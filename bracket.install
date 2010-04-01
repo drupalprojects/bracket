@@ -1,0 +1,108 @@
+<?php
+// $Id$
+
+/**
+ * Implementation of hook_install().
+ */
+function bracket_install() {
+
+  // create tables for bracket module
+  switch ($GLOBALS['db_type']) {
+
+    case 'mysql':
+    case 'mysqli':
+
+      // create tables
+      db_query("CREATE TABLE IF NOT EXISTS {bracket} (
+                        `nid` int(11) NOT NULL AUTO_INCREMENT,
+                        `subtitle` varchar(100) NOT NULL,
+                        `description` text NULL,
+                        `sport` varchar(50) NOT NULL,
+                        `division` varchar(50) NOT NULL,
+                        `season` varchar(50) NOT NULL,
+                        `brgroup` varchar(50) NOT NULL,
+                        `comments` text NULL,
+                        `footer` text NULL,
+                        `design` varchar(50) NOT NULL,
+                        `extra` text NULL,
+                        `logopath` varchar(100) NOT NULL,
+                        `sponsorlogopath` varchar(100) NOT NULL,
+                        `options` text NULL,
+                        PRIMARY KEY (`nid`)
+                        )");
+
+      db_query("CREATE TABLE IF NOT EXISTS {bracket_round} (
+                        `nid` int(11) NOT NULL,
+                        `id` int(11) NOT NULL,
+                        `round` varchar(50) DEFAULT NULL COMMENT 'round description',
+                        `loser` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'losers round',
+                        `first` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'first round',
+                        `comment` varchar(50) DEFAULT NULL,
+                        PRIMARY KEY (`nid`,`id`)
+                        )");
+
+      db_query("CREATE TABLE IF NOT EXISTS {bracket_match} (
+                        `nid` int(11) NOT NULL,
+                        `id` int(11) NOT NULL COMMENT 'match id',
+                        `roundid` int(11) NOT NULL COMMENT 'round id',
+                        `compid1` int(11) NOT NULL DEFAULT '0',
+                        `score1` varchar(50) DEFAULT NULL,
+                        `home1` tinyint(1) NOT NULL DEFAULT '0',
+                        `win1` tinyint(1) NOT NULL DEFAULT '0',
+                        `comp1_comment` varchar(50) DEFAULT NULL,
+                        `compid2` int(11) NOT NULL DEFAULT '0',
+                        `score2` varchar(50) DEFAULT NULL,
+                        `home2` tinyint(1) NOT NULL DEFAULT '0',
+                        `win2` tinyint(1) NOT NULL DEFAULT '0',
+                        `comp2_comment` varchar(50) DEFAULT NULL,
+                        `match_comment1` varchar(50) DEFAULT NULL,
+                        `match_comment2` varchar(50) DEFAULT NULL,
+                        `seq` int(11) NOT NULL DEFAULT '0' COMMENT 'match sequence',
+                        `winner_match` int(11) NOT NULL DEFAULT '0' COMMENT 'winner next match',
+                        `winner_comp` int(11) NOT NULL DEFAULT '0' COMMENT 'winner next match - competitor (1 or 2)',
+                        `loser_match` int(11) NOT NULL DEFAULT '0' COMMENT 'loser next match',
+                        `loser_comp` int(11) NOT NULL DEFAULT '0' COMMENT 'loser next match - competitor (1 or 2)',
+                        `winner_result` int(11) NOT NULL DEFAULT '0' COMMENT 'winner place',
+                        `loser_result` int(11) NOT NULL DEFAULT '0' COMMENT 'loser place',
+                        `win_use_result` int(11) NOT NULL DEFAULT '0' COMMENT 'if this competitor wins (1 or 2) use result',
+                        PRIMARY KEY (`nid`,`id`)
+                        )");
+
+      db_query("CREATE TABLE IF NOT EXISTS {bracket_comp} (
+                        `nid` int(11) NOT NULL,
+                        `id` int(11) NOT NULL COMMENT 'competitor id',
+                        `name` varchar(50) DEFAULT NULL,
+                        `seedin` varchar(50) DEFAULT NULL,
+                        PRIMARY KEY (`nid`,`id`)
+                        )");
+
+      db_query("CREATE TABLE IF NOT EXISTS {bracket_result} (
+                        `nid` int(11) NOT NULL,
+                        `id` int(11) NOT NULL,
+                        `compid` int(11) NOT NULL DEFAULT '0',
+                        `comment` varchar(50) DEFAULT NULL,
+                        `seedout` varchar(50) DEFAULT NULL,
+                        PRIMARY KEY (`nid`,`id`)
+                        )");
+      break;
+
+    case 'pgsql':
+      break;
+  }
+
+  drupal_set_message(t('The bracket module was successfully installed'));
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function bracket_uninstall() {
+
+  // Drop tables.
+  db_query("DROP TABLE {bracket}");
+  db_query("DROP TABLE {bracket_round}");
+  db_query("DROP TABLE {bracket_match}");
+  db_query("DROP TABLE {bracket_comp}");
+}
+
+

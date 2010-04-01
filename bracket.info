@@ -1,0 +1,5 @@
+; $Id$
+
+name = Bracket
+description = The Bracket module creates and displays tournament brackets
+core = 5.x
