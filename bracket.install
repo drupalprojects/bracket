@@ -14,7 +14,7 @@ function bracket_install() {
 
       // create tables
       db_query("CREATE TABLE IF NOT EXISTS {bracket} (
-                        `nid` int(11) NOT NULL AUTO_INCREMENT,
+                        `nid` int(11) NOT NULL,
                         `subtitle` varchar(100) NOT NULL,
                         `description` text NULL,
                         `sport` varchar(50) NOT NULL,
