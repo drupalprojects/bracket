@@ -16,7 +16,7 @@ function bracket_route_edit($node) {
   return drupal_get_form('bracket_route_edit_form', $node);
 }
 
-function bracket_route_edit_form($node) {
+function bracket_route_edit_form($form_state, $node) {
 
   drupal_set_title(t('Routing') . ' - ' . check_plain($node->title));
 
@@ -417,9 +417,9 @@ function theme_bracket_route_form_element($title, $value, $description = NULL, $
   return $output;
 }
 
-function bracket_route_edit_form_validate($form_id, $form_values) {
+function bracket_route_edit_form_validate($form_id, &$form_state) {
 
-  $nid = $form_values['nid'];
+  $nid = $form_state['values']['nid'];
   $node = node_load($nid);
 
   $ma = array();
@@ -435,7 +435,7 @@ function bracket_route_edit_form_validate($form_id, $form_values) {
       $match = 'match' . $j;
       $m = $r->match[$j];
 
-      $id = $form_values[$round][$match]['matchid'];
+      $id = $form_state['values'][$round][$match]['matchid'];
 
       if (isset($ma[$id])) {
         form_set_error($round .']['. $match .'][matchid',
@@ -459,10 +459,10 @@ function bracket_route_edit_form_validate($form_id, $form_values) {
       $match = 'match' . $j;
       $m = $r->match[$j];
 
-      $wm = $form_values[$round][$match]['winner_match'];
-      $wc = $form_values[$round][$match]['winner_comp'];
-      $lm = $form_values[$round][$match]['loser_match'];
-      $lc = $form_values[$round][$match]['loser_comp'];
+      $wm = $form_state['values'][$round][$match]['winner_match'];
+      $wc = $form_state['values'][$round][$match]['winner_comp'];
+      $lm = $form_state['values'][$round][$match]['loser_match'];
+      $lc = $form_state['values'][$round][$match]['loser_comp'];
 
       if ($wm > 0 && $wc == 0) {
         form_set_error($round .']['. $match . '][winner_comp',
@@ -490,9 +490,9 @@ function bracket_route_edit_form_validate($form_id, $form_values) {
   }
 }
 
-function bracket_route_edit_form_submit($form_id, $form_values) {
+function bracket_route_edit_form_submit($form_id, &$form_state) {
 
-  $nid = $form_values['nid'];
+  $nid = $form_state['values']['nid'];
   $node = node_load($nid);
 
   for ($i=1; $i<=count($node->round); $i++) {
@@ -506,13 +506,13 @@ function bracket_route_edit_form_submit($form_id, $form_values) {
       $m = $r->match[$j];
 
       // update the match id
-      $m->id = $form_values[$round][$match]['matchid'];
+      $m->id = $form_state['values'][$round][$match]['matchid'];
 
       // update the routing
-      $m->winner_match = $form_values[$round][$match]['winner_match'];
-      $m->winner_comp = $form_values[$round][$match]['winner_comp'];
-      $m->loser_match = $form_values[$round][$match]['loser_match'];
-      $m->loser_comp = $form_values[$round][$match]['loser_comp'];
+      $m->winner_match = $form_state['values'][$round][$match]['winner_match'];
+      $m->winner_comp = $form_state['values'][$round][$match]['winner_comp'];
+      $m->loser_match = $form_state['values'][$round][$match]['loser_match'];
+      $m->loser_comp = $form_state['values'][$round][$match]['loser_comp'];
      }
   }
 

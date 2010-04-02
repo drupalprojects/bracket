@@ -19,17 +19,17 @@ $bracket_fg_color_default = '#000000';      // black
 $bracket_bar_bg_color_default = '#404080';  // dark blue
 $bracket_bar_fg_color_default = '#FFFFFF';  // white
 
-require_once 'bracket_class.inc';
-require_once 'bracket_db.inc';
-require_once 'bracket_design.inc';
-require_once 'bracket_round.inc';
-require_once 'bracket_result.inc';
-require_once 'bracket_route.inc';
-require_once 'bracket_seed.inc';
-require_once('bracket_image.inc');
-require_once('bracket_pdf.inc');
+module_load_include('inc', 'bracket', 'bracket_class');
+module_load_include('inc', 'bracket', 'bracket_db');
+module_load_include('inc', 'bracket', 'bracket_design');
+module_load_include('inc', 'bracket', 'bracket_round');
+module_load_include('inc', 'bracket', 'bracket_result');
+module_load_include('inc', 'bracket', 'bracket_route');
+module_load_include('inc', 'bracket', 'bracket_seed');
+module_load_include('inc', 'bracket', 'bracket_image');
+module_load_include('inc', 'bracket', 'bracket_pdf');
 if (module_exists('views')) {
-  include_once 'bracket_views.inc';
+  module_load_include('inc', 'bracket', 'bracket_views');
 }
 
 //=========================================================================
@@ -39,6 +39,7 @@ if (module_exists('views')) {
  * Implementation of hook_perm().
  */
 function bracket_perm() {
+
   return array('view brackets', 'maintain brackets');
 }
 
@@ -47,175 +48,224 @@ function bracket_perm() {
  */
 function bracket_node_info() {
 
-  return array('bracket' => array('name' => t('Bracket'),
-                                  'module' => 'bracket',
-                                  'description' => t('Create a tournament bracket.')
-                                 )
-              );
+  $info = array(
+    'bracket' => array(
+      'name' => t('Bracket'),
+      'module' => 'bracket',
+      'description' => t('Create a tournament bracket.')
+     )
+   );
+   
+   return $info;
 }
 
 /**
  * Implementation of hook_menu().
  */
-function bracket_menu($may_cache) {
-
-  global $user;
+function bracket_menu() {
 
   $items = array();
 
-  $canupdate = user_access('maintain brackets');
-  $canview = user_access('view brackets');
+  $items['admin/settings/bracket'] = array(
+    'title' => 'Brackets',
+    'description' => 'Change bracket settings',
+    'page callback' => 'bracket_settings',
+    'access callback' => 'user_access',
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_NORMAL_ITEM,
+  );
 
-  if ($may_cache) {
+  // bracket listing.
+  $items['admin/content/bracket'] = array(
+    'title' =>'Brackets',
+    'page callback' => 'bracket_admin_content',
+    'access callback' => 'user_access',
+    'access arguments' => array('view brackets'),
+    'description' => 'View and edit all the brackets on your site.',
+    'type' => MENU_NORMAL_ITEM,
+  );
 
-    $items[] = array(
-      'path' => 'admin/settings/bracket',
-      'title' => t('Brackets'),
-      'description' => t('Change bracket settings'),
-      'callback' => 'bracket_settings',
-      'access' => ($user->uid == 1),
-      'type' => MENU_NORMAL_ITEM,
-    );
+  $items['node/%bracket_menu/image'] = array(
+    'page callback' => 'bracket_image',
+    'page arguments' => array(1),
+    'access callback' => 'node_access',
+    'access arguments' => array('view', 1),
+    'type' => MENU_CALLBACK,
+  );
 
-    // bracket listing.
-    $items[] = array(
-      'path' => 'admin/content/bracket',
-      'title' => t('Brackets'),
-      'callback' => 'bracket_admin_content',
-      'access' => $canview | $canupdate,
-      'description' => t('View and edit all the brackets on your site.'),
-      'type' => MENU_NORMAL_ITEM,
-    );
-  }
+  $items['node/%bracket_menu/pdf'] = array(
+    'page callback' => 'bracket_pdf',
+    'page arguments' => array(1),
+    'access callback' => 'node_access',
+    'access arguments' => array('view', 1),
+    'type' => MENU_CALLBACK,
+  );
 
-  elseif (arg(0) == 'node' && is_numeric(arg(1))) {
+  $items['node/%bracket_menu/clone'] = array(
+    'title' => 'Clone',
+    'page callback' => 'bracket_clone',
+    'page arguments' => array(1),
+    'access callback' => 'user_access',
+    'access arguments' => array('maintain brackets'),
+    'weight' => 2,
+    'type' => MENU_LOCAL_TASK
+  );
 
-    $nid = arg(1);
-    $node = node_load($nid);
+  $items['node/%bracket_menu/clear'] = array(
+    'title' => 'Clear',
+    'page callback' => 'bracket_clear',
+    'page arguments' => array(1),
+    'access callback' => 'user_access',
+    'access arguments' => array('maintain brackets'),
+    'weight' => 3,
+    'type' => MENU_LOCAL_TASK
+  );
 
-    if ($node->nid && $node->type == 'bracket') {
+  $items['node/%bracket_menu/export'] = array(
+    'title' => 'Export',
+    'page callback' => 'bracket_export',
+    'page arguments' => array(1),
+    'access callback' => 'user_access',
+    'access arguments' => array('maintain brackets'),
+    'weight' => 4,
+    'type' => MENU_LOCAL_TASK
+  );
 
-      $items[] = array(
-        'path' => 'node/'. $nid,
-        'title' => $node->title,
-        'callback' => 'node_page_view',
-        'callback arguments' => array($node),
-        'access' => node_access('view', $node),
-        'type' => MENU_CALLBACK,
-      );
+  $items['node/%bracket_menu/import'] = array(
+    'title' => 'Import',
+    'page callback' => 'bracket_import',
+    'page arguments' => array(1),
+    'access callback' => 'user_access',
+    'access arguments' => array('maintain brackets'),
+    'weight' => 5,
+    'type' => MENU_LOCAL_TASK
+  );
 
-      $items[] = array(
-        'path' => 'node/'. $nid . '/image',
-        'callback' => 'bracket_image',
-        'callback arguments' => array($node),
-        'access' => node_access('view', $node),
-        'type' => MENU_CALLBACK,
-      );
+  $items['node/%bracket_menu/edit/info'] = array(
+    'title' => 'Bracket Info',
+    'page callback' => 'node_page_edit',
+    'page arguments' => array(1),
+    'access callback' => 'node_access',
+    'access arguments' => array('update', 1),
+    'weight' => 0,
+    'type' => MENU_DEFAULT_LOCAL_TASK
+  );
 
-      $items[] = array(
-        'path' => 'node/'. $nid . '/pdf',
-        'callback' => 'bracket_pdf',
-        'callback arguments' => array($node),
-        'access' => node_access('view', $node),
-        'type' => MENU_CALLBACK,
-      );
+  $items['node/%bracket_menu/edit/route'] = array(
+    'title' => 'Routing',
+    'page callback' => 'bracket_route_edit',
+    'page arguments' => array(1),
+    'access callback' => 'user_access',
+    'access arguments' => array('maintain brackets'),
+    'weight' => 0,
+    'file' => 'bracket_route.inc',
+    'type' => MENU_LOCAL_TASK
+  );
 
-      $items[] = array(
-        'path' => 'node/'. $nid . '/clone',
-        'title' => t('Clone'),
-        'callback' => 'bracket_clone',
-        'callback arguments' => array($node),
-        'access' => $canupdate,
-        'weight' => 2,
-        'type' => MENU_LOCAL_TASK
-      );
+  $items['node/%bracket_menu/edit/seed'] = array(
+    'title' => 'Seeding',
+    'page callback' => 'bracket_seed_edit',
+    'page arguments' => array(1),
+    'access callback' => 'user_access',
+    'access arguments' => array('maintain brackets'),
+    'weight' => 0,
+    'file' => 'bracket_seed.inc',
+    'type' => MENU_LOCAL_TASK
+  );
 
-      $items[] = array(
-        'path' => 'node/'. $nid . '/clear',
-        'title' => t('Clear'),
-        'callback' => 'bracket_clear',
-        'callback arguments' => array($node),
-        'access' => $canupdate,
-        'weight' => 3,
-        'type' => MENU_LOCAL_TASK
-      );
+  $items['node/%bracket_menu/edit/round'] = array(
+    'title' => 'Rounds',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('bracket_round_list_form', 1),
+    'access callback' => 'user_access',
+    'access arguments' => array('maintain brackets'),
+    'weight' => 1,
+    'file' => 'bracket_round.inc',
+    'type' => MENU_LOCAL_TASK
+  );
+  
+  $items['node/%bracket_menu/edit/round/%bracket_round_menu'] = array(
+    'load arguments' => array(1),
+    'page arguments' => array('bracket_round_edit_form', 1, 4),
+    'access callback' => 'user_access',
+    'access arguments' => array('maintain brackets'),
+    'type' => MENU_LOCAL_TASK
+  );
 
-      $items[] = array(
-        'path' => 'node/'. $nid . '/export',
-        'title' => t('Export'),
-        'callback' => 'bracket_export',
-        'callback arguments' => array($node),
-        'access' => $canupdate,
-        'weight' => 4,
-        'type' => MENU_LOCAL_TASK
-      );
-
-      $items[] = array(
-        'path' => 'node/'. $nid . '/import',
-        'title' => t('Import'),
-        'callback' => 'bracket_import',
-        'callback arguments' => array($node),
-        'access' => $canupdate,
-        'weight' => 5,
-        'type' => MENU_LOCAL_TASK
-      );
-
-      $items[] = array('path' => 'node/'. $nid .'/edit/info',
-        'title' => t('Bracket Info'),
-        'callback' => 'node_page_edit',
-        'callback arguments' => array($node),
-        'access' => node_access('update', $node),
-        'weight' => 0,
-        'type' => MENU_DEFAULT_LOCAL_TASK
-      );
-
-      $items[] = array(
-        'path' => 'node/'. $nid . '/edit/route',
-        'title' => t('Routing'),
-        'callback' => 'bracket_route_edit',
-        'callback arguments' => array($node),
-        'access' => $canupdate,
-        'weight' => 0,
-        'type' => MENU_LOCAL_TASK
-      );
-
-      $items[] = array(
-        'path' => 'node/'. $nid . '/edit/seed',
-        'title' => t('Seeding'),
-        'callback' => 'bracket_seed_edit',
-        'callback arguments' => array($node),
-        'access' => $canupdate,
-        'weight' => 0,
-        'type' => MENU_LOCAL_TASK
-      );
-
-      for ($i=1; $i<=count($node->round); $i++) {
-        $items[] = array(
-          'path' => 'node/' . $nid . '/edit/round/' . $i,
-          'title' => $node->round[$i]->name,
-          'callback' => 'bracket_round_edit',
-          'callback arguments' => array($node, $i),
-          'access' => $canupdate,
-          'weight' => $i,
-          'type' => MENU_LOCAL_TASK
-        );
-      }
-
-      $items[] = array(
-        'path' => 'node/'. $nid . '/edit/results',
-        'title' => t('Results'),
-        'callback' => 'bracket_result_edit',
-        'callback arguments' => array($node),
-        'access' => $canupdate,
-        'weight' => count($node->round) + 1,
-        'type' => MENU_LOCAL_TASK
-      );
-
-    }
-  }
-
+  $items['node/%bracket_menu/edit/results'] = array(
+    'title' => 'Results',
+    'page callback' => 'bracket_result_edit',
+    'page arguments' => array(1),
+    'access callback' => 'user_access',
+    'access arguments' => array('maintain brackets'),
+    'weight' => 2,
+    'file' => 'bracket_result.inc',
+    'type' => MENU_LOCAL_TASK
+  );
+  
   return $items;
 }
+
+/**
+ * Menu loader callback; Load a bracket node if the given nid is a bracket
+ */
+function bracket_menu_load($nid) {
+
+  if (!is_numeric($nid)) {
+    return FALSE;
+  }
+  $node = node_load($nid);
+  if (empty($node->type) || $node->type != 'bracket') {
+    return FALSE;
+  }
+  return $node;
+}
+
+/**
+ * Menu loader callback; Load a bracket node and return the round object if valid
+ */
+function bracket_round_menu_load($roundid, $nid) {
+
+  $node = bracket_menu_load($nid);
+  if ($node) {
+    if ($roundid >= 1 && $roundid <= count($node->round)) {
+      return $roundid;
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Implementation of hook_theme().
+ */
+function bracket_theme() {
+  
+  $theme = array(
+    'bracket_view' => array(
+      'arguments' => array('node' => NULL, 'teaser' => NULL, 'page' => NULL),
+    ),
+    'bracket_admin_content' => array(
+      'arguments' => array('nodes' => NULL),
+    ),
+    'bracket_route_edit_form' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    'bracket_route_select' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'bracket_route_form_element' => array(
+      'arguments' => array('title' => NULL, 'value' => NULL, 'description' => NULL,  'id' => NULL, 'required' => NULL, 'error' => NULL),
+    ),
+    'bracket_rounds' => array(
+      'arguments' => array('node' => NULL),
+    ),
+    'bracket_round_edit_form' => array(
+      'arguments' => array('form' => NULL),
+    ),
+  );
+  return $theme;
+}
+
 
 //=========================================================================
 // bracket settings
@@ -225,7 +275,7 @@ function bracket_settings() {
   return drupal_get_form('bracket_settings_form');
 }
 
-function bracket_settings_form() {
+function bracket_settings_form($form_state) {
 
   $form = array();
 
@@ -260,10 +310,23 @@ function bracket_settings_form() {
   return $form;
 }
 
-function bracket_settings_form_submit($form_id, $form_values) {
+function bracket_settings_form_validate($form_id, &$form_state) {
 
-  variable_set('bracket_image_upload', $form_values['upload']);
-  variable_set('bracket_image_upload_path', $form_values['upload_path']);
+  $upload = $form_state['values']['upload'];
+  if ($upload) {
+    $dir = $form_state['values']['upload_path'];
+    // must be writable
+    $is_writable = file_check_directory($dir, 1);
+    if (!$is_writable) {
+      form_set_error('upload_path', 'Upload path must be writeable');
+    }
+  }
+}
+
+function bracket_settings_form_submit($form_id, &$form_state) {
+
+  variable_set('bracket_image_upload', $form_state['values']['upload']);
+  variable_set('bracket_image_upload_path', $form_state['values']['upload_path']);
 
   drupal_set_message(t('Configuration settings were saved.'));
 }
@@ -392,6 +455,7 @@ function bracket_form(&$node) {
       '#type' => 'textfield',
       '#title' => t('Bracket Design'),
       '#default_value' => $tmp,
+      '#size' => 100,
       '#required' => TRUE,
       '#weight' => -6,
       '#attributes' => array('readonly' => 'readonly'),
@@ -462,12 +526,14 @@ function bracket_form(&$node) {
   $form['bracket']['logo']['logopath'] = array(
     '#type' => 'textfield',
     '#title' => t('Logo Image Path'),
-    '#size' => 50,
+    '#size' => 100,
     '#maxlength' => 100,
     '#description' => t('Path to the logo image file. Supported image types are JPG and PNG.'),
     '#default_value' => $node->logopath
   );
 
+  $upl = variable_get('bracket_image_upload_path', FALSE);
+  
   if ($node->logopath) {
     $abs = preg_match("/^https?:\/\//", $node->logopath);
     if ($abs) {
@@ -481,12 +547,15 @@ function bracket_form(&$node) {
       '#value' => '&nbsp;<br /><img src="' . $imgurl . '">'
     );
 
-    if (!$abs && variable_get('bracket_image_upload', FALSE)) {
-      $form['bracket']['logo']['delete_logo'] = array(
-        '#type' => 'checkbox',
-        '#title' => t('Delete Logo'),
-        '#description' => t('Check to delete current logo. WARNING - image file will be deleted!')
-      );
+    // only allow delete, if file exists in the upload directory
+    if (!$abs && $upl) {
+      if (file_check_location($node->logopath, $upl)) {  
+        $form['bracket']['logo']['delete_logo'] = array(
+          '#type' => 'checkbox',
+          '#title' => t('Delete Logo'),
+          '#description' => t('Check to delete current logo. WARNING - image file will be deleted!')
+        );
+      }
     }
   }
 
@@ -508,7 +577,7 @@ function bracket_form(&$node) {
   $form['bracket']['sponsorlogo']['sponsorlogopath'] = array(
     '#type' => 'textfield',
     '#title' => t('Sponsor Logo Image Path'),
-    '#size' => 50,
+    '#size' => 100,
     '#maxlength' => 100,
     '#description' => t('Path to the sponsor logo image file. Supported image types are JPG and PNG.'),
     '#default_value' => $node->sponsorlogopath
@@ -517,28 +586,31 @@ function bracket_form(&$node) {
   if ($node->sponsorlogopath) {
     $abs = preg_match("/^https?:\/\//", $node->sponsorlogopath);
     if ($abs) {
-      $imgurl = $node->logopath;
+      $imgurl = $node->sponsorlogopath;
     }
     else {
-      $imgurl = file_create_url($node->logopath);
+      $imgurl = file_create_url($node->sponsorlogopath);
     }
     $form['bracket']['sponsorlogo']['current_sponsorlogo'] = array(
       '#type' => 'markup',
       '#value' => '&nbsp;<br /><img src="' . $imgurl . '">'
     );
 
-    if (!$abs && variable_get('bracket_image_upload', FALSE)) {
-      $form['bracket']['sponsorlogo']['delete_sponsorlogo'] = array(
-        '#type' => 'checkbox',
-        '#title' => t('Delete Sponsor Logo'),
-        '#description' => t('Check to delete current sponsor logo. WARNING - image file will be deleted!')
-      );
+    // only allow delete, if file exists in the upload directory
+    if (!$abs && $upl) {
+      if (file_check_location($node->sponsorlogopath, $upl)) {  
+        $form['bracket']['sponsorlogo']['delete_sponsorlogo'] = array(
+          '#type' => 'checkbox',
+          '#title' => t('Delete Sponsor Logo'),
+          '#description' => t('Check to delete current sponsor logo. WARNING - image file will be deleted!')
+        );
+      }
     }
   }
 
   if (variable_get('bracket_image_upload', FALSE)) {
     // so uploads will work
-    $form['#validate'] = array('bracket_form_validate' => array());
+    $form['#validate'][] = 'bracket_form_validate';
     $form['#attributes']['enctype'] = 'multipart/form-data';
   }
 
@@ -760,10 +832,15 @@ function bracket_check_image_type($path) {
 /**
  * validation hook of bracket form - handles image uploads and deletes
  */
-function bracket_form_validate($form_id, $form_values) {
+function bracket_form_validate($form_id, &$form_state) {
 
-  bracket_form_process_image('logoupload', 'logopath', 'delete_logo');
-  bracket_form_process_image('sponsorlogoupload', 'sponsorlogopath', 'delete_sponsorlogo');
+//echo '<pre>';
+//print_r($form_state);
+//echo '</pre>';
+//die();
+
+  bracket_form_process_image('logoupload', 'logopath', 'delete_logo', $form_state);
+  bracket_form_process_image('sponsorlogoupload', 'sponsorlogopath', 'delete_sponsorlogo', $form_state);
 }
 
 /**
@@ -776,51 +853,42 @@ function bracket_form_validate($form_id, $form_values) {
  * @param $delete_field
  *   the name of the checkbox field containing the delete option
  */
-function bracket_form_process_image($upload_field, $path_field, $delete_field) {
+function bracket_form_process_image($upload_field, $path_field, $delete_field, &$form_state) {
 
-  // save a new logo image, if present
-  $source = file_check_upload($upload_field);
-  // if something was uploaded
-  if ($source) {
-    // get bracket upload path
-    $dir = variable_get('bracket_image_upload_path', '');
-    // if not set, get default files directory
-    if ($dir == '') {
-      $dir = file_directory_path();
-    }
-    // must be writable
-    $is_writable = file_check_directory($dir, 1);
-    if ($is_writable) {
-      // save the uploaded file
-      if ($file = file_save_upload($source, $dir)) {
-        // make sure its an image
-        if (image_get_info($file->filepath)) {
-          // set the path value for the node
-          $GLOBALS['form_values'][$path_field] = $file->filepath;
-          drupal_set_message(t('Image saved - ' . $file->filepath . '.'));
-        }
-        else {
-          file_delete($file->filepath);
-          drupal_set_message(t('Uploaded image file does not appear to be a valid image file. Please try again.'));
-        }
-      }
-      else {
-        drupal_set_message(t('Unable to save uploaded image file. Please try again.'));
-      }
+  // get bracket upload path
+  $dir = variable_get('bracket_image_upload_path', '');
+  // if not set, get default files directory
+  if ($dir == '') {
+    $dir = file_directory_path();
+  }
+  $validators = array(
+    'file_validate_is_image' => array()
+  );
+  // save the uploaded file
+  if ($file = file_save_upload($upload_field, $validators, $dir)) {
+    // make sure its an image
+    if (image_get_info($file->filepath)) {
+      // set the path value for the node
+      $form_state['values'][$path_field] = $file->filepath;
+      drupal_set_message(t('Image saved - ' . $file->filepath . '.'));
     }
     else {
-      drupal_set_message(t('Upload path is not writeable. Please try again.'));
+      file_delete($file->filepath);
+      drupal_set_message(t('Uploaded image file does not appear to be a valid image file. Please try again.'));
     }
   }
   // if user wants to delete the image
-  if ($GLOBALS['form_values'][$delete_field]) {
-    // do it, if it's there
-    if ($GLOBALS['form_values'][$path_field]) {
-      // delete the file
-      file_delete($GLOBALS['form_values'][$path_field]);
-      // clear the value for the node
-      $GLOBALS['form_values'][$path_field] = '';
-      drupal_set_message('Logo image deleted.');
+  if ($form_state['values'][$delete_field]) {
+    // only delete if file is in the upload directory
+    $path = $form_state['values'][$path_field];
+    if ($path) {
+      if (file_check_location($path, $dir)) {  
+        // delete the file
+        file_delete($path);
+        // clear the value for the node
+        $form_state['values'][$path_field] = '';
+        drupal_set_message('Logo image deleted.');
+      }
     }
   }
 }
@@ -830,11 +898,10 @@ function bracket_form_process_image($upload_field, $path_field, $delete_field) {
   */
 function bracket_insert($node) {
 
+  // create bracket components
   bracket_create($node);
 
   bracket_db_insert($node);
-
-  watchdog('bracket', t('Bracket @title added', array('@title' => $node->title)), WATCHDOG_NOTICE);
 }
 
 /**
@@ -842,9 +909,18 @@ function bracket_insert($node) {
   */
 function bracket_update($node) {
 
-  bracket_db_update($node);
+  // if submitted from hook_form(), must add bracket componenets back
+  if (isset($node->op) && $node->op == $node->submit) {
+    // load bracket components
+    $node2 = bracket_db_load($node);
 
-  watchdog('bracket', t('Bracket @title updated', array('@title' => $node->title)), WATCHDOG_NOTICE);
+    // copy bracket components to submitted node
+    $node->comp = $node2->comp;
+    $node->round = $node2->round;
+    $node->result = $node2->result;
+  }
+
+  bracket_db_update($node);
 }
 
 /**
@@ -853,8 +929,6 @@ function bracket_update($node) {
 function bracket_delete($node, $log = TRUE) {
 
   bracket_db_delete($node);
-
-  watchdog('bracket', t('Bracket @title deleted', array('@title' => $node->title)), WATCHDOG_NOTICE);
 }
 
 //=========================================================================
@@ -866,7 +940,7 @@ function bracket_clone($node) {
   return drupal_get_form('bracket_clone_form', $node);
 }
 
-function bracket_clone_form($node) {
+function bracket_clone_form($form_state, $node) {
 
   drupal_set_title(t('Clone') . ' - ' . check_plain($node->title));
 
@@ -893,27 +967,27 @@ function bracket_clone_form($node) {
   return $form;
 }
 
-function bracket_clone_form_submit($form_id, $form_values) {
+function bracket_clone_form_submit($form_id, &$form_state) {
 
   global $user;
 
   // load the source node
-  $node = node_load($form_values['nid']);
+  $node = node_load($form_state['values']['nid']);
 
   // make a new node and copy some info
   $node2 = new StdClass();
   $node2->type = $node->type;
   $node2->uid = $user->uid;
   $node2->comment = $node->comment;
-  $node2->title = $form_values['title'];
-  $node2->subtitle = $form_values['subtitle'];
-  $node2->comments = $form_values['comments'];
-  $node2->sport = $form_values['sport'];
-  $node2->division = $form_values['division'];
-  $node2->season = $form_values['season'];
-  $node2->footer = $form_values['footer'];
-  $node2->logopath = $form_values['logopath'];
-  $node2->sponsorlogopath = $form_values['sponsorlogopath'];
+  $node2->title = $form_state['values']['title'];
+  $node2->subtitle = $form_state['values']['subtitle'];
+  $node2->comments = $form_state['values']['comments'];
+  $node2->sport = $form_state['values']['sport'];
+  $node2->division = $form_state['values']['division'];
+  $node2->season = $form_state['values']['season'];
+  $node2->footer = $form_state['values']['footer'];
+  $node2->logopath = $form_state['values']['logopath'];
+  $node2->sponsorlogopath = $form_state['values']['sponsorlogopath'];
   $node2->design = $node->design;
   $node2->options = $node->options;
 
@@ -942,7 +1016,7 @@ function bracket_clear($node) {
   return drupal_get_form('bracket_clear_form', $node);
 }
 
-function bracket_clear_form($node) {
+function bracket_clear_form($form_state, $node) {
 
   drupal_set_title(t('Clear') . ' - ' . check_plain($node->title));
 
@@ -984,19 +1058,19 @@ function bracket_clear_form($node) {
   return $form;
 }
 
-function bracket_clear_form_submit($form_id, $form_values) {
+function bracket_clear_form_submit($form_id, &$form_state) {
 
   // load the node
-  $node = node_load($form_values['nid']);
+  $node = node_load($form_state['values']['nid']);
 
-  if ($form_values['opt'] == 'comp') {
+  if ($form_state['values']['opt'] == 'comp') {
     // clear competitors
     for ($i=1; $i<=count($node->comp); $i++) {
       $node->comp[$i]->name = '';
     }
   }
 
-  if ($form_values['opt'] == 'comp' || $form_values['opt'] == 'match') {
+  if ($form_state['values']['opt'] == 'comp' || $form_state['values']['opt'] == 'match') {
     // clear match results
     for ($i=1; $i<=count($node->round); $i++) {
       $r = $node->round[$i];
@@ -1032,7 +1106,7 @@ function bracket_export($node) {
   return drupal_get_form('bracket_export_form', $node);
 }
 
-function bracket_export_form($node) {
+function bracket_export_form($form_state, $node) {
 
   drupal_set_title(t('Export') . ' - ' . check_plain($node->title));
 
@@ -1069,16 +1143,16 @@ function bracket_export_form($node) {
   return $form;
 }
 
-function bracket_export_form_submit($form_id, $form_values) {
+function bracket_export_form_submit($form_id, &$form_state) {
 
   // include xml code
   require_once 'bracket_xml.inc';
 
   // load the node
-  $node = node_load($form_values['nid']);
+  $node = node_load($form_state['values']['nid']);
 
   // generate the xml
-  $output = bracket_xml_export($node, $form_values['opt']);
+  $output = bracket_xml_export($node, $form_state['values']['opt']);
 
   // prepare to download
   header('Content-Type: text/plain');
@@ -1100,7 +1174,7 @@ function bracket_import($node) {
   return drupal_get_form('bracket_import_form', $node);
 }
 
-function bracket_import_form($node) {
+function bracket_import_form($form_state, $node) {
 
   drupal_set_title(t('Import') . ' - ' . check_plain($node->title));
 
@@ -1145,22 +1219,22 @@ function bracket_import_form($node) {
   return $form;
 }
 
-function bracket_import_form_submit($form_id, $form_values) {
+function bracket_import_form_submit($form_id, &$form_state) {
 
   // include xml code
   require_once 'bracket_xml.inc';
 
   // check for upload
-  $xmlfile = file_check_upload('upload');
+  $xmlfile = file_save_upload('upload');
 
   // if something was uploaded, get file contents and parse xml
   if ($xmlfile) {
 
     // load the node
-    $node = node_load($form_values['nid']);
+    $node = node_load($form_state['values']['nid']);
 
     // import the xml
-    if (!bracket_xml_import($xmlfile->filepath, $node, $form_values['opt'])) {
+    if (!bracket_xml_import($xmlfile->filepath, $node, $form_state['values']['opt'])) {
 
       drupal_set_message(t('Unable to parse XML file - Bracket was not imported.'), 'error');
     }

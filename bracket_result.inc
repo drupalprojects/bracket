@@ -16,7 +16,7 @@ function bracket_result_edit($node) {
   return drupal_get_form('bracket_result_edit_form', $node);
 }
 
-function bracket_result_edit_form($node) {
+function bracket_result_edit_form($form_state, $node) {
 
   drupal_set_title(t('Results') . ' - ' . check_plain($node->title));
   
@@ -86,10 +86,10 @@ function bracket_result_edit_form($node) {
   return $form;
 }
 
-function bracket_result_edit_form_submit($form_id, $form_values) {
+function bracket_result_edit_form_submit($form_id, &$form_state) {
 
   // get id's
-  $nid = $form_values['nid'];
+  $nid = $form_state['values']['nid'];
 
   // load the node
   $node = node_load($nid);
@@ -102,8 +102,8 @@ function bracket_result_edit_form_submit($form_id, $form_values) {
     $s = $node->result[$i];
 
     // update result info
-    $s->comment = $form_values[$result]['comment'];
-    $s->seedout = $form_values[$result]['seedout'];
+    $s->comment = $form_state['values'][$result]['comment'];
+    $s->seedout = $form_state['values'][$result]['seedout'];
   }
 
   // save the node

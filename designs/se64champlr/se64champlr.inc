@@ -225,7 +225,7 @@ function se64champlr_image($node) {
 
   // sponsor logo
   if ($node->sponsorlogopath != '') {
-    bracket_image_insert_image($img, $node->sponsorlogopath, $iwidth / 2, 550, 75, TRUE);
+    bracket_image_insert_image($img, $node->sponsorlogopath, $iwidth / 2, $iheight - 225, 75, TRUE);
   }
 
   // generate the png image stream
@@ -428,12 +428,12 @@ function se64champlr_pdf($node) {
 
   // bracket logo
   if ($node->logopath != '') {
-    bracket_pdf_insert_image($pdf, $node->logopath, 5.5, 1.00, 1.75);
+    bracket_pdf_insert_image($pdf, $node->logopath, $iwidth/2, 1.5, 1.5, TRUE);
   }
 
   // sponsor logo
   if ($node->sponsorlogopath != '') {
-    bracket_pdf_insert_image($pdf, $node->sponsorlogopath, 5.5, 5.5, 0.5);
+    bracket_pdf_insert_image($pdf, $node->sponsorlogopath, $iwidth/2, $iheight-2.0, 0.5, TRUE);
   }
 
   // bracket bar

@@ -7,19 +7,56 @@
  *
  * @author Jim Bullington <jimb@jrbcs.com>
  */
-
+ 
+ 
 /**
- * Round form functions
+ * Display list of rounds for the given bracket node
  */
-function bracket_round_edit($node, $id) {
+function bracket_round_list_form($form_state, $node) {
 
-  return drupal_get_form('bracket_round_edit_form', $node, $id);
-}
+  $header = array(
+    t('Round'),
+    t('Matches'), 
+    t('Matches Decided'), 
+    array('data' => t('Operations'), 'colspan' => '2')
+  );
 
-function bracket_round_edit_form($node, $id) {
+  $rows = array();
+  foreach ($node->round as $r) {
+
+    $link = 'node/'. $node->nid . '/edit/round/' . $r->id;
+    
+    $dc = 0;
+    foreach($r->match as $m) {
+      if ($m->win[1] || $m->win[2]) {
+        $dc++;
+      }
+    }
+    
+    $rows[] = array(
+      l($r->name, $link),
+      count($r->match),
+      $dc,
+      l(t('Edit'), $link),
+    );
+  }
 
   $form = array();
+  $form['round_list'] = array(
+    '#type' => 'markup',
+    '#value' => theme('table', $header, $rows)
+  );
+  
+  return $form;
+}
+ 
 
+/**
+ * Round edit form
+ */
+function bracket_round_edit_form($form_state, $node, $id) {
+
+  $form = array();
   $r = $node->round[$id];
 
   drupal_set_title($r->name . ' - ' . check_plain($node->title));
@@ -292,20 +329,20 @@ function theme_bracket_round_edit_form($form) {
   return drupal_render($form);
 }
 
-function bracket_round_edit_form_validate($form_id, $form_values) {
+function bracket_round_edit_form_validate($form_id, &$form_state) {
 
   // iterate through matches
-  foreach (array_filter(array_keys($form_values), 'bracket_round_edit_form_match_key') as $match) {
+  foreach (array_filter(array_keys($form_state['values']), 'bracket_round_edit_form_match_key') as $match) {
 
     $msg = t('There can only be one home competitor, please select one home competitor only.');
-    if ( $form_values[$match]['home1'] == 1 && $form_values[$match]['home2'] == 1 ) {
+    if ($form_state['values'][$match]['home1'] == 1 && $form_state['values'][$match]['home2'] == 1 ) {
       form_set_error($match . '][home1' , $msg);
       form_set_error($match . '][home2' , $msg);
       return;
     }
 
     $msg = t('There can only be one winner, please select one winner only.');
-    if ( $form_values[$match]['win1'] == 1 && $form_values[$match]['win2'] == 1 ) {
+    if ($form_state['values'][$match]['win1'] == 1 && $form_state['values'][$match]['win2'] == 1 ) {
       form_set_error($match .'][win1', $msg);
       form_set_error($match .'][win2', $msg);
       return;
@@ -318,11 +355,11 @@ function bracket_round_edit_form_match_key($key) {
   return (substr($key, 0, 5) == 'match');
 }
 
-function bracket_round_edit_form_submit($form_id, $form_values) {
+function bracket_round_edit_form_submit($form_id, &$form_state) {
 
   // get ids
-  $nid = $form_values['nid'];
-  $rid = $form_values['roundid'];
+  $nid = $form_state['values']['nid'];
+  $rid = $form_state['values']['roundid'];
 
   // load the node
   $node = node_load($nid);
@@ -331,8 +368,8 @@ function bracket_round_edit_form_submit($form_id, $form_values) {
   $r = $node->round[$rid];
 
   // update round info
-  $r->name = $form_values['rname'];
-  $r->comment = $form_values['rcomment'];
+  $r->name = $form_state['values']['rname'];
+  $r->comment = $form_state['values']['rcomment'];
 
   // update all matches in the round
   for ($i=1; $i<= count($r->match); $i++) {
@@ -346,23 +383,23 @@ function bracket_round_edit_form_submit($form_id, $form_values) {
     $win2 = $m->win[2];
 
     // update match info
-    $m->home[1] = $form_values[$match]['home1'];
-    $m->win[1] = $form_values[$match]['win1'];
-    $m->score[1] = trim($form_values[$match]['score1']);
-    $m->comp_comment[1] = $form_values[$match]['comp1_comment'];
-    $m->home[2] = $form_values[$match]['home2'];
-    $m->win[2] = $form_values[$match]['win2'];
-    $m->score[2] = trim($form_values[$match]['score2']);
-    $m->comp_comment[2] = $form_values[$match]['comp2_comment'];
-    $m->comment[1] = $form_values[$match]['comment1'];
-    $m->comment[2] = $form_values[$match]['comment2'];
+    $m->home[1] = $form_state['values'][$match]['home1'];
+    $m->win[1] = $form_state['values'][$match]['win1'];
+    $m->score[1] = trim($form_state['values'][$match]['score1']);
+    $m->comp_comment[1] = $form_state['values'][$match]['comp1_comment'];
+    $m->home[2] = $form_state['values'][$match]['home2'];
+    $m->win[2] = $form_state['values'][$match]['win2'];
+    $m->score[2] = trim($form_state['values'][$match]['score2']);
+    $m->comp_comment[2] = $form_state['values'][$match]['comp2_comment'];
+    $m->comment[1] = $form_state['values'][$match]['comment1'];
+    $m->comment[2] = $form_state['values'][$match]['comment2'];
 
     // update competitors if round 1
     if ($rid == 1) {
-      $node->comp[$m->compid[1]]->name = $form_values[$match]['comp1'];
-      $node->comp[$m->compid[1]]->seedin = $form_values[$match]['seed1'];
-      $node->comp[$m->compid[2]]->name = $form_values[$match]['comp2'];
-      $node->comp[$m->compid[2]]->seedin = $form_values[$match]['seed2'];
+      $node->comp[$m->compid[1]]->name = $form_state['values'][$match]['comp1'];
+      $node->comp[$m->compid[1]]->seedin = $form_state['values'][$match]['seed1'];
+      $node->comp[$m->compid[2]]->name = $form_state['values'][$match]['comp2'];
+      $node->comp[$m->compid[2]]->seedin = $form_state['values'][$match]['seed2'];
     }
 
     // see if winner has changed
