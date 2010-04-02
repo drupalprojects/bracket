@@ -468,6 +468,8 @@ function bracket_form(&$node) {
     '#default_value' => $node->logopath
   );
 
+  $upl = variable_get('bracket_image_upload_path', FALSE);
+
   if ($node->logopath) {
     $abs = preg_match("/^https?:\/\//", $node->logopath);
     if ($abs) {
@@ -481,12 +483,15 @@ function bracket_form(&$node) {
       '#value' => '&nbsp;<br /><img src="' . $imgurl . '">'
     );
 
-    if (!$abs && variable_get('bracket_image_upload', FALSE)) {
-      $form['bracket']['logo']['delete_logo'] = array(
-        '#type' => 'checkbox',
-        '#title' => t('Delete Logo'),
-        '#description' => t('Check to delete current logo. WARNING - image file will be deleted!')
-      );
+    // only allow delete, if file exists in the upload directory
+    if (!$abs && $upl) {
+      if (file_check_location($node->logopath, $upl)) {  
+        $form['bracket']['logo']['delete_logo'] = array(
+          '#type' => 'checkbox',
+          '#title' => t('Delete Logo'),
+          '#description' => t('Check to delete current logo. WARNING - image file will be deleted!')
+        );
+      }
     }
   }
 
@@ -517,22 +522,25 @@ function bracket_form(&$node) {
   if ($node->sponsorlogopath) {
     $abs = preg_match("/^https?:\/\//", $node->sponsorlogopath);
     if ($abs) {
-      $imgurl = $node->logopath;
+      $imgurl = $node->sponsorlogopath;
     }
     else {
-      $imgurl = file_create_url($node->logopath);
+      $imgurl = file_create_url($node->sponsorlogopath);
     }
     $form['bracket']['sponsorlogo']['current_sponsorlogo'] = array(
       '#type' => 'markup',
       '#value' => '&nbsp;<br /><img src="' . $imgurl . '">'
     );
 
-    if (!$abs && variable_get('bracket_image_upload', FALSE)) {
-      $form['bracket']['sponsorlogo']['delete_sponsorlogo'] = array(
-        '#type' => 'checkbox',
-        '#title' => t('Delete Sponsor Logo'),
-        '#description' => t('Check to delete current sponsor logo. WARNING - image file will be deleted!')
-      );
+    // only allow delete, if file exists in the upload directory
+    if (!$abs && $upl) {
+      if (file_check_location($node->sponsorlogopath, $upl)) {  
+        $form['bracket']['sponsorlogo']['delete_sponsorlogo'] = array(
+          '#type' => 'checkbox',
+          '#title' => t('Delete Sponsor Logo'),
+          '#description' => t('Check to delete current sponsor logo. WARNING - image file will be deleted!')
+        );
+      }
     }
   }
 
@@ -814,13 +822,16 @@ function bracket_form_process_image($upload_field, $path_field, $delete_field) {
   }
   // if user wants to delete the image
   if ($GLOBALS['form_values'][$delete_field]) {
-    // do it, if it's there
-    if ($GLOBALS['form_values'][$path_field]) {
-      // delete the file
-      file_delete($GLOBALS['form_values'][$path_field]);
-      // clear the value for the node
-      $GLOBALS['form_values'][$path_field] = '';
-      drupal_set_message('Logo image deleted.');
+    // only delete if file is in the upload directory
+    $path = $GLOBALS['form_values'][$path_field];
+    if ($path) {
+      if (file_check_location($path, $dir)) {  
+        // delete the file
+        file_delete($path);
+        // clear the value for the node
+        $GLOBALS['form_values'][$path_field] = '';
+        drupal_set_message('Logo image deleted.');
+      }
     }
   }
 }
