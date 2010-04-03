@@ -37,8 +37,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Bracket 6.x\n"
-"POT-Creation-Date: 2010-04-03 06:52+0200\n"
-"PO-Revision-Date: 2010-04-03 06:53+0100\n"
+"POT-Creation-Date: 2010-04-03 07:32+0200\n"
+"PO-Revision-Date: 2010-04-03 07:34+0100\n"
 "Last-Translator: Magnus Gunnarsson <magnus.gunnarsson76@gmail.com>\n"
 "Language-Team: drupalsverige.se\n"
 "MIME-Version: 1.0\n"
@@ -634,15 +634,15 @@ msgstr "Diagram @title har klonats"
 
 #: bracket.module:1021;1285;115
 msgid "Clear"
-msgstr "Rensa"
+msgstr "Töm"
 
 #: bracket.module:1025
 msgid "Use this form to clear bracket competitors and match results."
-msgstr "Använd detta formulär för att tömma deltagare och matchresultat från diagram."
+msgstr "Använd detta formulär för att ta bort deltagare för diagram och matchresultat."
 
 #: bracket.module:1035
 msgid "Clear Options"
-msgstr "Töm alternativ"
+msgstr "Alternativ för tömning"
 
 #: bracket.module:1043
 msgid "Competitors and Match Results"
