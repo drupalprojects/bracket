@@ -94,7 +94,7 @@ function se64champlr_image($node) {
   // font height
   $bbox = imagettfbbox($bracket_image_font_norm, 0, $bracket_image_font, 'Q');
   $h = $bbox[1] - $bbox[7];
-  $w = 10;
+  $w = $bbox[2] - $bbox[0];
 
   // round 1
   $right = $iwidth - $left;
@@ -158,7 +158,7 @@ function se64champlr_image($node) {
   imageline($img, $l, $t, $l+$width, $t, $bracket_image_fg_color);
   bracket_image_imagetextalign($img, $bracket_image_font_norm, $l+2, $t-2, $width, $match->cname[1], $bracket_image_fg_color, 'L');
   bracket_image_imagetextalign($img, $bracket_image_font_small, $l+2, $t+$h+2, $width, $match->comp_comment[1], $bracket_image_fg_color, 'L');
-  bracket_image_imagetextalign($img, $bracket_font_norm, $l+$width-($w*2), $t-$h, $w*2, $match->score[1], $bracket_image_fg_color, 'R');
+  bracket_image_imagetextalign($img, $bracket_image_font_norm, $l+$width-($w*2), $t-2, $w*2, $match->score[1], $bracket_image_fg_color, 'R');
   if ($match->home[1]) {
     $bracket_image_imageTextAlign($img, $bracket_image_font_norm, $l+$width-($w*2), $t+$h, $w, 'H', $bracket_image_fg_color);
   }
@@ -168,7 +168,7 @@ function se64champlr_image($node) {
 
   bracket_image_imagetextalign($img, $bracket_image_font_norm, $r-$width, $t-2, $width, $match->cname[2], $bracket_image_fg_color, 'R');
   bracket_image_imagetextalign($img, $bracket_image_font_small, $r-$width, $t+$h+2, $width, $match->comp_comment[2], $bracket_image_fg_color, 'R');
-  bracket_image_imagetextalign($img, $bracket_image_font_norm, $r-$width, $t-$h, $w*2, $match->score[2], $bracket_image_fg_color, 'L');
+  bracket_image_imagetextalign($img, $bracket_image_font_norm, $r-$width, $t-2, $w*2, $match->score[2], $bracket_image_fg_color, 'L');
   if ($match->home[2]) {
     bracket_image_imagetextalign($img, $bracket_image_font_norm, $r-$width, $t+$h, $w, 'H', $bracket_image_fg_color);
   }
@@ -367,7 +367,7 @@ function se64champlr_pdf($node) {
   $t += $hh / 3;
   $r -= $width;
   $pdf->line($r, $t, $r-$width, $t);
-  $pdf->setXY($l, $t-0.125);
+  $pdf->setXY($r-$width, $t-0.125);
   $pdf->cell($width, 0.125, $match->cname[2], 0, 0, 'R');
   $pdf->setXY($r, $t+0.0625);
   $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_small);
@@ -428,12 +428,12 @@ function se64champlr_pdf($node) {
 
   // bracket logo
   if ($node->logopath != '') {
-    bracket_pdf_insert_image($pdf, $node->logopath, 5.5, 1.00, 1.75);
+    bracket_pdf_insert_image($pdf, $node->logopath, $iwidth/2, 1.5, 1.5, TRUE);
   }
 
   // sponsor logo
   if ($node->sponsorlogopath != '') {
-    bracket_pdf_insert_image($pdf, $node->sponsorlogopath, 5.5, $iheight - 2.0, 0.5);
+    bracket_pdf_insert_image($pdf, $node->sponsorlogopath, $iwidth/2, $iheight-2.0, 0.5, TRUE);
   }
 
   // bracket bar
