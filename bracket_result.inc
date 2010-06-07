@@ -42,7 +42,7 @@ function bracket_result_edit_form($form_state, $node) {
 
     $form[$result] = array(
       '#type' => 'fieldset',
-      '#title' => '<b>' . t('Place') . ' #' . $i . '</b>',
+      '#title' => '<strong>' . t('Place') . ' #' . $i . '</strong>',
       '#tree' => TRUE
     );
 

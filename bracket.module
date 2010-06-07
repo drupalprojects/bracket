@@ -413,7 +413,7 @@ function bracket_form(&$node) {
     '#required' => TRUE,
     '#default_value' => $node->title,
     '#weight' => -9,
-    '#description' => t('Enter a title for this bracket')
+    '#description' => t('Enter a title for this bracket.')
   );
 
   $form['bracket']['subtitle'] = array(
@@ -422,7 +422,7 @@ function bracket_form(&$node) {
     '#required' => FALSE,
     '#default_value' => $node->subtitle,
     '#weight' => -8,
-    '#description' => t('Enter a subtitle for this bracket')
+    '#description' => t('Enter a subtitle for this bracket.')
   );
 
   $form['bracket']['comments'] = array(
@@ -435,7 +435,7 @@ function bracket_form(&$node) {
   );
 
   if (arg(1) == 'add') {
-    $options = array('' => 'Select a bracket design') + bracket_design_list();
+    $options = array('' => t('Select a bracket design')) + bracket_design_list();
     $form['bracket']['design'] = array(
       '#type' => 'select',
       '#title' => t('Bracket Design'),
@@ -443,7 +443,7 @@ function bracket_form(&$node) {
       '#options' => $options,
       '#required' => TRUE,
       '#weight' => -6,
-      '#description' => t('Select a design for this bracket'),
+      '#description' => t('Select a design for this bracket.'),
      );
   }
   else {
@@ -469,7 +469,7 @@ function bracket_form(&$node) {
     '#required' => FALSE,
     '#default_value' => $node->sport,
     '#weight' => -5,
-    '#description' => t('Enter the sport for this bracket')
+    '#description' => t('Enter the sport for this bracket.')
   );
 
   $form['bracket']['division'] = array(
@@ -478,7 +478,7 @@ function bracket_form(&$node) {
     '#required' => FALSE,
     '#default_value' => $node->division,
     '#weight' => -4,
-    '#description' => t('Enter the division for this bracket')
+    '#description' => t('Enter the division for this bracket.')
   );
 
   $form['bracket']['season'] = array(
@@ -487,7 +487,7 @@ function bracket_form(&$node) {
     '#required' => FALSE,
     '#default_value' => $node->season,
     '#weight' => -3,
-    '#description' => t('Enter the season for this bracket')
+    '#description' => t('Enter the season for this bracket.')
   );
 
   $form['bracket']['brgroup'] = array(
@@ -496,7 +496,7 @@ function bracket_form(&$node) {
     '#required' => FALSE,
     '#default_value' => $node->brgroup,
     '#weight' => -2,
-    '#description' => t('Enter the group for this bracket - ex boys, girls, men, women, etc')
+    '#description' => t('Enter the group for this bracket - ex boys, girls, men, women, etc.')
   );
 
   $form['bracket']['footer'] = array(
@@ -651,7 +651,7 @@ function bracket_form(&$node) {
     '#size' => 7,
     '#maxlength' => 7,
     '#required' => TRUE,
-    '#description' => t('In html color format - #RRGGBB (Default is @color).', array('@color' => $bracket_bg_color_default)),
+    '#description' => t('In HTML color format - #RRGGBB (Default is @color).', array('@color' => $bracket_bg_color_default)),
     '#default_value' => $node->options['bg_color']
   );
 
@@ -659,7 +659,7 @@ function bracket_form(&$node) {
     '#type' => 'checkbox',
     '#title' => t('Show Bracket Bar'),
     '#default_value' => $node->options['show_bracket_bar'],
-    '#description' => t('Check to display bracket bar and round comments on bracket. Note: Some designs to not utilize this option.')
+    '#description' => t('Check to display bracket bar and round comments on bracket. Note: Some designs do not utilize this option.')
   );
 
   if (trim($node->options['bar_bg_color']) == '') {
@@ -670,7 +670,7 @@ function bracket_form(&$node) {
     '#title' => t('Bracket Bar Background Color'),
     '#size' => 7,
     '#maxlength' => 7,
-    '#description' => t('In html color format - #RRGGBB (Default is @color).', array('@color' => $bracket_bar_bg_color_default)),
+    '#description' => t('In HTML color format - #RRGGBB (Default is @color).', array('@color' => $bracket_bar_bg_color_default)),
     '#default_value' => $node->options['bar_bg_color']
   );
 
@@ -682,13 +682,13 @@ function bracket_form(&$node) {
     '#title' => t('Bracket Bar Foreground (Text) Color'),
     '#size' => 7,
     '#maxlength' => 7,
-    '#description' => t('In html color format - #RRGGBB (Default is @color).', array('@color' => $bracket_bar_fg_color_default)),
+    '#description' => t('In HTML color format - #RRGGBB (Default is @color).', array('@color' => $bracket_bar_fg_color_default)),
     '#default_value' => $node->options['bar_fg_color']
   );
 
   $form['bracket']['options']['bar_example'] = array(
     '#type' => 'markup',
-    '#value' => '<div style="background-color:' . $node->options['bar_bg_color'] . ';color:' . $node->options['bar_fg_color'] . ';">Bracket Bar Example</div>'
+    '#value' => '<div style="background-color:' . $node->options['bar_bg_color'] . ';color:' . $node->options['bar_fg_color'] . ';">' . t('Bracket Bar Example') .'</div>'
   );
 
   $form['bracket']['options']['image_fonts'] = array(
@@ -791,7 +791,7 @@ function bracket_validate($node) {
 }
 
 /**
- * Return true if the given color is a valid html color
+ * Return true if the given color is a valid HTML color
  * code in the format of : #RRGGBB
  *
  * @param $color
@@ -949,7 +949,7 @@ function bracket_clone_form($form_state, $node) {
 
   $form['help'] = array(
     '#type' => 'markup',
-    '#value' => t('Use this form clone a bracket - bracket design, comments, competitors and match results are all copied.'),
+    '#value' => t('Use this form to clone a bracket - bracket design, comments, competitors and match results are all copied.'),
     '#weight' => -10
   );
 
@@ -961,7 +961,7 @@ function bracket_clone_form($form_state, $node) {
 
   $form['clone'] = array(
     '#type' => 'submit',
-    '#value' => 'Clone Bracket'
+    '#value' => t('Clone Bracket')
   );
 
   return $form;
@@ -1046,13 +1046,13 @@ function bracket_clear_form($form_state, $node) {
     );
 
   $form['msg'] = array(
-    '#type' => t('markup'),
-    '#value' => '<p><b>' . t('Note: This action cannot be undone.') . '</b></p>'
+    '#type' => 'markup',
+    '#value' => '<p><strong>' . t('Note: This action cannot be undone.') . '</strong></p>'
   );
 
   $form['clear'] = array(
     '#type' => 'submit',
-    '#value' => 'Clear Bracket'
+    '#value' => t('Clear Bracket')
   );
 
   return $form;
@@ -1137,7 +1137,7 @@ function bracket_export_form($form_state, $node) {
 
   $form['clear'] = array(
     '#type' => 'submit',
-    '#value' => 'Export Bracket'
+    '#value' => t('Export Bracket')
   );
 
   return $form;
@@ -1213,7 +1213,7 @@ function bracket_import_form($form_state, $node) {
 
   $form['import'] = array(
     '#type' => 'submit',
-    '#value' => 'Import Bracket'
+    '#value' => t('Import Bracket')
   );
 
   return $form;
@@ -1365,14 +1365,14 @@ function bracket_pdf($node) {
 }
 
 /**
- * Convert an html color to decimal rgb parts
+ * Convert an HTML color to decimal RGB parts
  *
  * Adapted from code at: http://www.anyexample.com/programming/php/php_convert_rgb_from_to_html_hex_color.xml
  *
  * @param $color
- *   the html color to convert
+ *   the HTML color to convert
  * @return
- *   an array containing the rgb values
+ *   an array containing the RGB values
  */
 function bracket_html2rgb($color) {
 
