@@ -64,7 +64,7 @@ function bracket_round_edit_form($node, $id) {
 
     $form['round'][$match] = array(
       '#type' => 'fieldset',
-      '#title' => '<b>' . t('Match') . ' #' . $m->id . '</b>',
+      '#title' => '<strong>' . t('Match') . ' #' . $m->id . '</strong>',
       '#tree' => TRUE
     );
 

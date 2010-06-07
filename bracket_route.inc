@@ -24,14 +24,14 @@ function bracket_route_edit_form($node) {
 
   // save the nodeid
   $form['head']['nid'] = array(
-    '#type' => t('hidden'),
+    '#type' => 'hidden',
     '#value' => $node->nid
   );
 
   $form['head']['help'] = array(
-    '#type' => t('markup'),
+    '#type' => 'markup',
     '#value' => t('Use this form to change match ids and competitor routing through the bracket.
-                   <b>Use With Caution</b> - in most cases this will not be necessary, especially for single-elimination brackets.
+                   <strong>Use With Caution</strong> - in most cases this will not be necessary, especially for single-elimination brackets.
                    The form has been provided since some customization may be required for double-elimination brackets.')
   );
 
@@ -213,7 +213,7 @@ function theme_bracket_route_edit_form($form) {
 
       if (isset($form[$rtype][$round][$match]['winner_match'])) {
 
-        $table .= '<td nowrap><b>' . t('Winner') .'</b></td>';
+        $table .= '<td nowrap><strong>' . t('Winner') .'</strong></td>';
 
         $table .= '<td>';
         $table .= drupal_render($form[$rtype][$round][$match]['winner_match']);
@@ -228,7 +228,7 @@ function theme_bracket_route_edit_form($form) {
 
       if ($hasloserroute) {
 
-        $table .= '</tr><tr><td nowrap><b>' . t('Loser') .'</b></td>';
+        $table .= '</tr><tr><td nowrap><strong>' . t('Loser') .'</strong></td>';
 
         $table .= '<td>';
         $table .= drupal_render($form[$rtype][$round][$match]['loser_match']);
@@ -321,7 +321,7 @@ function theme_bracket_route_edit_form($form) {
 
         if (isset($form[$rtype][$round][$match]['winner_match'])) {
 
-          $table .= '<td nowrap><b>' . t('Winner') .'</b></td>';
+          $table .= '<td nowrap><strong>' . t('Winner') .'</strong></td>';
 
           $table .= '<td>';
           $table .= drupal_render($form[$rtype][$round][$match]['winner_match']);
@@ -439,7 +439,7 @@ function bracket_route_edit_form_validate($form_id, $form_values) {
 
       if (isset($ma[$id])) {
         form_set_error($round .']['. $match .'][matchid',
-                        t('Match #@id is selected more that once.', array('@id' => $id)));
+                        t('Match #@id is selected more than once.', array('@id' => $id)));
       }
       $ma[$id] = TRUE;
     }
@@ -474,11 +474,11 @@ function bracket_route_edit_form_validate($form_id, $form_values) {
       }
       if ($wm > 0 && $wc > 0 && isset($ma[$wm][$wc])) {
         form_set_error($round .']['. $match . '][winner_match',
-                        t('Match #@id, Competitor #@cn is routed more that once.', array('@id' => $wm, '@cn' => $wc)));
+                        t('Match #@id, Competitor #@cn is routed more than once.', array('@id' => $wm, '@cn' => $wc)));
       }
       if ($lm > 0 && $lc > 0 && isset($ma[$lm][$lc])) {
         form_set_error($round .']['. $match . '][loser_match',
-                        t('Match #@id, Competitor #@cn is routed more that once.', array('@id' => $lm, '@cn' => $lc)));
+                        t('Match #@id, Competitor #@cn is routed more than once.', array('@id' => $lm, '@cn' => $lc)));
       }
       if ($wm > 0 && $wc > 0) {
         $ma[$wm][$wc] = TRUE;

@@ -24,12 +24,12 @@ function bracket_seed_edit_form($node) {
 
   // save the nodeid
   $form['nid'] = array(
-    '#type' => t('hidden'),
+    '#type' => 'hidden',
     '#value' => $node->nid
   );
 
   $form['help'] = array(
-    '#type' => t('markup'),
+    '#type' => 'markup',
     '#value' => t('Use this form to assign competitors and seeds to bracket slots.
                    This is actually just a trimmed down version of the Round 1 form.
                    Seeds are used for importing competitors - they are optional and do not appear on the bracket.')
@@ -43,8 +43,8 @@ function bracket_seed_edit_form($node) {
     $match = 'match' . $m->id;
 
     $form[$match] = array(
-      '#type' => t('fieldset'),
-      '#title' => '<b>' . t('Match') . ' #' . $m->id . '</b>',
+      '#type' => 'fieldset',
+      '#title' => '<strong>' . t('Match') . ' #' . $m->id . '</strong>',
       '#tree' => FALSE
     );
 
