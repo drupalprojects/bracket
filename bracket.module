@@ -40,7 +40,7 @@ if (module_exists('views')) {
  */
 function bracket_perm() {
 
-  return array('view brackets', 'maintain brackets');
+  return array('view brackets', 'create brackets', 'edit brackets', 'edit own brackets');
 }
 
 /**
@@ -57,6 +57,25 @@ function bracket_node_info() {
    );
    
    return $info;
+}
+
+/**
+ * Implementation of hook_access
+ */
+function bracket_access($op, $node, $account) {
+
+  switch ($op) {
+    case 'view':
+      return user_access('view brackets', $account);
+      break;
+    case 'create':
+      return user_access('create brackets', $account);
+      break;
+    case 'update':
+    case 'delete':
+      return user_access("edit brackets") || (user_access("edit own brackets") && ($account->uid == $node->uid));
+      break;
+  }
 }
 
 /**
@@ -105,8 +124,8 @@ function bracket_menu() {
     'title' => 'Clone',
     'page callback' => 'bracket_clone',
     'page arguments' => array(1),
-    'access callback' => 'user_access',
-    'access arguments' => array('maintain brackets'),
+    'access callback' => 'node_access',
+    'access arguments' => array('create', 1),
     'weight' => 2,
     'type' => MENU_LOCAL_TASK
   );
@@ -115,8 +134,8 @@ function bracket_menu() {
     'title' => 'Clear',
     'page callback' => 'bracket_clear',
     'page arguments' => array(1),
-    'access callback' => 'user_access',
-    'access arguments' => array('maintain brackets'),
+    'access callback' => 'node_access',
+    'access arguments' => array('update', 1),
     'weight' => 3,
     'type' => MENU_LOCAL_TASK
   );
@@ -125,8 +144,8 @@ function bracket_menu() {
     'title' => 'Export',
     'page callback' => 'bracket_export',
     'page arguments' => array(1),
-    'access callback' => 'user_access',
-    'access arguments' => array('maintain brackets'),
+    'access callback' => 'node_access',
+    'access arguments' => array('view', 1),
     'weight' => 4,
     'type' => MENU_LOCAL_TASK
   );
@@ -135,8 +154,8 @@ function bracket_menu() {
     'title' => 'Import',
     'page callback' => 'bracket_import',
     'page arguments' => array(1),
-    'access callback' => 'user_access',
-    'access arguments' => array('maintain brackets'),
+    'access callback' => 'node_access',
+    'access arguments' => array('update', 1),
     'weight' => 5,
     'type' => MENU_LOCAL_TASK
   );
@@ -155,8 +174,8 @@ function bracket_menu() {
     'title' => 'Routing',
     'page callback' => 'bracket_route_edit',
     'page arguments' => array(1),
-    'access callback' => 'user_access',
-    'access arguments' => array('maintain brackets'),
+    'access callback' => 'node_access',
+    'access arguments' => array('update', 1),
     'weight' => 0,
     'file' => 'bracket_route.inc',
     'type' => MENU_LOCAL_TASK
@@ -166,8 +185,8 @@ function bracket_menu() {
     'title' => 'Seeding',
     'page callback' => 'bracket_seed_edit',
     'page arguments' => array(1),
-    'access callback' => 'user_access',
-    'access arguments' => array('maintain brackets'),
+    'access callback' => 'node_access',
+    'access arguments' => array('update', 1),
     'weight' => 0,
     'file' => 'bracket_seed.inc',
     'type' => MENU_LOCAL_TASK
@@ -177,8 +196,8 @@ function bracket_menu() {
     'title' => 'Rounds',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('bracket_round_list_form', 1),
-    'access callback' => 'user_access',
-    'access arguments' => array('maintain brackets'),
+    'access callback' => 'node_access',
+    'access arguments' => array('update', 1),
     'weight' => 1,
     'file' => 'bracket_round.inc',
     'type' => MENU_LOCAL_TASK
@@ -187,8 +206,8 @@ function bracket_menu() {
   $items['node/%bracket_menu/edit/round/%bracket_round_menu'] = array(
     'load arguments' => array(1),
     'page arguments' => array('bracket_round_edit_form', 1, 4),
-    'access callback' => 'user_access',
-    'access arguments' => array('maintain brackets'),
+    'access callback' => 'node_access',
+    'access arguments' => array('update', 1),
     'type' => MENU_LOCAL_TASK
   );
 
@@ -196,8 +215,8 @@ function bracket_menu() {
     'title' => 'Results',
     'page callback' => 'bracket_result_edit',
     'page arguments' => array(1),
-    'access callback' => 'user_access',
-    'access arguments' => array('maintain brackets'),
+    'access callback' => 'node_access',
+    'access arguments' => array('update', 1),
     'weight' => 2,
     'file' => 'bracket_result.inc',
     'type' => MENU_LOCAL_TASK
