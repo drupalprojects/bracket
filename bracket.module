@@ -39,7 +39,8 @@ if (module_exists('views')) {
  * Implementation of hook_perm().
  */
 function bracket_perm() {
-  return array('view brackets', 'maintain brackets');
+
+  return array('view brackets', 'create brackets', 'edit brackets', 'edit own brackets');
 }
 
 /**
@@ -55,6 +56,27 @@ function bracket_node_info() {
 }
 
 /**
+ * Implementation of hook_access
+ */
+function bracket_access($op, $node) {
+
+  global $user;
+
+  switch ($op) {
+    case 'view':
+      return user_access('view brackets', $account);
+      break;
+    case 'create':
+      return user_access('create brackets', $account);
+      break;
+    case 'update':
+    case 'delete':
+      return user_access('edit brackets') || (user_access('edit own brackets') && ($user->uid == $node->uid));
+      break;
+  }
+}
+
+/**
  * Implementation of hook_menu().
  */
 function bracket_menu($may_cache) {
@@ -62,9 +84,6 @@ function bracket_menu($may_cache) {
   global $user;
 
   $items = array();
-
-  $canupdate = user_access('maintain brackets');
-  $canview = user_access('view brackets');
 
   if ($may_cache) {
 
@@ -82,7 +101,7 @@ function bracket_menu($may_cache) {
       'path' => 'admin/content/bracket',
       'title' => t('Brackets'),
       'callback' => 'bracket_admin_content',
-      'access' => $canview | $canupdate,
+      'access' => user_access('view brackets'),
       'description' => t('View and edit all the brackets on your site.'),
       'type' => MENU_NORMAL_ITEM,
     );
@@ -125,7 +144,7 @@ function bracket_menu($may_cache) {
         'title' => t('Clone'),
         'callback' => 'bracket_clone',
         'callback arguments' => array($node),
-        'access' => $canupdate,
+        'access' => node_access('create', $node),
         'weight' => 2,
         'type' => MENU_LOCAL_TASK
       );
@@ -135,7 +154,7 @@ function bracket_menu($may_cache) {
         'title' => t('Clear'),
         'callback' => 'bracket_clear',
         'callback arguments' => array($node),
-        'access' => $canupdate,
+        'access' => node_access('update', $node),
         'weight' => 3,
         'type' => MENU_LOCAL_TASK
       );
@@ -145,7 +164,7 @@ function bracket_menu($may_cache) {
         'title' => t('Export'),
         'callback' => 'bracket_export',
         'callback arguments' => array($node),
-        'access' => $canupdate,
+        'access' => node_access('view', $node),
         'weight' => 4,
         'type' => MENU_LOCAL_TASK
       );
@@ -155,7 +174,7 @@ function bracket_menu($may_cache) {
         'title' => t('Import'),
         'callback' => 'bracket_import',
         'callback arguments' => array($node),
-        'access' => $canupdate,
+        'access' => node_access('update', $node),
         'weight' => 5,
         'type' => MENU_LOCAL_TASK
       );
@@ -174,7 +193,7 @@ function bracket_menu($may_cache) {
         'title' => t('Routing'),
         'callback' => 'bracket_route_edit',
         'callback arguments' => array($node),
-        'access' => $canupdate,
+        'access' => node_access('update', $node),
         'weight' => 0,
         'type' => MENU_LOCAL_TASK
       );
@@ -184,7 +203,7 @@ function bracket_menu($may_cache) {
         'title' => t('Seeding'),
         'callback' => 'bracket_seed_edit',
         'callback arguments' => array($node),
-        'access' => $canupdate,
+        'access' => node_access('update', $node),
         'weight' => 0,
         'type' => MENU_LOCAL_TASK
       );
@@ -195,7 +214,7 @@ function bracket_menu($may_cache) {
           'title' => $node->round[$i]->name,
           'callback' => 'bracket_round_edit',
           'callback arguments' => array($node, $i),
-          'access' => $canupdate,
+          'access' => node_access('update', $node),
           'weight' => $i,
           'type' => MENU_LOCAL_TASK
         );
@@ -206,7 +225,7 @@ function bracket_menu($may_cache) {
         'title' => t('Results'),
         'callback' => 'bracket_result_edit',
         'callback arguments' => array($node),
-        'access' => $canupdate,
+        'access' => node_access('update', $node),
         'weight' => count($node->round) + 1,
         'type' => MENU_LOCAL_TASK
       );
