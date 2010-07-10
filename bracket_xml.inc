@@ -119,6 +119,8 @@ function bracket_xml_export($node, $opt = 'bracket') {
  *   the node object to receive the bracket
  * @param $opt
  *   option - 'bracket' = import entire bracket, 'results' = import competitors from results export matching seeds
+ * @return 
+ *   TRUE if bracket was imported, FALSE if an error occurred
  */
 function bracket_xml_import($path, &$node, $opt = 'bracket') {
 
@@ -126,6 +128,24 @@ function bracket_xml_import($path, &$node, $opt = 'bracket') {
   $fp = fopen($path, 'r');
   $xml = fread($fp, filesize($path));
   fclose($fp);
+
+  // do the import
+  return bracket_xml_string_import($xml, $node, $opt);
+}
+
+/**
+ * Import a bracket from an xml string
+ *
+ * @param $xml
+ *   the xml document to import
+ * @param $node
+ *   the node object to receive the bracket
+ * @param $opt
+ *   option - 'bracket' = import entire bracket, 'results' = import competitors from results export matching seeds
+ * @return 
+ *   TRUE if bracket was imported, FALSE if an error occurred
+ */
+function bracket_xml_string_import($xml, &$node, $opt = 'bracket') {
 
   // parse the xml
   $parser = xml_parser_create();
@@ -144,11 +164,11 @@ function bracket_xml_import($path, &$node, $opt = 'bracket') {
       bracket_xml_import_results($node, $values);
     }
 
-    return true;
+    return TRUE;
   }   // end - if ($ok)...
 
   else {
-    return false;
+    return FALSE;
   }
 }
 
@@ -223,7 +243,7 @@ function bracket_xml_import_bracket(&$node, $values) {
     }   // end - if ($e['type'] == 'open')...
 
     // complete tag - set a value
-    else if ($e['type'] == 'complete') {
+    else if ($e['type'] == 'complete' && array_key_exists('value', $e)) {
 
       $tag = $e['tag'];
 

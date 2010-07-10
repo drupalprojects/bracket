@@ -168,7 +168,7 @@ function bracket_route_edit_form_matches($r, &$form, $options, $comp_opt, $loser
 
 function theme_bracket_route_edit_form($form) {
 
-  $output .= drupal_render($form['head']);
+  $output = drupal_render($form['head']);
 
   $wr = element_children($form['winner']);
   $lr = element_children($form['loser']);
@@ -397,6 +397,8 @@ function theme_bracket_route_select($element) {
 // custom form_element theme function
 function theme_bracket_route_form_element($title, $value, $description = NULL, $id = NULL, $required = FALSE, $error = FALSE) {
 
+  $output = '';
+  
   $required = $required ? '<span class="form-required" title="'. t('This field is required.') .'">*</span>' : '';
 
   if ($title) {

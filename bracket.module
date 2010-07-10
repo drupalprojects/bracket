@@ -28,6 +28,7 @@ module_load_include('inc', 'bracket', 'bracket_route');
 module_load_include('inc', 'bracket', 'bracket_seed');
 module_load_include('inc', 'bracket', 'bracket_image');
 module_load_include('inc', 'bracket', 'bracket_pdf');
+module_load_include('inc', 'bracket', 'bracket_api');
 if (module_exists('views')) {
   module_load_include('inc', 'bracket', 'bracket_views');
 }
@@ -145,7 +146,7 @@ function bracket_menu() {
     'page callback' => 'bracket_export',
     'page arguments' => array(1),
     'access callback' => 'node_access',
-    'access arguments' => array('view', 1),
+    'access arguments' => array('update', 1),
     'weight' => 4,
     'type' => MENU_LOCAL_TASK
   );
@@ -357,37 +358,53 @@ function bracket_settings_form_submit($form_id, &$form_state) {
 /**
  * Implementation of hook_view
  */
-function bracket_view($node, $teaser = 0, $page = 0) {
+function bracket_view($node, $teaser=FALSE, $page=FALSE) {
 
-  if ($teaser && !$node->content['teaser']) {
-    $node->content['teaser'] = array(
-      '#value' => check_markup($node->teaser, $node->format, FALSE)
-    );
+  if ($teaser) {
+    if (!property_exists($node, 'content') || !$node->content['teaser']) {
+      $node->content['teaser'] = array(
+        '#value' => check_markup($node->teaser, $node->format, FALSE)
+      );
+    }
     return $node;
   }
-
+  
   $node->content['body'] = array(
     '#value' => check_markup($node->body, $node->format, FALSE)
   );
-
+  
   $node->content['bracket'] = array(
     '#value' => theme('bracket_view', $node, $teaser, $page),
     '#weight' => 10
   );
-
+  
   return $node;
 }
 
 /**
  * Theming function for bracket_view
  */
-function theme_bracket_view(&$node, $teaser = 0, $page = 0) {
+function theme_bracket_view(&$node, $teaser=FALSE, $page=FALSE) {
 
   $output = '<div class="bracket"><p>' . l(t('Click here for a printable version'), 'node/' . $node->nid . '/pdf') . '</p>';
   $output .= '<img src="' . url('node/' . $node->nid . '/image') . '">';
   $output .= '</div>';
 
   return $output;
+}
+
+/**
+ * Implementation of hook_load().
+ */
+function bracket_prepare(&$node) {
+
+  // add default bracket fields
+  if (arg(1) == 'add') {
+    $bracket = new Bracket();
+    foreach ($bracket as $key => $value) {
+      $node->$key = $value;
+    }
+  }
 }
 
 /**
@@ -853,11 +870,6 @@ function bracket_check_image_type($path) {
  */
 function bracket_form_validate($form_id, &$form_state) {
 
-//echo '<pre>';
-//print_r($form_state);
-//echo '</pre>';
-//die();
-
   bracket_form_process_image('logoupload', 'logopath', 'delete_logo', $form_state);
   bracket_form_process_image('sponsorlogoupload', 'sponsorlogopath', 'delete_sponsorlogo', $form_state);
 }
@@ -897,7 +909,7 @@ function bracket_form_process_image($upload_field, $path_field, $delete_field, &
     }
   }
   // if user wants to delete the image
-  if ($form_state['values'][$delete_field]) {
+  if (array_key_exists($delete_field, $form_state['values'])) {
     // only delete if file is in the upload directory
     $path = $form_state['values'][$path_field];
     if ($path) {
@@ -928,7 +940,7 @@ function bracket_insert($node) {
   */
 function bracket_update($node) {
 
-  // if submitted from hook_form(), must add bracket componenets back
+  // if submitted from hook_form(), must add bracket components back
   if (isset($node->op) && $node->op == $node->submit) {
     // load bracket components
     $node2 = bracket_db_load($node);
@@ -1004,6 +1016,7 @@ function bracket_clone_form_submit($form_id, &$form_state) {
   $node2->sport = $form_state['values']['sport'];
   $node2->division = $form_state['values']['division'];
   $node2->season = $form_state['values']['season'];
+  $node2->brgroup = $form_state['values']['brgroup'];
   $node2->footer = $form_state['values']['footer'];
   $node2->logopath = $form_state['values']['logopath'];
   $node2->sponsorlogopath = $form_state['values']['sponsorlogopath'];
@@ -1275,7 +1288,7 @@ function bracket_import_form_submit($form_id, &$form_state) {
  */
 function bracket_admin_content() {
 
-  $result = db_query(db_rewrite_sql("SELECT n.* FROM {node} n WHERE n.type = 'bracket'"));
+  $result = db_query(db_rewrite_sql("SELECT n.*, r.* FROM {node} n INNER JOIN {node_revisions} r ON n.vid = r.vid WHERE n.type = 'bracket'"));
   $nodes = array();
   while ($node = db_fetch_object($result)) {
     $nodes[] = $node;
