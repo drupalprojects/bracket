@@ -138,6 +138,14 @@ function bracket_design_load($design) {
   return $result;
 }
 
+/**
+ * Add the given number of competitors to a bracket
+ *
+ * @param $node
+ *   the bracket node
+ * @param $cc
+ *   the number of competitors to add
+ */
 function bracket_design_create_competitors(&$node, $cc) {
 
   // add competitors
@@ -146,6 +154,14 @@ function bracket_design_create_competitors(&$node, $cc) {
   }
 }
 
+/**
+ * Add the given number of rounds to a bracket
+ *
+ * @param $node
+ *   the bracket node
+ * @param $rounds
+ *   the number of rounds to add
+ */
 function bracket_design_create_winner_rounds(&$node, $rounds = 0) {
 
   // competitors must already be added
@@ -229,6 +245,12 @@ function bracket_design_create_winner_rounds(&$node, $rounds = 0) {
   }
 }
 
+/**
+ * Add championship results to a bracket
+ *
+ * @param $node
+ *   the bracket node
+ */
 function bracket_design_create_championship_results(&$node) {
 
   // get final round
@@ -254,6 +276,12 @@ function bracket_design_create_championship_results(&$node) {
   }
 }
 
+/**
+ * Add playoff results to a bracket
+ *
+ * @param $node
+ *   the bracket node
+ */
 function bracket_design_create_playoff_results(&$node) {
 
   // get final round
@@ -269,6 +297,15 @@ function bracket_design_create_playoff_results(&$node) {
   }
 }
 
+/**
+ * Add loser rounds to a bracket
+ *
+ * @param $node
+ *   the bracket node
+ * @param $modified
+ *   indicates if the bracket is a modified double elimination bracket
+ *   where the loser bracket competes for consolidation places
+ */
 function bracket_design_create_loser_rounds(&$node, $modified = FALSE) {
 
   // competitors must already be added
@@ -298,9 +335,9 @@ function bracket_design_create_loser_rounds(&$node, $modified = FALSE) {
     // this match has match routing and result routing
     // since a competitor must lose twice to be eliminated
     $m->winner_match = $mid;
-    $m->winner_comp = 2;
+    $m->winner_comp = 1;
     $m->loser_match = $mid;
-    $m->loser_comp = 1;
+    $m->loser_comp = 2;
     $m->winner_result = 1;
     $m->loser_result = 2;
     // this indicates that if competitor 1 wins this match,
@@ -407,7 +444,7 @@ function bracket_design_create_loser_rounds(&$node, $modified = FALSE) {
         $comp = ($comp == 1) ? 2 : 1;
 
         // if no previous loser round, bump winner match index
-        if (!$plr) {
+        if (!isset($plr)) {
           $wmi++;
         }
         // if previous loser round, bump winner match index
@@ -482,7 +519,7 @@ function bracket_design_create_loser_rounds(&$node, $modified = FALSE) {
         $rdone = TRUE;
       }
     }
-  }   // while (!$rdoue)...
+  }   // while (!$rdone)...
 
   if (!$modified) {
 

@@ -93,7 +93,7 @@ function se32champlr_image($node) {
   // font height
   $bbox = imagettfbbox($bracket_image_font_norm, 0, $bracket_image_font, 'Q');
   $h = $bbox[1] - $bbox[7];
-  $w = 10;
+  $w = $bbox[2] - $bbox[0];
 
   // round 1
   $right = $iwidth - $left;
@@ -146,7 +146,7 @@ function se32champlr_image($node) {
   imageline($img, $l, $t, $l+$width, $t, $bracket_image_fg_color);
   bracket_image_imagetextalign($img, $bracket_image_font_norm, $l+2, $t-2, $width, $match->cname[1], $bracket_image_fg_color, 'L');
   bracket_image_imagetextalign($img, $bracket_image_font_small, $l+2, $t+$h+2, $width, $match->comp_comment[1], $bracket_image_fg_color, 'L');
-  bracket_image_imagetextalign($img, $bracket_font_norm, $l+$width-($w*2), $t-$h, $w*2, $match->score[1], $bracket_image_fg_color, 'R');
+  bracket_image_imagetextalign($img, $bracket_image_font_norm, $l+$width-($w*2), $t-$h, $w*2, $match->score[1], $bracket_image_fg_color, 'R');
   if ($match->home[1]) {
     $bracket_image_imageTextAlign($img, $bracket_image_font_norm, $l+$width-($w*2), $t+$h, $w, 'H', $bracket_image_fg_color);
   }
@@ -344,7 +344,7 @@ function se32champlr_pdf($node) {
   $t += $hh / 3;
   $r -= $width;
   $pdf->line($r, $t, $r-$width, $t);
-  $pdf->setXY($l, $t-0.125);
+  $pdf->setXY($r-$width, $t-0.125);
   $pdf->cell($width, 0.125, $match->cname[2], 0, 0, 'R');
   $pdf->setXY($r, $t+0.0625);
   $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_small);

@@ -16,7 +16,7 @@ function bracket_seed_edit($node) {
   return drupal_get_form('bracket_seed_edit_form', $node);
 }
 
-function bracket_seed_edit_form($node) {
+function bracket_seed_edit_form($form_state, $node) {
 
   drupal_set_title(t('Seeding') . ' - ' . check_plain($node->title));
 
@@ -24,12 +24,12 @@ function bracket_seed_edit_form($node) {
 
   // save the nodeid
   $form['nid'] = array(
-    '#type' => t('hidden'),
+    '#type' => 'hidden',
     '#value' => $node->nid
   );
 
   $form['help'] = array(
-    '#type' => t('markup'),
+    '#type' => 'markup',
     '#value' => t('Use this form to assign competitors and seeds to bracket slots.
                    This is actually just a trimmed down version of the Round 1 form.
                    Seeds are used for importing competitors - they are optional and do not appear on the bracket.')
@@ -43,8 +43,8 @@ function bracket_seed_edit_form($node) {
     $match = 'match' . $m->id;
 
     $form[$match] = array(
-      '#type' => t('fieldset'),
-      '#title' => '<b>' . t('Match') . ' #' . $m->id . '</b>',
+      '#type' => 'fieldset',
+      '#title' => '<strong>' . t('Match') . ' #' . $m->id . '</strong>',
       '#tree' => FALSE
     );
 
@@ -112,17 +112,17 @@ function bracket_seed_get_match($node, $compid1, $compid2) {
   return NULL;
 }
 
-function bracket_seed_edit_form_submit($form_id, $form_values) {
+function bracket_seed_edit_form_submit($form_id, &$form_state) {
 
-  $nid = $form_values['nid'];
+  $nid = $form_state['values']['nid'];
   $node = node_load($nid);
 
   for ($i=1; $i<=count($node->comp); $i++) {
 
     $c = $node->comp[$i];
 
-    $c->name = $form_values['comp' . $i];
-    $c->seedin = $form_values['seed' . $i];
+    $c->name = $form_state['values']['comp' . $i];
+    $c->seedin = $form_state['values']['seed' . $i];
   }
 
   node_save($node);

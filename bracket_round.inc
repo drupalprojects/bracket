@@ -7,19 +7,56 @@
  *
  * @author Jim Bullington <jimb@jrbcs.com>
  */
-
+ 
+ 
 /**
- * Round form functions
+ * Display list of rounds for the given bracket node
  */
-function bracket_round_edit($node, $id) {
+function bracket_round_list_form($form_state, $node) {
 
-  return drupal_get_form('bracket_round_edit_form', $node, $id);
-}
+  $header = array(
+    t('Round'),
+    t('Matches'), 
+    t('Matches Decided'), 
+    array('data' => t('Operations'), 'colspan' => '2')
+  );
 
-function bracket_round_edit_form($node, $id) {
+  $rows = array();
+  foreach ($node->round as $r) {
+
+    $link = 'node/'. $node->nid . '/edit/round/' . $r->id;
+    
+    $dc = 0;
+    foreach($r->match as $m) {
+      if ($m->win[1] || $m->win[2]) {
+        $dc++;
+      }
+    }
+    
+    $rows[] = array(
+      l($r->name, $link),
+      count($r->match),
+      $dc,
+      l(t('Edit'), $link),
+    );
+  }
 
   $form = array();
+  $form['round_list'] = array(
+    '#type' => 'markup',
+    '#value' => theme('table', $header, $rows)
+  );
+  
+  return $form;
+}
+ 
 
+/**
+ * Round edit form
+ */
+function bracket_round_edit_form($form_state, $node, $id) {
+
+  $form = array();
   $r = $node->round[$id];
 
   drupal_set_title($r->name . ' - ' . check_plain($node->title));
@@ -64,7 +101,7 @@ function bracket_round_edit_form($node, $id) {
 
     $form['round'][$match] = array(
       '#type' => 'fieldset',
-      '#title' => '<b>' . t('Match') . ' #' . $m->id . '</b>',
+      '#title' => '<strong>' . t('Match') . ' #' . $m->id . '</strong>',
       '#tree' => TRUE
     );
 
@@ -105,7 +142,6 @@ function bracket_round_edit_form($node, $id) {
     );
 
     // competitor #1, score
-    $score = $row->score1;
     $form['round'][$match]['score1'] = array(
       '#type' => 'textfield',
       '#title' => t('Score'),
@@ -292,20 +328,20 @@ function theme_bracket_round_edit_form($form) {
   return drupal_render($form);
 }
 
-function bracket_round_edit_form_validate($form_id, $form_values) {
+function bracket_round_edit_form_validate($form_id, &$form_state) {
 
   // iterate through matches
-  foreach (array_filter(array_keys($form_values), 'bracket_round_edit_form_match_key') as $match) {
+  foreach (array_filter(array_keys($form_state['values']), 'bracket_round_edit_form_match_key') as $match) {
 
     $msg = t('There can only be one home competitor, please select one home competitor only.');
-    if ( $form_values[$match]['home1'] == 1 && $form_values[$match]['home2'] == 1 ) {
+    if ($form_state['values'][$match]['home1'] == 1 && $form_state['values'][$match]['home2'] == 1 ) {
       form_set_error($match . '][home1' , $msg);
       form_set_error($match . '][home2' , $msg);
       return;
     }
 
     $msg = t('There can only be one winner, please select one winner only.');
-    if ( $form_values[$match]['win1'] == 1 && $form_values[$match]['win2'] == 1 ) {
+    if ($form_state['values'][$match]['win1'] == 1 && $form_state['values'][$match]['win2'] == 1 ) {
       form_set_error($match .'][win1', $msg);
       form_set_error($match .'][win2', $msg);
       return;
@@ -318,11 +354,11 @@ function bracket_round_edit_form_match_key($key) {
   return (substr($key, 0, 5) == 'match');
 }
 
-function bracket_round_edit_form_submit($form_id, $form_values) {
+function bracket_round_edit_form_submit($form_id, &$form_state) {
 
   // get ids
-  $nid = $form_values['nid'];
-  $rid = $form_values['roundid'];
+  $nid = $form_state['values']['nid'];
+  $rid = $form_state['values']['roundid'];
 
   // load the node
   $node = node_load($nid);
@@ -331,8 +367,8 @@ function bracket_round_edit_form_submit($form_id, $form_values) {
   $r = $node->round[$rid];
 
   // update round info
-  $r->name = $form_values['rname'];
-  $r->comment = $form_values['rcomment'];
+  $r->name = $form_state['values']['rname'];
+  $r->comment = $form_state['values']['rcomment'];
 
   // update all matches in the round
   for ($i=1; $i<= count($r->match); $i++) {
@@ -346,23 +382,23 @@ function bracket_round_edit_form_submit($form_id, $form_values) {
     $win2 = $m->win[2];
 
     // update match info
-    $m->home[1] = $form_values[$match]['home1'];
-    $m->win[1] = $form_values[$match]['win1'];
-    $m->score[1] = trim($form_values[$match]['score1']);
-    $m->comp_comment[1] = $form_values[$match]['comp1_comment'];
-    $m->home[2] = $form_values[$match]['home2'];
-    $m->win[2] = $form_values[$match]['win2'];
-    $m->score[2] = trim($form_values[$match]['score2']);
-    $m->comp_comment[2] = $form_values[$match]['comp2_comment'];
-    $m->comment[1] = $form_values[$match]['comment1'];
-    $m->comment[2] = $form_values[$match]['comment2'];
+    $m->home[1] = $form_state['values'][$match]['home1'];
+    $m->win[1] = $form_state['values'][$match]['win1'];
+    $m->score[1] = trim($form_state['values'][$match]['score1']);
+    $m->comp_comment[1] = $form_state['values'][$match]['comp1_comment'];
+    $m->home[2] = $form_state['values'][$match]['home2'];
+    $m->win[2] = $form_state['values'][$match]['win2'];
+    $m->score[2] = trim($form_state['values'][$match]['score2']);
+    $m->comp_comment[2] = $form_state['values'][$match]['comp2_comment'];
+    $m->comment[1] = $form_state['values'][$match]['comment1'];
+    $m->comment[2] = $form_state['values'][$match]['comment2'];
 
     // update competitors if round 1
     if ($rid == 1) {
-      $node->comp[$m->compid[1]]->name = $form_values[$match]['comp1'];
-      $node->comp[$m->compid[1]]->seedin = $form_values[$match]['seed1'];
-      $node->comp[$m->compid[2]]->name = $form_values[$match]['comp2'];
-      $node->comp[$m->compid[2]]->seedin = $form_values[$match]['seed2'];
+      $node->comp[$m->compid[1]]->name = $form_state['values'][$match]['comp1'];
+      $node->comp[$m->compid[1]]->seedin = $form_state['values'][$match]['seed1'];
+      $node->comp[$m->compid[2]]->name = $form_state['values'][$match]['comp2'];
+      $node->comp[$m->compid[2]]->seedin = $form_state['values'][$match]['seed2'];
     }
 
     // see if winner has changed
@@ -446,10 +482,10 @@ function bracket_round_edit_form_submit($form_id, $form_values) {
           if ($m->winner_match > 0 && $m->winner_comp > 0) {
 
             // get match index
-            if (bracket_round_get_match_index($node, $m->winner_match, $ri, $mi)) {
+            if ($mindex = bracket_round_get_match_index($node, $m->winner_match)) {
 
               // get match
-              $m2 = $node->round[$ri]->match[$mi];
+              $m2 = $node->round[$mindex['round']]->match[$mindex['match']];
 
               // update competitor in next match
               $m2->compid[$m->winner_comp] = $wcompid;
@@ -458,7 +494,7 @@ function bracket_round_edit_form_submit($form_id, $form_values) {
               if ($wcompid > 0) {
                 drupal_set_message(t('Winner of Match @mid (@name) has been placed in @round,
                                       Match @match, Competitor @comp',
-                                      array('@mid' => $m->id, '@name' => $node->comp[$wcompid]->name, '@round' => $node->round[$ri]->name,
+                                      array('@mid' => $m->id, '@name' => $node->comp[$wcompid]->name, '@round' => $node->round[$mindex['round']]->name,
                                             '@match' => $m->winner_match, '@comp' => $m->winner_comp)));
               }
               else {
@@ -466,29 +502,29 @@ function bracket_round_edit_form_submit($form_id, $form_values) {
               }
 
               // propogate competitor through the rest of the tree
-              bracket_round_check_tree($node, $ri, $mi, $m->winner_comp);
+              bracket_round_check_tree($node, $mindex['round'], $mindex['match'], $m->winner_comp);
             }
           } // end - if ($m->winner_match > 0 && $m->winner_comp > 0)...
 
           // route loser
           if ($m->loser_match > 0 && $m->loser_comp > 0) {
 
-            if (bracket_round_get_match_index($node, $m->loser_match, $ri, $mi)) {
+            if ($mindex = bracket_round_get_match_index($node, $m->loser_match)) {
 
-              $m2 = $node->round[$ri]->match[$mi];
+              $m2 = $node->round[$mindex['round']]->match[$mindex['match']];
               $m2->compid[$m->loser_comp] = $lcompid;
 
               if ($lcompid > 0) {
                 drupal_set_message(t('Loser of Match @mid (@name) has been placed in @round,
                                       Match @match, Competitor @comp',
-                                      array('@mid' => $m->id, '@name' => $node->comp[$lcompid]->name, '@round' => $node->round[$ri]->name,
+                                      array('@mid' => $m->id, '@name' => $node->comp[$lcompid]->name, '@round' => $node->round[$mindex['round']]->name,
                                             '@match' => $m->loser_match, '@comp' => $m->loser_comp)));
               }
               else {
                 drupal_set_message(t('Match @mid results were reset.', array('@mid' => $m->id)));
               }
 
-              bracket_round_check_tree($node, $ri, $mi, $m->loser_comp);
+              bracket_round_check_tree($node, $mindex['round'], $mindex['match'], $m->loser_comp);
             }
           }   // end - if ($m->loser_match > 0 && $m->loser_comp > 0)...
         }   // end - if ($m->win_use_result == 0 || ($m->win_use_result > 0 && !$m->win[$m->win_use_result])...
@@ -524,14 +560,17 @@ function bracket_round_check_tree(&$node, $ri, $mi, $comp) {
     return;
   }
 
-  // check results, if needed
-  if ($m->winner_result > 0 && ($m->win_use_result == 0 || ($m->win_use_result > 0 && $m->win[$m->win_use_result]))) {
-    // adjust results
-    if ($m->win[$comp] && $m->winner_result > 0 ) {
-      $node->result[$m->winner_result]->compid = $m->compid[$comp];
-    }
-    else if ($m->loser_result > 0) {
-      $node->result[$m->loser_result]->compid = $m->compid[$comp];
+  // adjust results, if needed
+  if (($m->winner_result > 0 || $m->loser_result > 0) && 
+      ($m->win_use_result == 0 || ($m->win_use_result > 0 && $m->win[$m->win_use_result]))) {
+    // if winner is marked
+    if ($m->win[1] || $m->win[2]) {
+      if ($m->win[$comp] && $m->winner_result > 0 ) {
+        $node->result[$m->winner_result]->compid = $m->compid[$comp];
+      }
+      else if (!$m->win[$comp] && $m->loser_result > 0) {
+        $node->result[$m->loser_result]->compid = $m->compid[$comp];
+      }
     }
   }
 
@@ -539,21 +578,21 @@ function bracket_round_check_tree(&$node, $ri, $mi, $comp) {
   if ($m->winner_match > 0 && ($m->win_use_result == 0 || ($m->win_use_result > 0 && !$m->win[$m->win_use_result]))) {
     // competitor won, check winner chain
     if ($m->win[$comp] && $m->winner_match > 0) {
-      if (bracket_round_get_match_index($node, $m->winner_match, $ri2, $mi2)) {
-        $m2 = $node->round[$ri2]->match[$mi2];
+      if ($mindex = bracket_round_get_match_index($node, $m->winner_match)) {
+        $m2 = $node->round[$mindex['round']]->match[$mindex['match']];
         if ($m2->compid[$m->winner_comp] != $m->compid[$comp]) {
           $m2->compid[$m->winner_comp] = $m->compid[$comp];
-          bracket_round_check_tree($node, $ri2, $mi2, $m->winner_comp);
+          bracket_round_check_tree($node, $mindex['round'], $mindex['match'], $m->winner_comp);
         }
       }
     }
     // competitor did not win, check loser chain
     else if ($m->loser_match > 0 && ($m->win[1] || $m->win[2])) {
-      if (bracket_round_get_match_index($node, $m->loser_match, $ri2, $mi2)) {
-        $m2 = $node->round[$ri2]->match[$mi2];
+      if ($mindex = bracket_round_get_match_index($node, $m->loser_match)) {
+        $m2 = $node->round[$mindex['round']]->match[$mindex['match']];
         if ($m2->compid[$m->loser_comp] != $m->compid[$comp]) {
           $m2->compid[$m->loser_comp] = $m->compid[$comp];
-          bracket_round_check_tree($node, $ri2, $mi2, $m->loser_comp);
+          bracket_round_check_tree($node, $mindex['round'], $mindex['match'], $m->loser_comp);
         }
       }
     }
@@ -636,18 +675,11 @@ function bracket_round_last_loser_round($node) {
  *   the node object
  * @param $matchid
  *   the match id to search for
- * @param $rindex
- *   the round index of the match, if found
- * @param $mindex
- *   the match index of the match, if found
  * @return
- *   true if the match id was found, otherwise false
+ *   round and match indexes as an associative 
+ *   array if the match id was found, otherwise false
  */
-function bracket_round_get_match_index($node, $matchid, &$rindex, &$mindex) {
-
-  // reset indexes
-  $rindex = 0;
-  $mindex = 0;
+function bracket_round_get_match_index($node, $matchid) {
 
   // iterate through rounds and matches until match id is found
   for ($i=1; $i<=count($node->round); $i++) {
@@ -655,10 +687,8 @@ function bracket_round_get_match_index($node, $matchid, &$rindex, &$mindex) {
     for ($j=1; $j<=count($r->match); $j++) {
       $m = $r->match[$j];
       if ($m->id == $matchid) {
-        // match id was found
-        $rindex = $i;
-        $mindex = $j;
-        return TRUE;
+        // match id was found, return indexes
+        return array('round' => $i, 'match' => $j);
       }
     }
   }

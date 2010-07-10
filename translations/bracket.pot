@@ -1,0 +1,834 @@
+# $Id$
+#
+# LANGUAGE translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  bracket_design.inc,v 1.1 2010/04/01 00:09:53 jimbullington
+#  ff2champ.inc,v 1.1 2010/04/01 00:09:53 jimbullington
+#  bracket_route.inc,v 1.1.4.1 2010/04/02 16:15:06 jimbullington
+#  bracket_result.inc,v 1.1.4.1 2010/04/02 16:15:06 jimbullington
+#  bracket.module,v 1.1.4.1 2010/04/02 16:15:06 jimbullington
+#  bracket_round.inc,v 1.1.4.1 2010/04/02 16:15:06 jimbullington
+#  bracket_seed.inc,v 1.1.4.1 2010/04/02 16:15:06 jimbullington
+#  de16champ.inc,v 1.1 2010/04/01 00:09:53 jimbullington
+#  de8champ.inc,v 1.1 2010/04/01 00:09:53 jimbullington
+#  mde16champ.inc,v 1.1 2010/04/01 00:09:53 jimbullington
+#  se16champ.inc,v 1.1 2010/04/01 00:09:53 jimbullington
+#  se32champlr.inc,v 1.1 2010/04/01 00:09:53 jimbullington
+#  se64champlr.inc,v 1.1.4.1 2010/04/02 16:15:06 jimbullington
+#  bracket_views.inc,v 1.1 2010/04/01 00:09:53 jimbullington
+#  bracket_xml.inc,v 1.1 2010/04/01 00:09:53 jimbullington
+#  bracket.info,v 1.1.4.1 2010/04/02 16:15:06 jimbullington
+#  bracket.install,v 1.1.4.1 2010/04/02 16:15:06 jimbullington
+#  mde8champ.inc,v 1.1 2010/04/01 00:09:53 jimbullington
+#  designs/de16champ/de16champ.info: n/a
+#  designs/de8champ/de8champ.info: n/a
+#  designs/ff2champ/ff2champ.info: n/a
+#  se8champ.inc,v 1.1 2010/04/01 00:09:53 jimbullington
+#  designs/mde16champ/mde16champ.info: n/a
+#  designs/mde8champ/mde8champ.info: n/a
+#  designs/se16champ/se16champ.info: n/a
+#  designs/se32champlr/se32champlr.info: n/a
+#  designs/se32po2lr/se32po2lr.info: n/a
+#  designs/se64champlr/se64champlr.info: n/a
+#  designs/se8champ/se8champ.info: n/a
+#  se8po2.inc,v 1.1 2010/04/01 00:09:53 jimbullington
+#  designs/se8po2/se8po2.info: n/a
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2010-04-03 06:42+0200\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: bracket_design.inc:247 designs/ff2champ/ff2champ.inc:36
+msgid "Champion"
+msgstr ""
+
+#: bracket_design.inc:250
+msgid "Runner-Up"
+msgstr ""
+
+#: bracket_design.inc:394 bracket_route.inc:231
+msgid "Loser"
+msgstr ""
+
+#: bracket_result.inc:21 bracket.module:196
+msgid "Results"
+msgstr ""
+
+#: bracket_result.inc:32
+msgid "Use this form to view the bracket results and update comments that appear on the bracket for top placers.\n                   Seeds are used for exporting competitors into the next bracket - they are optional and do not appear on the bracket."
+msgstr ""
+
+#: bracket_result.inc:45
+msgid "Place"
+msgstr ""
+
+#: bracket_result.inc:52 bracket_round.inc:112;119;129;156;191;198;208;241 bracket_seed.inc:55;63;73;81
+msgid "Competitor"
+msgstr ""
+
+#: bracket_result.inc:66 bracket_round.inc:156;241
+msgid "Comment"
+msgstr ""
+
+#: bracket_result.inc:74 bracket_round.inc:119;198 bracket_seed.inc:63;81
+msgid "Seed"
+msgstr ""
+
+#: bracket_result.inc:83 bracket_round.inc:251 bracket_route.inc:76 bracket_seed.inc:91
+msgid "Submit"
+msgstr ""
+
+#: bracket_result.inc:111 bracket_round.inc:538 bracket_route.inc:521 bracket_seed.inc:129
+msgid "Bracket has been updated"
+msgstr ""
+
+#: bracket_round.inc:18;81 designs/de16champ/de16champ.inc:34 designs/de8champ/de8champ.inc:34 designs/mde16champ/mde16champ.inc:42 designs/se16champ/se16champ.inc:29 designs/se32champlr/se32champlr.inc:31;32 designs/se64champlr/se64champlr.inc:31;32;33
+msgid "Round"
+msgstr ""
+
+#: bracket_round.inc:19
+msgid "Matches"
+msgstr ""
+
+#: bracket_round.inc:20
+msgid "Matches Decided"
+msgstr ""
+
+#: bracket_round.inc:21 bracket.module:1276
+msgid "Operations"
+msgstr ""
+
+#: bracket_round.inc:40 bracket.module:1283
+msgid "Edit"
+msgstr ""
+
+#: bracket_round.inc:76
+msgid "Use this form to enter and view bracket competitors, comments, select winners and enter scores."
+msgstr ""
+
+#: bracket_round.inc:89
+msgid "Round Comment"
+msgstr ""
+
+#: bracket_round.inc:104 bracket_route.inc:48 bracket_seed.inc:47
+msgid "Match"
+msgstr ""
+
+#: bracket_round.inc:140;226 bracket_route.inc:216;324
+msgid "Winner"
+msgstr ""
+
+#: bracket_round.inc:148;233
+msgid "Score"
+msgstr ""
+
+#: bracket_round.inc:165;219
+msgid "Home"
+msgstr ""
+
+#: bracket_round.inc:172;180
+msgid "Match Comment"
+msgstr ""
+
+#: bracket_round.inc:337
+msgid "There can only be one home competitor, please select one home competitor only."
+msgstr ""
+
+#: bracket_round.inc:344
+msgid "There can only be one winner, please select one winner only."
+msgstr ""
+
+#: bracket_round.inc:412
+msgid "Competitor #1 has not been determined for Match @mid and cannot be selected as the winner"
+msgstr ""
+
+#: bracket_round.inc:421
+msgid "Competitor #2 has not been determined for Match @mid and cannot be selected as the winner"
+msgstr ""
+
+#: bracket_round.inc:453
+msgid "Winner of Match @mid (@name) has been placed in Results Place #@place"
+msgstr ""
+
+#: bracket_round.inc:457;470;502;525
+msgid "Match @mid results were reset."
+msgstr ""
+
+#: bracket_round.inc:466
+msgid "Loser of Match @mid (@name) has been placed in Results Place #@place"
+msgstr ""
+
+#: bracket_round.inc:496
+msgid "Winner of Match @mid (@name) has been placed in @round,\n                                      Match @match, Competitor @comp"
+msgstr ""
+
+#: bracket_round.inc:519
+msgid "Loser of Match @mid (@name) has been placed in @round,\n                                      Match @match, Competitor @comp"
+msgstr ""
+
+#: bracket_route.inc:21 bracket.module:155
+msgid "Routing"
+msgstr ""
+
+#: bracket_route.inc:33
+msgid "Use this form to change match ids and competitor routing through the bracket.\n                   <strong>Use With Caution</strong> - in most cases this will not be necessary, especially for single-elimination brackets.\n                   The form has been provided since some customization may be required for double-elimination brackets."
+msgstr ""
+
+#: bracket_route.inc:144
+msgid "Winner Result: "
+msgstr ""
+
+#: bracket_route.inc:151
+msgid "Loser Result: "
+msgstr ""
+
+#: bracket_route.inc:158
+msgid "Win Use Result: "
+msgstr ""
+
+#: bracket_route.inc:162
+msgid " (If this competitor wins, result is used, not match routing - no next match)"
+msgstr ""
+
+#: bracket_route.inc:178
+msgid "Winner Matches"
+msgstr ""
+
+#: bracket_route.inc:295
+msgid "Loser Matches"
+msgstr ""
+
+#: bracket_route.inc:400
+msgid "This field is required."
+msgstr ""
+
+#: bracket_route.inc:404;407
+msgid "%title: %required"
+msgstr ""
+
+#: bracket_route.inc:442
+msgid "Match #@id is selected more than once."
+msgstr ""
+
+#: bracket_route.inc:469;473
+msgid "Match #@id, No Competitor selected."
+msgstr ""
+
+#: bracket_route.inc:477;481
+msgid "Match #@id, Competitor #@cn is routed more than once."
+msgstr ""
+
+#: bracket_seed.inc:21 bracket.module:166
+msgid "Seeding"
+msgstr ""
+
+#: bracket_seed.inc:33
+msgid "Use this form to assign competitors and seeds to bracket slots.\n                   This is actually just a trimmed down version of the Round 1 form.\n                   Seeds are used for importing competitors - they are optional and do not appear on the bracket."
+msgstr ""
+
+#: bracket_views.inc:33;57
+msgid "Bracket: Sport"
+msgstr ""
+
+#: bracket_views.inc:35
+msgid "Display bracket sport."
+msgstr ""
+
+#: bracket_views.inc:38;63
+msgid "Bracket: Division"
+msgstr ""
+
+#: bracket_views.inc:40
+msgid "Display bracket division."
+msgstr ""
+
+#: bracket_views.inc:43;69
+msgid "Bracket: Season"
+msgstr ""
+
+#: bracket_views.inc:45
+msgid "Display bracket season."
+msgstr ""
+
+#: bracket_views.inc:48;75
+msgid "Bracket: Group"
+msgstr ""
+
+#: bracket_views.inc:51
+msgid "Display bracket group."
+msgstr ""
+
+#: bracket_views.inc:59
+msgid "Filter by Sport."
+msgstr ""
+
+#: bracket_views.inc:65
+msgid "Filter by Division."
+msgstr ""
+
+#: bracket_views.inc:71
+msgid "Filter by Season."
+msgstr ""
+
+#: bracket_views.inc:77
+msgid "Filter by Group."
+msgstr ""
+
+#: bracket_xml.inc:269
+msgid "Imported bracket design - @d - does not match current bracket design - @c.\n                                Bracket could not be imported."
+msgstr ""
+
+#: bracket.module:53 bracket.info:0 designs/ff2champ/ff2champ.inc:29;36
+msgid "Bracket"
+msgstr ""
+
+#: bracket.module:55
+msgid "Create a tournament bracket."
+msgstr ""
+
+#: bracket.module:284
+msgid "Bracket Settings"
+msgstr ""
+
+#: bracket.module:291
+msgid "Allow Image Uploads"
+msgstr ""
+
+#: bracket.module:293
+msgid "Allow the user to upload images with brackets."
+msgstr ""
+
+#: bracket.module:298
+msgid "Image Upload Path"
+msgstr ""
+
+#: bracket.module:300
+msgid "This is the path where bracket images will be uploaded - if not specified, the default file path will be used.\r\n                         This path must be writable by the user uploading the image."
+msgstr ""
+
+#: bracket.module:307
+msgid "Save Configuration Settings"
+msgstr ""
+
+#: bracket.module:331
+msgid "Configuration settings were saved."
+msgstr ""
+
+#: bracket.module:367
+msgid "Click here for a printable version"
+msgstr ""
+
+#: bracket.module:404;145
+msgid "Bracket Info"
+msgstr ""
+
+#: bracket.module:412;1275
+msgid "Title"
+msgstr ""
+
+#: bracket.module:416
+msgid "Enter a title for this bracket."
+msgstr ""
+
+#: bracket.module:421
+msgid "Subtitle"
+msgstr ""
+
+#: bracket.module:425
+msgid "Enter a subtitle for this bracket."
+msgstr ""
+
+#: bracket.module:430
+msgid "Comments"
+msgstr ""
+
+#: bracket.module:434
+msgid "Comments for this bracket"
+msgstr ""
+
+#: bracket.module:438
+msgid "Select a bracket design"
+msgstr ""
+
+#: bracket.module:441;456
+msgid "Bracket Design"
+msgstr ""
+
+#: bracket.module:446
+msgid "Select a design for this bracket."
+msgstr ""
+
+#: bracket.module:452
+msgid "Error - Selected design was not found - @design"
+msgstr ""
+
+#: bracket.module:462
+msgid "The design for this bracket - this cannot be altered."
+msgstr ""
+
+#: bracket.module:468
+msgid "Sport"
+msgstr ""
+
+#: bracket.module:472
+msgid "Enter the sport for this bracket."
+msgstr ""
+
+#: bracket.module:477
+msgid "Division"
+msgstr ""
+
+#: bracket.module:481
+msgid "Enter the division for this bracket."
+msgstr ""
+
+#: bracket.module:486
+msgid "Season"
+msgstr ""
+
+#: bracket.module:490
+msgid "Enter the season for this bracket."
+msgstr ""
+
+#: bracket.module:495
+msgid "Group"
+msgstr ""
+
+#: bracket.module:499
+msgid "Enter the group for this bracket - ex boys, girls, men, women, etc."
+msgstr ""
+
+#: bracket.module:504
+msgid "Footer"
+msgstr ""
+
+#: bracket.module:508
+msgid "Bracket comments - appear as a footer."
+msgstr ""
+
+#: bracket.module:513
+msgid "Logo Image"
+msgstr ""
+
+#: bracket.module:520
+msgid "Upload Logo Image"
+msgstr ""
+
+#: bracket.module:521;572
+msgid "Click \"Browse...\" to select an image to upload. Supported image types are JPG and PNG.\r\n                           The maximum file size per upload is %size MB."
+msgstr ""
+
+#: bracket.module:528
+msgid "Logo Image Path"
+msgstr ""
+
+#: bracket.module:531
+msgid "Path to the logo image file. Supported image types are JPG and PNG."
+msgstr ""
+
+#: bracket.module:555
+msgid "Delete Logo"
+msgstr ""
+
+#: bracket.module:556
+msgid "Check to delete current logo. WARNING - image file will be deleted!"
+msgstr ""
+
+#: bracket.module:564
+msgid "Sponsor Logo Image"
+msgstr ""
+
+#: bracket.module:571
+msgid "Upload Sponsor Logo Image"
+msgstr ""
+
+#: bracket.module:579
+msgid "Sponsor Logo Image Path"
+msgstr ""
+
+#: bracket.module:582
+msgid "Path to the sponsor logo image file. Supported image types are JPG and PNG."
+msgstr ""
+
+#: bracket.module:604
+msgid "Delete Sponsor Logo"
+msgstr ""
+
+#: bracket.module:605
+msgid "Check to delete current sponsor logo. WARNING - image file will be deleted!"
+msgstr ""
+
+#: bracket.module:619
+msgid "Bracket Display Options"
+msgstr ""
+
+#: bracket.module:627
+msgid "Show Match IDs"
+msgstr ""
+
+#: bracket.module:629
+msgid "Check to display match IDs on the bracket."
+msgstr ""
+
+#: bracket.module:637
+msgid "Foreground & Text Color"
+msgstr ""
+
+#: bracket.module:641;654;673;685
+msgid "In HTML color format - #RRGGBB (Default is @color)."
+msgstr ""
+
+#: bracket.module:650
+msgid "Background Color"
+msgstr ""
+
+#: bracket.module:660
+msgid "Show Bracket Bar"
+msgstr ""
+
+#: bracket.module:662
+msgid "Check to display bracket bar and round comments on bracket. Note: Some designs do not utilize this option."
+msgstr ""
+
+#: bracket.module:670
+msgid "Bracket Bar Background Color"
+msgstr ""
+
+#: bracket.module:682
+msgid "Bracket Bar Foreground (Text) Color"
+msgstr ""
+
+#: bracket.module:691
+msgid "Bracket Bar Example"
+msgstr ""
+
+#: bracket.module:696
+msgid "Image Font Files"
+msgstr ""
+
+#: bracket.module:700
+msgid "Image font files must be present in the fonts folder of the bracket module."
+msgstr ""
+
+#: bracket.module:708
+msgid "Image Normal Font File"
+msgstr ""
+
+#: bracket.module:711
+msgid "Image font file for normal font (Default is @font)."
+msgstr ""
+
+#: bracket.module:720
+msgid "Image Bold Font File"
+msgstr ""
+
+#: bracket.module:723
+msgid "Image font file for bold font (Default is @font)."
+msgstr ""
+
+#: bracket.module:732
+msgid "Image Italic Font File"
+msgstr ""
+
+#: bracket.module:735
+msgid "Image font file for italic font (Default is @font)."
+msgstr ""
+
+#: bracket.module:744
+msgid "Image Bold Italic Font File"
+msgstr ""
+
+#: bracket.module:747
+msgid "Image font file for bold italic font (Default is @font)."
+msgstr ""
+
+#: bracket.module:757
+msgid "PDF Font"
+msgstr ""
+
+#: bracket.module:760
+msgid "Select the PDF font for this bracket (Default is @font)."
+msgstr ""
+
+#: bracket.module:784
+msgid "Image type not supported"
+msgstr ""
+
+#: bracket.module:877
+msgid "Uploaded image file does not appear to be a valid image file. Please try again."
+msgstr ""
+
+#: bracket.module:945;1284;105
+msgid "Clone"
+msgstr ""
+
+#: bracket.module:952
+msgid "Use this form to clone a bracket - bracket design, comments, competitors and match results are all copied."
+msgstr ""
+
+#: bracket.module:964
+msgid "Clone Bracket"
+msgstr ""
+
+#: bracket.module:1005
+msgid "Bracket @title has been cloned"
+msgstr ""
+
+#: bracket.module:1021;1285;115
+msgid "Clear"
+msgstr ""
+
+#: bracket.module:1025
+msgid "Use this form to clear bracket competitors and match results."
+msgstr ""
+
+#: bracket.module:1035
+msgid "Clear Options"
+msgstr ""
+
+#: bracket.module:1043
+msgid "Competitors and Match Results"
+msgstr ""
+
+#: bracket.module:1043
+msgid "Match Results Only"
+msgstr ""
+
+#: bracket.module:1050
+msgid "Note: This action cannot be undone."
+msgstr ""
+
+#: bracket.module:1055
+msgid "Clear Bracket"
+msgstr ""
+
+#: bracket.module:1097
+msgid "Bracket @title has been cleared"
+msgstr ""
+
+#: bracket.module:1111;1286;125
+msgid "Export"
+msgstr ""
+
+#: bracket.module:1115
+msgid "Use this form to export a complete bracket or results."
+msgstr ""
+
+#: bracket.module:1125
+msgid "Export Options"
+msgstr ""
+
+#: bracket.module:1133;1201
+msgid "Complete Bracket"
+msgstr ""
+
+#: bracket.module:1133
+msgid "Bracket Results Only"
+msgstr ""
+
+#: bracket.module:1140
+msgid "Export Bracket"
+msgstr ""
+
+#: bracket.module:1179;1287;135
+msgid "Import"
+msgstr ""
+
+#: bracket.module:1183
+msgid "Use this form to import a complete bracket or bracket competitors."
+msgstr ""
+
+#: bracket.module:1193
+msgid "Import Options"
+msgstr ""
+
+#: bracket.module:1201
+msgid "Results to Competitors"
+msgstr ""
+
+#: bracket.module:1208
+msgid "Import File"
+msgstr ""
+
+#: bracket.module:1209
+msgid "Click \"Browse...\" to select the file to import."
+msgstr ""
+
+#: bracket.module:1216
+msgid "Import Bracket"
+msgstr ""
+
+#: bracket.module:1239
+msgid "Unable to parse XML file - Bracket was not imported."
+msgstr ""
+
+#: bracket.module:1245
+msgid "Bracket @title Imported"
+msgstr ""
+
+#: bracket.module:1250
+msgid "Nothing was uploaded."
+msgstr ""
+
+#: bracket.module:43
+msgid "view brackets"
+msgstr ""
+
+#: bracket.module:43
+msgid "maintain brackets"
+msgstr ""
+
+#: bracket.module:70;80
+msgid "Brackets"
+msgstr ""
+
+#: bracket.module:71
+msgid "Change bracket settings"
+msgstr ""
+
+#: bracket.module:84
+msgid "View and edit all the brackets on your site."
+msgstr ""
+
+#: bracket.module:177
+msgid "Rounds"
+msgstr ""
+
+#: bracket.install:12
+msgid "The bracket module was successfully installed"
+msgstr ""
+
+#: bracket.install:372
+msgid "The bracket module was successfully uninstalled"
+msgstr ""
+
+#: bracket.info:0
+msgid "The Bracket module creates and displays tournament brackets"
+msgstr ""
+
+#: designs/de16champ/de16champ.inc:36;37 designs/de8champ/de8champ.inc:36;37 designs/ff2champ/ff2champ.inc:29 designs/mde16champ/mde16champ.inc:45 designs/mde8champ/mde8champ.inc:44
+msgid "Final"
+msgstr ""
+
+#: designs/de16champ/de16champ.inc:39 designs/de8champ/de8champ.inc:39 designs/mde16champ/mde16champ.inc:47 designs/mde8champ/mde8champ.inc:46
+msgid "Loser Rnd"
+msgstr ""
+
+#: designs/de16champ/de16champ.info:0
+msgid "de16champ"
+msgstr ""
+
+#: designs/de16champ/de16champ.info:0
+msgid "Double Elimination 16 Competitor Championship Bracket"
+msgstr ""
+
+#: designs/de8champ/de8champ.info:0
+msgid "de8champ"
+msgstr ""
+
+#: designs/de8champ/de8champ.info:0
+msgid "Double Elimination 8 Competitor Championship Bracket"
+msgstr ""
+
+#: designs/ff2champ/ff2champ.info:0
+msgid "ff2champ"
+msgstr ""
+
+#: designs/ff2champ/ff2champ.info:0
+msgid "Final Four - 2 Competitor Championship Brackets"
+msgstr ""
+
+#: designs/mde16champ/mde16champ.inc:43 designs/mde8champ/mde8champ.inc:42 designs/se16champ/se16champ.inc:30 designs/se32champlr/se32champlr.inc:33 designs/se64champlr/se64champlr.inc:34 designs/se8champ/se8champ.inc:29
+msgid "Quarterfinals"
+msgstr ""
+
+#: designs/mde16champ/mde16champ.inc:44 designs/mde8champ/mde8champ.inc:43 designs/se16champ/se16champ.inc:31 designs/se32champlr/se32champlr.inc:34 designs/se64champlr/se64champlr.inc:35 designs/se8champ/se8champ.inc:30
+msgid "Semifinals"
+msgstr ""
+
+#: designs/mde16champ/mde16champ.info:0
+msgid "mde16champ"
+msgstr ""
+
+#: designs/mde16champ/mde16champ.info:0
+msgid "Modified Double Elimination 16 Competitor Championship Bracket"
+msgstr ""
+
+#: designs/mde8champ/mde8champ.info:0
+msgid "mde8champ"
+msgstr ""
+
+#: designs/mde8champ/mde8champ.info:0
+msgid "Modified Double Elimination 8 Competitor Championship Bracket"
+msgstr ""
+
+#: designs/se16champ/se16champ.inc:32 designs/se32champlr/se32champlr.inc:35 designs/se64champlr/se64champlr.inc:36 designs/se8champ/se8champ.inc:31
+msgid "Finals"
+msgstr ""
+
+#: designs/se16champ/se16champ.info:0
+msgid "se16champ"
+msgstr ""
+
+#: designs/se16champ/se16champ.info:0
+msgid "Single Elimination 16 Competitor Championship Bracket"
+msgstr ""
+
+#: designs/se32champlr/se32champlr.info:0
+msgid "se32champlr"
+msgstr ""
+
+#: designs/se32champlr/se32champlr.info:0
+msgid "Single Elimination 32 Competitor Championship Left-Right Bracket"
+msgstr ""
+
+#: designs/se32po2lr/se32po2lr.info:0
+msgid "se32po2lr"
+msgstr ""
+
+#: designs/se32po2lr/se32po2lr.info:0
+msgid "Single Elimination 32 Competitor 2 Round Playoff Left-Right Bracket"
+msgstr ""
+
+#: designs/se64champlr/se64champlr.info:0
+msgid "se64champlr"
+msgstr ""
+
+#: designs/se64champlr/se64champlr.info:0
+msgid "Single Elimination 64 Competitor Championship Left-Right Bracket"
+msgstr ""
+
+#: designs/se8champ/se8champ.info:0
+msgid "se8champ"
+msgstr ""
+
+#: designs/se8champ/se8champ.info:0
+msgid "Single Elimination 8 Competitor Championship Bracket"
+msgstr ""
+
+#: designs/se8po2/se8po2.inc:31
+msgid "Round 1"
+msgstr ""
+
+#: designs/se8po2/se8po2.inc:32
+msgid "Round 2"
+msgstr ""
+
+#: designs/se8po2/se8po2.info:0
+msgid "se8po2"
+msgstr ""
+
+#: designs/se8po2/se8po2.info:0
+msgid "Single Elimination 8 Competitor 2 Round Playoff"
+msgstr ""
+

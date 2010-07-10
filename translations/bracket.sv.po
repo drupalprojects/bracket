@@ -1,0 +1,902 @@
+# $Id$
+#
+# Swedish translation of Drupal (bracket)
+# Generated from files:
+#  bracket_design.inc,v 1.1 2010/04/01 00:09:53 jimbullington
+#  ff2champ.inc,v 1.1 2010/04/01 00:09:53 jimbullington
+#  bracket_route.inc,v 1.1.4.1 2010/04/02 16:15:06 jimbullington
+#  bracket_result.inc,v 1.1.4.1 2010/04/02 16:15:06 jimbullington
+#  bracket.module,v 1.1.4.1 2010/04/02 16:15:06 jimbullington
+#  bracket_round.inc,v 1.1.4.1 2010/04/02 16:15:06 jimbullington
+#  bracket_seed.inc,v 1.1.4.1 2010/04/02 16:15:06 jimbullington
+#  de16champ.inc,v 1.1 2010/04/01 00:09:53 jimbullington
+#  de8champ.inc,v 1.1 2010/04/01 00:09:53 jimbullington
+#  mde16champ.inc,v 1.1 2010/04/01 00:09:53 jimbullington
+#  se16champ.inc,v 1.1 2010/04/01 00:09:53 jimbullington
+#  se32champlr.inc,v 1.1 2010/04/01 00:09:53 jimbullington
+#  se64champlr.inc,v 1.1.4.1 2010/04/02 16:15:06 jimbullington
+#  bracket_views.inc,v 1.1 2010/04/01 00:09:53 jimbullington
+#  bracket_xml.inc,v 1.1 2010/04/01 00:09:53 jimbullington
+#  bracket.info,v 1.1.4.1 2010/04/02 16:15:06 jimbullington
+#  bracket.install,v 1.1.4.1 2010/04/02 16:15:06 jimbullington
+#  mde8champ.inc,v 1.1 2010/04/01 00:09:53 jimbullington
+#  designs/de16champ/de16champ.info: n/a
+#  designs/de8champ/de8champ.info: n/a
+#  designs/ff2champ/ff2champ.info: n/a
+#  se8champ.inc,v 1.1 2010/04/01 00:09:53 jimbullington
+#  designs/mde16champ/mde16champ.info: n/a
+#  designs/mde8champ/mde8champ.info: n/a
+#  designs/se16champ/se16champ.info: n/a
+#  designs/se32champlr/se32champlr.info: n/a
+#  designs/se32po2lr/se32po2lr.info: n/a
+#  designs/se64champlr/se64champlr.info: n/a
+#  designs/se8champ/se8champ.info: n/a
+#  se8po2.inc,v 1.1 2010/04/01 00:09:53 jimbullington
+#  designs/se8po2/se8po2.info: n/a
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Bracket 6.x\n"
+"POT-Creation-Date: 2010-04-03 07:32+0200\n"
+"PO-Revision-Date: 2010-04-03 07:34+0100\n"
+"Last-Translator: Magnus Gunnarsson <magnus.gunnarsson76@gmail.com>\n"
+"Language-Team: drupalsverige.se\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+"X-Poedit-Language: Swedish\n"
+"X-Poedit-Country: SWEDEN\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: bracket_design.inc:247
+#: designs/ff2champ/ff2champ.inc:36
+msgid "Champion"
+msgstr "Segrare"
+
+#: bracket_design.inc:250
+msgid "Runner-Up"
+msgstr "Andra plats"
+
+#: bracket_design.inc:394
+#: bracket_route.inc:231
+msgid "Loser"
+msgstr "Förlorare"
+
+#: bracket_result.inc:21
+#: bracket.module:196
+msgid "Results"
+msgstr "Resultat"
+
+#: bracket_result.inc:32
+msgid ""
+"Use this form to view the bracket results and update comments that appear on the bracket for top placers.\n"
+"                   Seeds are used for exporting competitors into the next bracket - they are optional and do not appear on the bracket."
+msgstr "Använd detta formulär för att visa diagram och uppdatera kommentarer som visas på diagrammet för bästa placeringar. Seedningar används för att exportera konkurrenter till det nästa diagrammet - de är frivilliga och visas inte i diagrammet."
+
+#: bracket_result.inc:45
+msgid "Place"
+msgstr "Placering"
+
+#: bracket_result.inc:52
+#: bracket_round.inc:112;119;129;156;191;198;208;241
+#: bracket_seed.inc:55;63;73;81
+msgid "Competitor"
+msgstr "Deltagare"
+
+#: bracket_result.inc:66
+#: bracket_round.inc:156;241
+msgid "Comment"
+msgstr "Kommentar"
+
+#: bracket_result.inc:74
+#: bracket_round.inc:119;198
+#: bracket_seed.inc:63;81
+msgid "Seed"
+msgstr "Seedning"
+
+#: bracket_result.inc:83
+#: bracket_round.inc:251
+#: bracket_route.inc:76
+#: bracket_seed.inc:91
+msgid "Submit"
+msgstr "Skicka"
+
+#: bracket_result.inc:111
+#: bracket_round.inc:538
+#: bracket_route.inc:521
+#: bracket_seed.inc:129
+msgid "Bracket has been updated"
+msgstr "Diagram har uppdaterats"
+
+#: bracket_round.inc:18;81
+#: designs/de16champ/de16champ.inc:34
+#: designs/de8champ/de8champ.inc:34
+#: designs/mde16champ/mde16champ.inc:42
+#: designs/se16champ/se16champ.inc:29
+#: designs/se32champlr/se32champlr.inc:31;32
+#: designs/se64champlr/se64champlr.inc:31;32;33
+msgid "Round"
+msgstr "Omgång"
+
+#: bracket_round.inc:19
+msgid "Matches"
+msgstr "Matcher"
+
+#: bracket_round.inc:20
+msgid "Matches Decided"
+msgstr "Avgjorda matcher"
+
+#: bracket_round.inc:21
+#: bracket.module:1276
+msgid "Operations"
+msgstr "Funktioner"
+
+#: bracket_round.inc:40
+#: bracket.module:1283
+msgid "Edit"
+msgstr "Redigera"
+
+#: bracket_round.inc:76
+msgid "Use this form to enter and view bracket competitors, comments, select winners and enter scores."
+msgstr "Använd detta formulär för att ange och visa tävlingsdeltagare, kommentarer, välja vinnare och ange poäng."
+
+#: bracket_round.inc:89
+msgid "Round Comment"
+msgstr "Kommentar för omgång"
+
+#: bracket_round.inc:104
+#: bracket_route.inc:48
+#: bracket_seed.inc:47
+msgid "Match"
+msgstr "Match"
+
+#: bracket_round.inc:140;226
+#: bracket_route.inc:216;324
+msgid "Winner"
+msgstr "Vinnare"
+
+#: bracket_round.inc:148;233
+msgid "Score"
+msgstr "Poäng"
+
+#: bracket_round.inc:165;219
+msgid "Home"
+msgstr "Hemmamatch"
+
+#: bracket_round.inc:172;180
+msgid "Match Comment"
+msgstr "Kommentar för match"
+
+#: bracket_round.inc:337
+msgid "There can only be one home competitor, please select one home competitor only."
+msgstr "Det kan enbart finnas en hemmadeltagare, var vänlig välj enbart en."
+
+#: bracket_round.inc:344
+msgid "There can only be one winner, please select one winner only."
+msgstr "Det kan enbart finnas en vinnare, var vänlig välj enbart en."
+
+#: bracket_round.inc:412
+msgid "Competitor #1 has not been determined for Match @mid and cannot be selected as the winner"
+msgstr "Tävlande #1 har inte fastställts för match @mid och kan inte väljas som vinnaren"
+
+#: bracket_round.inc:421
+msgid "Competitor #2 has not been determined for Match @mid and cannot be selected as the winner"
+msgstr "Tävlande #2 har inte fastställts för match @mid och kan inte väljas som vinnaren"
+
+#: bracket_round.inc:453
+msgid "Winner of Match @mid (@name) has been placed in Results Place #@place"
+msgstr "Vinnare av match @mid (@name) har placerats i resultat #@place"
+
+#: bracket_round.inc:457;470;502;525
+msgid "Match @mid results were reset."
+msgstr "Resultat för match @mid återställdes."
+
+#: bracket_round.inc:466
+msgid "Loser of Match @mid (@name) has been placed in Results Place #@place"
+msgstr "Förlorare av match @mid (@name) har placerats i resultat #@place"
+
+#: bracket_round.inc:496
+msgid ""
+"Winner of Match @mid (@name) has been placed in @round,\n"
+"                                      Match @match, Competitor @comp"
+msgstr "Vinnare av match @mid (@name) har placerats i @round, match @match, deltagare @comp"
+
+#: bracket_round.inc:519
+msgid ""
+"Loser of Match @mid (@name) has been placed in @round,\n"
+"                                      Match @match, Competitor @comp"
+msgstr "Förlorare av match @mid (@name) har placerats i @round, match @match, deltagare @comp"
+
+#: bracket_route.inc:21
+#: bracket.module:155
+msgid "Routing"
+msgstr "Rutt"
+
+#: bracket_route.inc:33
+msgid ""
+"Use this form to change match ids and competitor routing through the bracket.\n"
+"                   <strong>Use With Caution</strong> - in most cases this will not be necessary, especially for single-elimination brackets.\n"
+"                   The form has been provided since some customization may be required for double-elimination brackets."
+msgstr "Använd detta formulär för att ändra ID-nummer och rutt genom diagrammet. <strong>Använd med tillförsikt.</strong> I de flesta fallen så är inte detta nödvändigt, speciellt inte för diagram med enstaka utslagningar. Detta formulär tillhandahålls eftersom viss anpassning kan behövas för diagram med dubbel eliminering."
+
+#: bracket_route.inc:144
+msgid "Winner Result: "
+msgstr "Resultat för vinnare:"
+
+#: bracket_route.inc:151
+msgid "Loser Result: "
+msgstr "Resultat för förlorare:"
+
+#: bracket_route.inc:158
+msgid "Win Use Result: "
+msgstr "Använd resultat för vinnare:"
+
+#: bracket_route.inc:162
+msgid " (If this competitor wins, result is used, not match routing - no next match)"
+msgstr "(Om denna deltagare vinner så används resultat, stämmer ej överens med rutt - ingen text för match)"
+
+#: bracket_route.inc:178
+msgid "Winner Matches"
+msgstr "Vinnare av match"
+
+#: bracket_route.inc:295
+msgid "Loser Matches"
+msgstr "Förlorare av match"
+
+#: bracket_route.inc:400
+msgid "This field is required."
+msgstr "Detta fält är obligatoriskt."
+
+#: bracket_route.inc:404;407
+msgid "%title: %required"
+msgstr "%title: %required"
+
+#: bracket_route.inc:442
+msgid "Match #@id is selected more than once."
+msgstr "Match #@id är vald mer än en gång."
+
+#: bracket_route.inc:469;473
+msgid "Match #@id, No Competitor selected."
+msgstr "Match #@id. Inga deltagare valda."
+
+#: bracket_route.inc:477;481
+msgid "Match #@id, Competitor #@cn is routed more than once."
+msgstr "Match #@id, deltagare #@cn är dirigerad mer än en gång."
+
+#: bracket_seed.inc:21
+#: bracket.module:166
+msgid "Seeding"
+msgstr "Seedning"
+
+#: bracket_seed.inc:33
+msgid ""
+"Use this form to assign competitors and seeds to bracket slots.\n"
+"                   This is actually just a trimmed down version of the Round 1 form.\n"
+"                   Seeds are used for importing competitors - they are optional and do not appear on the bracket."
+msgstr "Använd detta formulär för att tilldela deltagare och seedningar till platser i diagram. Detta är egentligen bara en nedkortad version av den första omgångens formulär. Seedningar används för importerade deltagare. De är valfria och visas inte på diagrammet."
+
+#: bracket_views.inc:33;57
+msgid "Bracket: Sport"
+msgstr "Diagram: Idrottsgren"
+
+#: bracket_views.inc:35
+msgid "Display bracket sport."
+msgstr "Visa idrottsgren för diagram."
+
+#: bracket_views.inc:38;63
+msgid "Bracket: Division"
+msgstr "Diagram: Division"
+
+#: bracket_views.inc:40
+msgid "Display bracket division."
+msgstr "Visa division för diagram."
+
+#: bracket_views.inc:43;69
+msgid "Bracket: Season"
+msgstr "Diagram: Säsong"
+
+#: bracket_views.inc:45
+msgid "Display bracket season."
+msgstr "Visa säsong för diagram."
+
+#: bracket_views.inc:48;75
+msgid "Bracket: Group"
+msgstr "Diagram: Grupp"
+
+#: bracket_views.inc:51
+msgid "Display bracket group."
+msgstr "Visa diagramgrupp."
+
+#: bracket_views.inc:59
+msgid "Filter by Sport."
+msgstr "Filtrera per idrottsgren."
+
+#: bracket_views.inc:65
+msgid "Filter by Division."
+msgstr "Filtrera per division."
+
+#: bracket_views.inc:71
+msgid "Filter by Season."
+msgstr "Filtrera per säsong."
+
+#: bracket_views.inc:77
+msgid "Filter by Group."
+msgstr "Filtrera per grupp."
+
+#: bracket_xml.inc:269
+msgid ""
+"Imported bracket design - @d - does not match current bracket design - @c.\n"
+"                                Bracket could not be imported."
+msgstr "Importerad modell för diagram - @d - stämmer inte överens med nuvarande design - @c. Diagram kunde inte importeras."
+
+#: bracket.module:53
+#: bracket.info:0
+#: designs/ff2champ/ff2champ.inc:29;36
+msgid "Bracket"
+msgstr "Tävlingsdiagram"
+
+#: bracket.module:55
+msgid "Create a tournament bracket."
+msgstr "Skapa ett turneringsdiagram"
+
+#: bracket.module:284
+msgid "Bracket Settings"
+msgstr "Inställningar för tävlingsdiagram"
+
+#: bracket.module:291
+msgid "Allow Image Uploads"
+msgstr "Tillåt bilduppladdning"
+
+#: bracket.module:293
+msgid "Allow the user to upload images with brackets."
+msgstr "Tillåt användaren att ladda upp bilder till diagram."
+
+#: bracket.module:298
+msgid "Image Upload Path"
+msgstr "Sökväg för uppladdad bild"
+
+#: bracket.module:300
+msgid ""
+"This is the path where bracket images will be uploaded - if not specified, the default file path will be used.\r\n"
+"                         This path must be writable by the user uploading the image."
+msgstr "Detta är sökvägen där bilder för diagram kommer att laddas upp. Om det inte anges så kommer den förvalda sökvägen att användas. Denna sökväg måste vara skrivbar av användaren som laddar upp bilden."
+
+#: bracket.module:307
+msgid "Save Configuration Settings"
+msgstr "Spara inställningar för konfiguration"
+
+#: bracket.module:331
+msgid "Configuration settings were saved."
+msgstr "Inställningar för konfiguration sparades."
+
+#: bracket.module:367
+msgid "Click here for a printable version"
+msgstr "Klicka här för en utskrivbar version"
+
+#: bracket.module:404;145
+msgid "Bracket Info"
+msgstr "Information om diagram"
+
+#: bracket.module:412;1275
+msgid "Title"
+msgstr "Titel"
+
+#: bracket.module:416
+msgid "Enter a title for this bracket."
+msgstr "Ange en titel för detta diagram."
+
+#: bracket.module:421
+msgid "Subtitle"
+msgstr "Underrubrik"
+
+#: bracket.module:425
+msgid "Enter a subtitle for this bracket."
+msgstr "Ange en underrubrik för detta diagram."
+
+#: bracket.module:430
+msgid "Comments"
+msgstr "Kommentarer"
+
+#: bracket.module:434
+msgid "Comments for this bracket"
+msgstr "Kommentarer för detta diagram"
+
+#: bracket.module:438
+msgid "Select a bracket design"
+msgstr "Välj en modell för diagram"
+
+#: bracket.module:441;456
+msgid "Bracket Design"
+msgstr "Modell för diagram"
+
+#: bracket.module:446
+msgid "Select a design for this bracket."
+msgstr "Välj en modell för detta diagram."
+
+#: bracket.module:452
+msgid "Error - Selected design was not found - @design"
+msgstr "Felmeddelande - Vald modell hittades inte - @design"
+
+#: bracket.module:462
+msgid "The design for this bracket - this cannot be altered."
+msgstr "Modellen för detta diagram - detta kan inte ändras."
+
+#: bracket.module:468
+msgid "Sport"
+msgstr "Idrottsgren"
+
+#: bracket.module:472
+msgid "Enter the sport for this bracket."
+msgstr "Ange idrottsgrenen för detta diagram."
+
+#: bracket.module:477
+msgid "Division"
+msgstr "Division"
+
+#: bracket.module:481
+msgid "Enter the division for this bracket."
+msgstr "Ange divisionen för detta diagram."
+
+#: bracket.module:486
+msgid "Season"
+msgstr "Säsong"
+
+#: bracket.module:490
+msgid "Enter the season for this bracket."
+msgstr "Ange säsongen för detta diagram."
+
+#: bracket.module:495
+msgid "Group"
+msgstr "Grupp"
+
+#: bracket.module:499
+msgid "Enter the group for this bracket - ex boys, girls, men, women, etc."
+msgstr "Ange gruppen för detta diagram - till exempel pojkar, flickor, herrar, damer mm."
+
+#: bracket.module:504
+msgid "Footer"
+msgstr "Sidfot"
+
+#: bracket.module:508
+msgid "Bracket comments - appear as a footer."
+msgstr "Kommentarer för diagram - visas som sidfot."
+
+#: bracket.module:513
+msgid "Logo Image"
+msgstr "Logotyp"
+
+#: bracket.module:520
+msgid "Upload Logo Image"
+msgstr "Ladda upp bild"
+
+#: bracket.module:521;572
+msgid ""
+"Click \"Browse...\" to select an image to upload. Supported image types are JPG and PNG.\r\n"
+"                           The maximum file size per upload is %size MB."
+msgstr "Klicka på \"Bläddra...\" för att välja en bild att ladda upp. Stödda bildtyper är JPG och PNG. Den största filstorleken per uppladdning är %size MB."
+
+#: bracket.module:528
+msgid "Logo Image Path"
+msgstr "Sökväg till bild"
+
+#: bracket.module:531
+msgid "Path to the logo image file. Supported image types are JPG and PNG."
+msgstr "Sökväg till logotyp. Stödda bildtyper är JPG och PNG."
+
+#: bracket.module:555
+msgid "Delete Logo"
+msgstr "Radera logotyp"
+
+#: bracket.module:556
+msgid "Check to delete current logo. WARNING - image file will be deleted!"
+msgstr "Kryssa i för att radera nuvarande logotyp. VARNING - bildfil kommer att raderas!"
+
+#: bracket.module:564
+msgid "Sponsor Logo Image"
+msgstr "Sponsringsbild"
+
+#: bracket.module:571
+msgid "Upload Sponsor Logo Image"
+msgstr "Ladda upp sponsringsbild"
+
+#: bracket.module:579
+msgid "Sponsor Logo Image Path"
+msgstr "Sökväg till sponsringsbild"
+
+#: bracket.module:582
+msgid "Path to the sponsor logo image file. Supported image types are JPG and PNG."
+msgstr "Sökväg till sponsringsbild. Stödda bildtyper är JPG och PNG."
+
+#: bracket.module:604
+msgid "Delete Sponsor Logo"
+msgstr "Radera sponsringslogotyp"
+
+#: bracket.module:605
+msgid "Check to delete current sponsor logo. WARNING - image file will be deleted!"
+msgstr "Kryssa i för att radera nuvarande sponsringslogotyp. VARNING - bildfil kommer att raderas!"
+
+#: bracket.module:619
+msgid "Bracket Display Options"
+msgstr "Alternativ för visning av diagram"
+
+#: bracket.module:627
+msgid "Show Match IDs"
+msgstr "Visa ID-nummer för matcher"
+
+#: bracket.module:629
+msgid "Check to display match IDs on the bracket."
+msgstr "Kryssa i för att visa ID-nummer för matcher på diagrammet."
+
+#: bracket.module:637
+msgid "Foreground & Text Color"
+msgstr "Färg på text och bakgrund"
+
+#: bracket.module:641;654;673;685
+msgid "In HTML color format - #RRGGBB (Default is @color)."
+msgstr "I färgformatet HTML: RRGGBB (förvald är @color)."
+
+#: bracket.module:650
+msgid "Background Color"
+msgstr "Bakgrundsfärg"
+
+#: bracket.module:660
+msgid "Show Bracket Bar"
+msgstr "Visa diagramsrad"
+
+#: bracket.module:662
+msgid "Check to display bracket bar and round comments on bracket. Note: Some designs do not utilize this option."
+msgstr "Kryssa i för att visa diagramsrad och omgångskommentarer på diagram. Observera: Vissa modeller använder inte det här alternativet."
+
+#: bracket.module:670
+msgid "Bracket Bar Background Color"
+msgstr "Bakgrundsfärg för diagramsrad"
+
+#: bracket.module:682
+msgid "Bracket Bar Foreground (Text) Color"
+msgstr "Textfärg för diagramsrad"
+
+#: bracket.module:691
+msgid "Bracket Bar Example"
+msgstr "Exempel på diagramrad"
+
+#: bracket.module:696
+msgid "Image Font Files"
+msgstr "Fontfiler"
+
+#: bracket.module:700
+msgid "Image font files must be present in the fonts folder of the bracket module."
+msgstr "Fontfiler måste finnas i katalogen \"fonts\" för modulen Bracket."
+
+#: bracket.module:708
+msgid "Image Normal Font File"
+msgstr "Normal fontfil"
+
+#: bracket.module:711
+msgid "Image font file for normal font (Default is @font)."
+msgstr "Fontfil för normal font (förvald är @font)."
+
+#: bracket.module:720
+msgid "Image Bold Font File"
+msgstr "Fet fontfil"
+
+#: bracket.module:723
+msgid "Image font file for bold font (Default is @font)."
+msgstr "Fontfil för fet font (förvald är @font)."
+
+#: bracket.module:732
+msgid "Image Italic Font File"
+msgstr "Fontfil för kursiv"
+
+#: bracket.module:735
+msgid "Image font file for italic font (Default is @font)."
+msgstr "Fontfil för kursiv font (förvald är @font)."
+
+#: bracket.module:744
+msgid "Image Bold Italic Font File"
+msgstr "Fontfil för fet kursiv"
+
+#: bracket.module:747
+msgid "Image font file for bold italic font (Default is @font)."
+msgstr "Fontfil för fet kursiv font (förvald är @font)."
+
+#: bracket.module:757
+msgid "PDF Font"
+msgstr "PDF-font"
+
+#: bracket.module:760
+msgid "Select the PDF font for this bracket (Default is @font)."
+msgstr "Välj PDF-font för detta diagram (förvald är @font)."
+
+#: bracket.module:784
+msgid "Image type not supported"
+msgstr "Bildtyp stöds ej."
+
+#: bracket.module:877
+msgid "Uploaded image file does not appear to be a valid image file. Please try again."
+msgstr "Uppladdad bildfil verkar inte vara en giltig bildfil. Var vänlig försök igen."
+
+#: bracket.module:945;1284;105
+msgid "Clone"
+msgstr "Klona"
+
+#: bracket.module:952
+msgid "Use this form to clone a bracket - bracket design, comments, competitors and match results are all copied."
+msgstr "Använd detta formulär för att klona ett diagram. Design, kommentarer, deltagare och matchresultat kommer att kopieras."
+
+#: bracket.module:964
+msgid "Clone Bracket"
+msgstr "Klona diagram"
+
+#: bracket.module:1005
+msgid "Bracket @title has been cloned"
+msgstr "Diagram @title har klonats"
+
+#: bracket.module:1021;1285;115
+msgid "Clear"
+msgstr "Töm"
+
+#: bracket.module:1025
+msgid "Use this form to clear bracket competitors and match results."
+msgstr "Använd detta formulär för att ta bort deltagare för diagram och matchresultat."
+
+#: bracket.module:1035
+msgid "Clear Options"
+msgstr "Alternativ för tömning"
+
+#: bracket.module:1043
+msgid "Competitors and Match Results"
+msgstr "Deltagare och matchresultat"
+
+#: bracket.module:1043
+msgid "Match Results Only"
+msgstr "Enbart matchresultat"
+
+#: bracket.module:1050
+msgid "Note: This action cannot be undone."
+msgstr "Observera: Denna åtgärd kan inte ångras."
+
+#: bracket.module:1055
+msgid "Clear Bracket"
+msgstr "Töm diagram"
+
+#: bracket.module:1097
+msgid "Bracket @title has been cleared"
+msgstr "Diagram @title har tömts"
+
+#: bracket.module:1111;1286;125
+msgid "Export"
+msgstr "Exportera"
+
+#: bracket.module:1115
+msgid "Use this form to export a complete bracket or results."
+msgstr "Använd detta formulär för att exportera ett fullständigt diagram eller resultat."
+
+#: bracket.module:1125
+msgid "Export Options"
+msgstr "Alternativ för export"
+
+#: bracket.module:1133;1201
+msgid "Complete Bracket"
+msgstr "Fullständigt diagram"
+
+#: bracket.module:1133
+msgid "Bracket Results Only"
+msgstr "Enbart resultat för diagram"
+
+#: bracket.module:1140
+msgid "Export Bracket"
+msgstr "Exportera diagram"
+
+#: bracket.module:1179;1287;135
+msgid "Import"
+msgstr "Importera"
+
+#: bracket.module:1183
+msgid "Use this form to import a complete bracket or bracket competitors."
+msgstr "Använd detta formulär för att importera ett komplett diagram eller deltagare."
+
+#: bracket.module:1193
+msgid "Import Options"
+msgstr "Alternativ för import"
+
+#: bracket.module:1201
+msgid "Results to Competitors"
+msgstr "Resultat för deltagare"
+
+#: bracket.module:1208
+msgid "Import File"
+msgstr "Importera fil"
+
+#: bracket.module:1209
+msgid "Click \"Browse...\" to select the file to import."
+msgstr "Klicka på \"Bläddra...\" för att välja fil att importera."
+
+#: bracket.module:1216
+msgid "Import Bracket"
+msgstr "Importera diagram"
+
+#: bracket.module:1239
+msgid "Unable to parse XML file - Bracket was not imported."
+msgstr "Kunde inte tolka XML-fil. Diagram importerades inte."
+
+#: bracket.module:1245
+msgid "Bracket @title Imported"
+msgstr "Importerade diagram @title"
+
+#: bracket.module:1250
+msgid "Nothing was uploaded."
+msgstr "Inget laddades upp."
+
+#: bracket.module:43
+msgid "view brackets"
+msgstr "visa tävlingsdiagram"
+
+#: bracket.module:43
+msgid "maintain brackets"
+msgstr "underhåll tävlingsdiagram"
+
+#: bracket.module:70;80
+msgid "Brackets"
+msgstr "Tävlingsdiagram"
+
+#: bracket.module:71
+msgid "Change bracket settings"
+msgstr "Ändra inställningar för diagram"
+
+#: bracket.module:84
+msgid "View and edit all the brackets on your site."
+msgstr "Visa och redigera alla diagram på din webbplats."
+
+#: bracket.module:177
+msgid "Rounds"
+msgstr "Omgångar"
+
+#: bracket.install:12
+msgid "The bracket module was successfully installed"
+msgstr "Modulen Bracken installerades"
+
+#: bracket.install:372
+msgid "The bracket module was successfully uninstalled"
+msgstr "Modulen Bracket avinstallerades"
+
+#: bracket.info:0
+msgid "The Bracket module creates and displays tournament brackets"
+msgstr "Modulen Bracket skapar och visar tävlingsdiagram"
+
+#: designs/de16champ/de16champ.inc:36;37
+#: designs/de8champ/de8champ.inc:36;37
+#: designs/ff2champ/ff2champ.inc:29
+#: designs/mde16champ/mde16champ.inc:45
+#: designs/mde8champ/mde8champ.inc:44
+msgid "Final"
+msgstr "Final"
+
+#: designs/de16champ/de16champ.inc:39
+#: designs/de8champ/de8champ.inc:39
+#: designs/mde16champ/mde16champ.inc:47
+#: designs/mde8champ/mde8champ.inc:46
+msgid "Loser Rnd"
+msgstr "Förloraromgång"
+
+#: designs/de16champ/de16champ.info:0
+msgid "de16champ"
+msgstr "de16champ"
+
+#: designs/de16champ/de16champ.info:0
+msgid "Double Elimination 16 Competitor Championship Bracket"
+msgstr "Dubbel utslagning, 16 deltagare"
+
+#: designs/de8champ/de8champ.info:0
+msgid "de8champ"
+msgstr "de8champ"
+
+#: designs/de8champ/de8champ.info:0
+msgid "Double Elimination 8 Competitor Championship Bracket"
+msgstr "Dubbel utslagning, 8 deltagare"
+
+#: designs/ff2champ/ff2champ.info:0
+msgid "ff2champ"
+msgstr "ff2champ"
+
+#: designs/ff2champ/ff2champ.info:0
+msgid "Final Four - 2 Competitor Championship Brackets"
+msgstr "Sista fyra, 2 deltagare"
+
+#: designs/mde16champ/mde16champ.inc:43
+#: designs/mde8champ/mde8champ.inc:42
+#: designs/se16champ/se16champ.inc:30
+#: designs/se32champlr/se32champlr.inc:33
+#: designs/se64champlr/se64champlr.inc:34
+#: designs/se8champ/se8champ.inc:29
+msgid "Quarterfinals"
+msgstr "Kvartsfinaler"
+
+#: designs/mde16champ/mde16champ.inc:44
+#: designs/mde8champ/mde8champ.inc:43
+#: designs/se16champ/se16champ.inc:31
+#: designs/se32champlr/se32champlr.inc:34
+#: designs/se64champlr/se64champlr.inc:35
+#: designs/se8champ/se8champ.inc:30
+msgid "Semifinals"
+msgstr "Semifinaler"
+
+#: designs/mde16champ/mde16champ.info:0
+msgid "mde16champ"
+msgstr "mde16champ"
+
+#: designs/mde16champ/mde16champ.info:0
+msgid "Modified Double Elimination 16 Competitor Championship Bracket"
+msgstr "Anpassad dubbel utslagning, 16 deltagare"
+
+#: designs/mde8champ/mde8champ.info:0
+msgid "mde8champ"
+msgstr "mde8champ"
+
+#: designs/mde8champ/mde8champ.info:0
+msgid "Modified Double Elimination 8 Competitor Championship Bracket"
+msgstr "Anpassad dubbel utslagning, 8 deltagare"
+
+#: designs/se16champ/se16champ.inc:32
+#: designs/se32champlr/se32champlr.inc:35
+#: designs/se64champlr/se64champlr.inc:36
+#: designs/se8champ/se8champ.inc:31
+msgid "Finals"
+msgstr "Finaler"
+
+#: designs/se16champ/se16champ.info:0
+msgid "se16champ"
+msgstr "se16champ"
+
+#: designs/se16champ/se16champ.info:0
+msgid "Single Elimination 16 Competitor Championship Bracket"
+msgstr "Enkel utslagning, 16 deltagare"
+
+#: designs/se32champlr/se32champlr.info:0
+msgid "se32champlr"
+msgstr "se32champlr"
+
+#: designs/se32champlr/se32champlr.info:0
+msgid "Single Elimination 32 Competitor Championship Left-Right Bracket"
+msgstr "Enkel utslagning, 32 deltagare, från vänster och höger"
+
+#: designs/se32po2lr/se32po2lr.info:0
+msgid "se32po2lr"
+msgstr "se32po2lr"
+
+#: designs/se32po2lr/se32po2lr.info:0
+msgid "Single Elimination 32 Competitor 2 Round Playoff Left-Right Bracket"
+msgstr "Enkel utslagning, 32 deltagare, 2 omgångars slutspel, från vänster och höger"
+
+#: designs/se64champlr/se64champlr.info:0
+msgid "se64champlr"
+msgstr "se64champlr"
+
+#: designs/se64champlr/se64champlr.info:0
+msgid "Single Elimination 64 Competitor Championship Left-Right Bracket"
+msgstr "Enkel utslagning, 64 deltagare, från vänster och höger"
+
+#: designs/se8champ/se8champ.info:0
+msgid "se8champ"
+msgstr "se8champ"
+
+#: designs/se8champ/se8champ.info:0
+msgid "Single Elimination 8 Competitor Championship Bracket"
+msgstr "Enkel utslagning, 8 deltagare"
+
+#: designs/se8po2/se8po2.inc:31
+msgid "Round 1"
+msgstr "Omgång 1"
+
+#: designs/se8po2/se8po2.inc:32
+msgid "Round 2"
+msgstr "Omgång 2"
+
+#: designs/se8po2/se8po2.info:0
+msgid "se8po2"
+msgstr "se8po2"
+
+#: designs/se8po2/se8po2.info:0
+msgid "Single Elimination 8 Competitor 2 Round Playoff"
+msgstr "Enkel utslagning, 8 deltagare, 2 omgångars slutspel"
+

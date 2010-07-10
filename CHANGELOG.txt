@@ -1,5 +1,10 @@
-Bracket 1.0 Changelog
----------------------
-- Initial version
-
 $Id$
+
+Bracket 6.x Version Changelog
+------------------------------
+
+6.x-1.0
+--------
+- Initial version for 6.x API
+
+
