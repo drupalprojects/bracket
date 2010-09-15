@@ -28,6 +28,7 @@ require_once 'bracket_route.inc';
 require_once 'bracket_seed.inc';
 require_once('bracket_image.inc');
 require_once('bracket_pdf.inc');
+require_once('bracket_api.inc');
 if (module_exists('views')) {
   include_once 'bracket_views.inc';
 }

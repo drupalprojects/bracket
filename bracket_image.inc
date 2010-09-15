@@ -614,9 +614,9 @@ function bracket_image_insert_image($img, $imgpath, $x, $y, $w = 0, $center = FA
  *   the starting x coordinate of the line
  * @param $y1
  *   the starting y coordinate of the line
- * @param $x1
+ * @param $x2
  *   the ending x coordinate of the line
- * @param $y1
+ * @param $y2
  *   the ending y coordinate of the line
  * @param $color
  *   the color of the line

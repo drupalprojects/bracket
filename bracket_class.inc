@@ -13,21 +13,66 @@
  */
 class Bracket {
 
-  var $subtitle;
-  var $comments;
-  var $sport;
-  var $division;
-  var $season;
-  var $brgroup;
-  var $footer;
-  var $logopath;
-  var $sponsorlogopath;
-  var $design;
-  var $comp;
-  var $round;
-  var $result;
-  var $options;
+  /**
+   * bracket subtitle
+   */
+  public $subtitle;
+  /**
+   * bracket comments
+   */
+  public $comments;
+  /**
+   * activity
+   */
+  public $sport;
+  /**
+   * division
+   */
+  public $division;
+  /**
+   * season
+   */
+  public $season;
+  /**
+   * group
+   */
+  public $brgroup;
+  /**
+   * bracket footer
+   */
+  public $footer;
+  /**
+   * path to bracket logo image
+   */
+  public $logopath;
+  /**
+   * path to bracket sponsor logo image
+   */
+  public $sponsorlogopath;
+  /**
+   * bracket design code
+   */
+  public $design;
+  /**
+   * array of bracket competitors
+   */
+  public $comp;
+  /**
+   * array of bracket rounds
+   */
+  public $round;
+  /**
+   * array of bracket results
+   */
+  public $result;
+  /**
+   * array of bracket options
+   */
+  public $options;
 
+  /**
+   * Constructs a Bracket object
+   */
   function Bracket() {
 
     $this->subtitle = '';       // bracket comments, etc
@@ -44,6 +89,19 @@ class Bracket {
     $this->round = array();     // bracket rounds
     $this->result = array();    // bracket results
     $this->options = array();   // bracket options
+    
+    // set default options
+    $this->options['show_match_id'] = FALSE;
+    $this->options['fg_color'] = '';
+    $this->options['bg_color'] = '';
+    $this->options['show_bracket_bar'] = FALSE;
+    $this->options['bar_fg_color'] = '';
+    $this->options['bar_bg_color'] = '';
+    $this->options['image_fonts']['image_font'] = '';
+    $this->options['image_fonts']['image_font_bold'] = '';
+    $this->options['image_fonts']['image_font_italic'] = '';
+    $this->options['image_fonts']['image_font_bolditalic'] = '';
+    $this->options['pdf_font'] = '';
   }
 }
 
@@ -52,9 +110,18 @@ class Bracket {
  */
 class Bracket_Competitor {
 
-  var $name;
-  var $seedin;
+  /**
+   * competitor name
+   */
+  public $name;
+  /**
+   * competitor incoming seed
+   */
+  public $seedin;
 
+  /**
+   * Constructs a Bracket_Competitor object
+   */
   function Bracket_Competitor() {
 
     $this->name = '';           // competitor name
@@ -67,12 +134,34 @@ class Bracket_Competitor {
  */
 class Bracket_Round {
 
-  var $id;
-  var $name;
-  var $loser;
-  var $comment;
-  var $match;
+  /**
+   * round id (index)
+   */
+  public $id;
+  /**
+   * name of this round
+   */
+  public $name;
+  /**
+   * indicates a loser round
+   */
+  public $loser;
+  /**
+   * indicates a first round
+   */
+  public $first;
+  /**
+   * round comment
+   */
+  public $comment;
+  /**
+   * array of matches in this round
+   */
+  public $match;
 
+  /**
+   * Constructs a Bracket_Round object
+   */
   function Bracket_Round() {
 
       $this->id = 0;            // round id (index)
@@ -89,22 +178,70 @@ class Bracket_Round {
  */
 class Bracket_Match {
 
-  var $id;
-  var $compid;
-  var $cname;
-  var $comp_comment;
-  var $score;
-  var $home;
-  var $win;
-  var $comment;
-  var $winner_match;
-  var $winner_comp;
-  var $loser_match;
-  var $loser_comp;
-  var $winner_result;
-  var $loser_result;
-  var $win_use_result;
+  /**
+   * match id (unique across entire bracket)
+   */
+  public $id;
+  /**
+   * array of match competitors
+   */
+  public $compid;
+  /**
+   * array of match competitor names
+   */
+  public $cname;
+  /**
+   * array of match competitor comments
+   */
+  public $comp_comment;
+  /**
+   * array of match scores
+   */
+  public $score;
+  /**
+   * array of match home indicators
+   */
+  public $home;
+  /**
+   * array of match win indicators
+   */
+  public $win;
+  /**
+   * array of match comments
+   */
+  public $comment;
+  /**
+   * pointer to winner's next match
+   */
+  public $winner_match;
+  /**
+   * competitor index of winner's next match
+   */
+  public $winner_comp;
+  /**
+   * pointer to loser's next match
+   */
+  public $loser_match;
+  /**
+   * competitor index of loser's next match
+   */
+  public $loser_comp;
+  /**
+   * winner's result index
+   */
+  public $winner_result;
+  /**
+   * loser's result index
+   */
+  public $loser_result;
+  /**
+   * use result if winner is this index
+   */
+  public $win_use_result;
 
+  /**
+   * Constructs a Bracket_Match object
+   */
   function Bracket_Match() {
 
     $this->compid = array();
@@ -145,11 +282,26 @@ class Bracket_Match {
  */
 class Bracket_Result {
 
-  var $compid;
-  var $cname;
-  var $comment;
-  var $seedout;
+  /**
+   * result competitor id
+   */
+  public $compid;
+  /**
+   * result competitor name
+   */
+  public $cname;
+  /**
+   * result comment
+   */
+  public $comment;
+  /**
+   * result competitor outgoing seed
+   */
+  public $seedout;
 
+  /**
+   * Constructs a Bracket_Result object
+   */
   function Bracket_Result() {
 
     $this->compid = 0;          // competitor id (index)
@@ -158,4 +310,3 @@ class Bracket_Result {
     $this->seedout = '';        // result seed
   }
 }
-
