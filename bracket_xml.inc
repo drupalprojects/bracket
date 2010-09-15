@@ -337,6 +337,12 @@ function bracket_xml_import_bracket(&$node, $values) {
         $node->options['pdf_font'] = $e['value'];
       }
 
+      else if ($tag == 'id') {
+        if ($otag == 'match' && $m != NULL) {
+          $m->id = $e['value'];
+        }
+      }
+      
       else if ($tag == 'name') {
         if ($otag == 'competitor' && $c != NULL) {
           $c->name = $e['value'];
