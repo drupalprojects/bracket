@@ -8,7 +8,10 @@
  * @author Jim Bullington <jimb@jrbcs.com>
  */
 
-require_once 'FPDF/fpdf.php';
+// check if FPDF is used by another module before including
+if (!class_exists('FPDF')) {
+  require_once 'FPDF/fpdf.php';
+}
 
 // bracket pdf globals
 global $bracket_pdf_font_name;

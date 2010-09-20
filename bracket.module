@@ -100,7 +100,7 @@ function bracket_menu() {
     'title' =>'Brackets',
     'page callback' => 'bracket_admin_content',
     'access callback' => 'user_access',
-    'access arguments' => array('view brackets'),
+    'access arguments' => array('administer nodes'),
     'description' => 'View and edit all the brackets on your site.',
     'type' => MENU_NORMAL_ITEM,
   );
@@ -1186,10 +1186,13 @@ function bracket_export_form_submit($form_id, &$form_state) {
   // generate the xml
   $output = bracket_xml_export($node, $form_state['values']['opt']);
 
+  // make a file name from title
+  $fname = preg_replace('/[^0-9a-z\.\_\-]/i','_', $node->title);
+
   // prepare to download
   header('Content-Type: text/plain');
   header('Content-Length: ' . strlen($output));
-  header('Content-Disposition: attachment; filename="brexport.xml"');
+  header('Content-Disposition: attachment; filename="' . $fname . '.xml"');
 
   // send the output
   echo $output;
@@ -1305,7 +1308,7 @@ function theme_bracket_admin_content($nodes) {
 
   $header = array(
     t('Title'),
-    array('data' => t('Operations'), 'colspan' => '2')
+    array('data' => t('Operations'), 'colspan' => '5')
   );
 
   $rows = array();
@@ -1385,12 +1388,17 @@ function bracket_pdf($node) {
     // force PDF download
     header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 
-    if(isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'],'MSIE'))
+    if(isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'],'MSIE')) {
       header('Content-Type: application/force-download');
-    else
+    }
+    else {
       header('Content-Type: application/octet-stream');
+    }
 
-    header('Content-disposition: attachment; filename="' . check_plain($node->title) .'.pdf"');
+    // make a file name from title
+    $fname = preg_replace('/[^0-9a-z\.\_\-]/i','_', $node->title);
+
+    header('Content-disposition: attachment; filename="' . $fname .'.pdf"');
     header('Content-Length: '.strlen($img));
     echo $img;
   }
