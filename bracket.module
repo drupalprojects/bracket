@@ -102,7 +102,7 @@ function bracket_menu($may_cache) {
       'path' => 'admin/content/bracket',
       'title' => t('Brackets'),
       'callback' => 'bracket_admin_content',
-      'access' => user_access('view brackets'),
+      'access' => user_access('administer nodes'),
       'description' => t('View and edit all the brackets on your site.'),
       'type' => MENU_NORMAL_ITEM,
     );
@@ -165,7 +165,7 @@ function bracket_menu($may_cache) {
         'title' => t('Export'),
         'callback' => 'bracket_export',
         'callback arguments' => array($node),
-        'access' => node_access('view', $node),
+        'access' => node_access('update', $node),
         'weight' => 4,
         'type' => MENU_LOCAL_TASK
       );
@@ -942,6 +942,7 @@ function bracket_clone_form_submit($form_id, $form_values) {
   $node2->sport = $form_values['sport'];
   $node2->division = $form_values['division'];
   $node2->season = $form_values['season'];
+  $node2->brgroup = $form_values['brgroup'];
   $node2->footer = $form_values['footer'];
   $node2->logopath = $form_values['logopath'];
   $node2->sponsorlogopath = $form_values['sponsorlogopath'];
@@ -1111,10 +1112,13 @@ function bracket_export_form_submit($form_id, $form_values) {
   // generate the xml
   $output = bracket_xml_export($node, $form_values['opt']);
 
+  // make a file name from title
+  $fname = preg_replace('/[^0-9a-z\.\_\-]/i','_', $node->title);
+
   // prepare to download
   header('Content-Type: text/plain');
   header('Content-Length: ' . strlen($output));
-  header('Content-Disposition: attachment; filename="brexport.xml"');
+  header('Content-Disposition: attachment; filename="' . $fname . '.xml"');
 
   // send the output
   echo $output;
@@ -1213,7 +1217,7 @@ function bracket_import_form_submit($form_id, $form_values) {
  */
 function bracket_admin_content() {
 
-  $result = db_query(db_rewrite_sql("SELECT n.* FROM {node} n WHERE n.type = 'bracket'"));
+  $result = db_query(db_rewrite_sql("SELECT n.* FROM {node} n WHERE n.type = 'bracket' ORDER BY n.title"));
   $nodes = array();
   while ($node = db_fetch_object($result)) {
     $nodes[] = $node;
@@ -1230,7 +1234,7 @@ function theme_bracket_admin_content($nodes) {
 
   $header = array(
     t('Title'),
-    array('data' => t('Operations'), 'colspan' => '2')
+    array('data' => t('Operations'), 'colspan' => '5')
   );
 
   $rows = array();
@@ -1310,12 +1314,17 @@ function bracket_pdf($node) {
     // force PDF download
     header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 
-    if(isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'],'MSIE'))
+    if(isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'],'MSIE')) {
       header('Content-Type: application/force-download');
-    else
+    }
+    else {
       header('Content-Type: application/octet-stream');
+    }
+    
+    // make a file name from title
+    $fname = preg_replace('/[^0-9a-z\.\_\-]/i','_', $node->title);
 
-    header('Content-disposition: attachment; filename="' . check_plain($node->title) .'.pdf"');
+    header('Content-disposition: attachment; filename="' . $fname .'.pdf"');
     header('Content-Length: '.strlen($img));
     echo $img;
   }

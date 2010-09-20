@@ -96,7 +96,7 @@ function ff2champ_image($node) {
   // bracket 1
   $l = $left + ($width / 2);
   $t = ($iheight / 4) - ($height / 2);
-  bracket_image_imageTextAlign($img, $bracket_image_font_norm, $l, $t-40, $width, $node->round[1]->comment, $bracket_image_bar_fg_color, 'L');
+  bracket_image_imageTextAlign($img, $bracket_image_font_large, $l, $t-40, $width, $node->round[1]->comment, $bracket_image_bar_fg_color, 'L');
   bracket_image_drawbracketset($img, $node, $l, $t, $width, $height, $spacing, 1, 1, 1, 'L');
   $l += $width;
   $t += ($height / 2);
@@ -107,7 +107,7 @@ function ff2champ_image($node) {
   // bracket 2
   $r = $iwidth - $left - ($width / 2);
   $t = ($iheight / 4) - ($height / 2);
-  bracket_image_imageTextAlign($img, $bracket_image_font_norm, $r-$width, $t-40, $width, $node->round[2]->comment, $bracket_image_bar_fg_color, 'R');
+  bracket_image_imageTextAlign($img, $bracket_image_font_large, $r-$width, $t-40, $width, $node->round[2]->comment, $bracket_image_bar_fg_color, 'R');
   bracket_image_drawbracketset($img, $node, $r, $t, $width, $height, $spacing, 2, 1, 1, 'R');
   $t += ($height / 2);
   $r -= $width;
@@ -118,7 +118,7 @@ function ff2champ_image($node) {
   // bracket 3
   $t = $iheight - ($iheight / 4) - ($height / 2);
   $l = $left + ($width / 2);
-  bracket_image_imageTextAlign($img, $bracket_image_font_norm, $l, $t-40, $width, $node->round[3]->comment, $bracket_image_bar_fg_color, 'L');
+  bracket_image_imageTextAlign($img, $bracket_image_font_large, $l, $t-40, $width, $node->round[3]->comment, $bracket_image_bar_fg_color, 'L');
   bracket_image_drawbracketset($img, $node, $l, $t, $width, $height, $spacing, 3, 1, 1, 'L');
   $l += $width;
   $t += ($height / 2);
@@ -129,7 +129,7 @@ function ff2champ_image($node) {
   // bracket 4
   $t = $iheight - ($iheight / 4) - ($height / 2);
   $r = $iwidth - $left - ($width / 2);
-  bracket_image_imageTextAlign($img, $bracket_image_font_norm, $r-$width, $t-40, $width, $node->round[4]->comment, $bracket_image_bar_fg_color, 'R');
+  bracket_image_imageTextAlign($img, $bracket_image_font_large, $r-$width, $t-40, $width, $node->round[4]->comment, $bracket_image_bar_fg_color, 'R');
   bracket_image_drawbracketset($img, $node, $r, $t, $width, $height, $spacing, 4, 1, 1, 'R');
   $r -= $width;
   $t += ($height / 2);
@@ -250,14 +250,14 @@ function ff2champ_pdf($node) {
   $l = $left;
   $t = ($iheight / 4) - ($height / 2);
   $pdf->setXY($l, $t-0.4);
-  $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_norm);
+  $pdf->setFont($bracket_pdf_font_name, 'B', $bracket_pdf_font_large);
   $pdf->cell($width, 0.125, $node->round[1]->comment, 0, 0, 'L');
   bracket_pdf_drawbracketset($pdf, $node, $l, $t, $width, $height, $spacing, 1, 1, 1, 'L');
   $l += $width;
   $t += ($height / 2);
   $pdf->line($l, $t, $l+$width, $t);
   $pdf->setXY($l, $t-0.125);
-  $pdf->setFont($bracket_pdf_font_name, 'B', $bracket_pdf_font_large);
+  $pdf->setFont($bracket_pdf_font_name, 'B', $bracket_pdf_font_norm);
   $pdf->cell($width, 0.125, $node->result[1]->cname, 0, 0, 'L');
   $pdf->setXY($l, $t);
   $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_norm);
@@ -267,14 +267,14 @@ function ff2champ_pdf($node) {
   $r = $iwidth - $left;
   $t = ($iheight / 4) - ($height / 2);
   $pdf->setXY($r-$width, $t-0.4);
-  $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_norm);
+  $pdf->setFont($bracket_pdf_font_name, 'B', $bracket_pdf_font_large);
   $pdf->cell($width, 0.125, $node->round[2]->comment, 0, 0, 'R');
   bracket_pdf_drawbracketset($pdf, $node, $r, $t, $width, $height, $spacing, 2, 1, 1, 'R');
   $r -= $width;
   $t += ($height / 2);
   $pdf->line($r, $t, $r-$width, $t);
   $pdf->setXY($r-$width, $t-0.125);
-  $pdf->setFont($bracket_pdf_font_name, 'B', $bracket_pdf_font_large);
+  $pdf->setFont($bracket_pdf_font_name, 'B', $bracket_pdf_font_norm);
   $pdf->cell($width, 0.125, $node->result[2]->cname, 0, 0, 'R');
   $pdf->setXY($r-$width, $t);
   $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_norm);
@@ -284,14 +284,14 @@ function ff2champ_pdf($node) {
   $t = $iheight - ($iheight / 4) - ($height / 2);
   $l = $left;
   $pdf->setXY($l, $t-0.4);
-  $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_norm);
+  $pdf->setFont($bracket_pdf_font_name, 'B', $bracket_pdf_font_large);
   $pdf->cell($width, 0.125, $node->round[3]->comment, 0, 0, 'L');
   bracket_pdf_drawbracketset($pdf, $node, $l, $t, $width, $height, $spacing, 3, 1, 1, 'L');
   $l += $width;
   $t += ($height / 2);
   $pdf->line($l, $t, $l+$width, $t);
   $pdf->setXY($l, $t-0.125);
-  $pdf->setFont($bracket_pdf_font_name, 'B', $bracket_pdf_font_large);
+  $pdf->setFont($bracket_pdf_font_name, 'B', $bracket_pdf_font_norm);
   $pdf->cell($width, 0.125, $node->result[3]->cname, 0, 0, 'L');
   $pdf->setXY($l, $t);
   $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_norm);
@@ -301,14 +301,14 @@ function ff2champ_pdf($node) {
   $t = $iheight - ($iheight / 4) - ($height / 2);
   $r = $iwidth - $left;
   $pdf->setXY($r-$width, $t-0.4);
-  $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_norm);
+  $pdf->setFont($bracket_pdf_font_name, 'B', $bracket_pdf_font_large);
   $pdf->cell($width, 0.125, $node->round[4]->comment, 0, 0, 'R');
   bracket_pdf_drawbracketset($pdf, $node, $r, $t, $width, $height, $spacing, 4, 1, 1, 'R');
   $r -= $width;
   $t += ($height / 2);
   $pdf->line($r, $t, $r-$width, $t);
   $pdf->setXY($r-$width, $t-0.125);
-  $pdf->setFont($bracket_pdf_font_name, 'B', $bracket_pdf_font_large);
+  $pdf->setFont($bracket_pdf_font_name, 'B', $bracket_pdf_font_norm);
   $pdf->cell($width, 0.125, $node->result[4]->cname, 0, 0, 'R');
   $pdf->setXY($r-$width, $t);
   $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_norm);

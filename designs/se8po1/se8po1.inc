@@ -1,13 +1,13 @@
 <?php
-// $Id$
+// $Id
 
 /**
  * @file
- * This file contains the required functions for the se8po2 bracket design
+ * This file contains the required functions for the se8po1 bracket design
  *
  * This design consists of 8 competitors in a single elimination bracket
  *
- * competing for 2 rounds only
+ * competing for 1 round only
  *
  * @author Jim Bullington <jimb@jrbcs.com>
  */
@@ -18,7 +18,7 @@
  * @param $node
  *   the node object
  */
-function se8po2_create(&$node) {
+function se8po1_create(&$node) {
 
   // set bracket bar option
   $node->options['show_bracket_bar'] = TRUE;
@@ -26,10 +26,9 @@ function se8po2_create(&$node) {
   // add competitors
   bracket_design_create_competitors($node, 8);
   // add rounds
-  bracket_design_create_winner_rounds($node, 2);
+  bracket_design_create_winner_rounds($node, 1);
   // name the rounds
   $node->round[1]->name = t('Round 1');
-  $node->round[2]->name = t('Round 2');
   // add playoff results
   bracket_design_create_playoff_results($node);
 }
@@ -42,7 +41,7 @@ function se8po2_create(&$node) {
  * @return
  *   the png image
  */
-function se8po2_image($node) {
+function se8po1_image($node) {
 
   global $bracket_image_font;
   global $bracket_image_font_bold;
@@ -59,7 +58,7 @@ function se8po2_image($node) {
   // setup positions and spacing
   $top = 75;
   $left = 15;
-  $width = 120;
+  $width = 150;
   $height = 50;
   $spacing = $height * 1.75;
 
@@ -67,7 +66,7 @@ function se8po2_image($node) {
   $tb = $spacing * 2.5;
 
   // setup image
-  $iwidth = 700;
+  $iwidth = 600;
   $iheight = 500;
   $img = imagecreatetruecolor($iwidth, $iheight);
 
@@ -96,26 +95,22 @@ function se8po2_image($node) {
   bracket_image_drawbracketset($img, $node, $left, $top, $width, $height, $spacing, 1, 1, 2, 'L');
   bracket_image_drawbracketset($img, $node, $left, $top+$tb, $width, $height, $spacing, 1, 3, 4, 'L');
 
-  // round 2
-  $l = $left + $width;
-  $hh = $spacing;
-  $sp = $spacing * 2;
-  // new top - add half prev height
-  $t = $top + ($height / 2);
-  bracket_image_drawbracketset($img, $node, $l, $t, $width, $hh, $sp, 2, 1, 1, 'L');
-  bracket_image_drawbracketset($img, $node, $l, $t+$tb, $width, $hh, $sp, 2, 2, 2, 'L');
-
   // results
-  $l += $width;
-  $t += ($hh / 2);
-  $hh = $sp;
-  $sp = $sp * 2;
+  $l = $left + $width;
+  $t = $top + ($height / 2);
   imageline($img, $l, $t, $l+$width, $t, $bracket_image_fg_color);
   bracket_image_imagetextalign($img, $bracket_image_font_norm, $l+2, $t-5, $w, $node->result[1]->cname, $bracket_image_fg_color, 'L');
   bracket_image_imagetextalign($img, $bracket_image_font_norm, $l+2, $t+10, $w, $node->result[1]->comment, $bracket_image_fg_color, 'L');
   imageline($img, $l, $t+$tb, $l+$width, $t+$tb, $bracket_image_fg_color);
-  bracket_image_imagetextalign($img, $bracket_image_font_norm, $l+2, $t+$tb-5, $w, $node->result[2]->cname, $bracket_image_fg_color, 'L');
-  bracket_image_imagetextalign($img, $bracket_image_font_norm, $l+2, $t+$tb+10, $w, $node->result[2]->comment, $bracket_image_fg_color, 'L');
+  bracket_image_imagetextalign($img, $bracket_image_font_norm, $l+2, $t+$tb-5, $w, $node->result[3]->cname, $bracket_image_fg_color, 'L');
+  bracket_image_imagetextalign($img, $bracket_image_font_norm, $l+2, $t+$tb+10, $w, $node->result[3]->comment, $bracket_image_fg_color, 'L');
+  $t += $spacing;
+  imageline($img, $l, $t, $l+$width, $t, $bracket_image_fg_color);
+  bracket_image_imagetextalign($img, $bracket_image_font_norm, $l+2, $t-5, $w, $node->result[2]->cname, $bracket_image_fg_color, 'L');
+  bracket_image_imagetextalign($img, $bracket_image_font_norm, $l+2, $t+10, $w, $node->result[2]->comment, $bracket_image_fg_color, 'L');
+  imageline($img, $l, $t+$tb, $l+$width, $t+$tb, $bracket_image_fg_color);
+  bracket_image_imagetextalign($img, $bracket_image_font_norm, $l+2, $t+$tb-5, $w, $node->result[4]->cname, $bracket_image_fg_color, 'L');
+  bracket_image_imagetextalign($img, $bracket_image_font_norm, $l+2, $t+$tb+10, $w, $node->result[4]->comment, $bracket_image_fg_color, 'L');
 
   // bracket title
   bracket_image_imagetextalign($img, $bracket_image_font_xlarge, $iwidth / 2 - (400 / 2), 15, 400, $node->title, $bracket_image_fg_color, 'C');
@@ -127,7 +122,7 @@ function se8po2_image($node) {
   bracket_image_imagetextwordwrap($img, $bracket_image_font_small, $iwidth / 2 - (400 / 2), 60, 400, $node->comments, $bracket_image_fg_color, 'C');
 
   // bracket footnote
-  bracket_image_imagetextwordwrap($img, $bracket_image_font_small, $left, $iheight-$h, $iwidth-($left*2), $node->footer, $bracket_image_fg_color, 'C');
+  bracket_image_imagetextwordwrap($img, $bracket_image_font_small, $left, $iheight-($h*2), $iwidth-($left*2), $node->footer, $bracket_image_fg_color, 'C');
 
   // bracket logo
   if ($node->logopath != '') {
@@ -169,7 +164,7 @@ function se8po2_image($node) {
  * @return
  *   the pdf document
  */
-function se8po2_pdf($node) {
+function se8po1_pdf($node) {
 
   global $bracket_pdf_font_name;
   global $bracket_pdf_font_xlarge;
@@ -213,19 +208,9 @@ function se8po2_pdf($node) {
   bracket_pdf_drawbracketset($pdf, $node, $left, $top, $width, $height, $spacing, 1, 1, 2, 'L');
   bracket_pdf_drawbracketset($pdf, $node, $left, $top + $tb, $width, $height, $spacing, 1, 3, 4, 'L');
 
-  // round 2
+  // results
   $l = $left + $width;
   $t = $top + ($height / 2);
-  $hh = $spacing;
-  $sp = $spacing * 2;
-  bracket_pdf_drawbracketset($pdf, $node, $l, $t, $width, $hh, $sp, 2, 1, 1, 'L');
-  bracket_pdf_drawbracketset($pdf, $node, $l, $t + $tb, $width, $hh, $sp, 2, 2, 2, 'L');
-
-  // results
-  $l += $width;
-  $t += ($hh / 2);
-  $hh = $sp;
-  $sp = $sp * 2;
   $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_norm);
   $pdf->line($l, $t, $l+$width, $t);
   $pdf->setXY($l, $t-0.125);
@@ -234,9 +219,20 @@ function se8po2_pdf($node) {
   $pdf->cell($w, 0.125, $node->result[1]->comment, 0, 0, 'L');
   $pdf->line($l, $t+$tb, $l+$width, $t+$tb);
   $pdf->setXY($l, $t+$tb-0.125);
-  $pdf->cell($w, 0.125, $node->result[2]->cname, 0, 0, 'L');
+  $pdf->cell($w, 0.125, $node->result[3]->cname, 0, 0, 'L');
   $pdf->setXY($l, $t+$tb);
+  $pdf->cell($w, 0.125, $node->result[3]->comment, 0, 0, 'L');
+  $t += $spacing;
+  $pdf->line($l, $t, $l+$width, $t);
+  $pdf->setXY($l, $t-0.125);
+  $pdf->cell($w, 0.125, $node->result[2]->cname, 0, 0, 'L');
+  $pdf->setXY($l, $t);
   $pdf->cell($w, 0.125, $node->result[2]->comment, 0, 0, 'L');
+  $pdf->line($l, $t+$tb, $l+$width, $t+$tb);
+  $pdf->setXY($l, $t+$tb-0.125);
+  $pdf->cell($w, 0.125, $node->result[4]->cname, 0, 0, 'L');
+  $pdf->setXY($l, $t+$tb);
+  $pdf->cell($w, 0.125, $node->result[4]->comment, 0, 0, 'L');
 
   // bracket title
   $pdf->setFont($bracket_pdf_font_name, 'BI', $bracket_pdf_font_xlarge);
