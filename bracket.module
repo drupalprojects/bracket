@@ -386,9 +386,13 @@ function bracket_view($node, $teaser=FALSE, $page=FALSE) {
  */
 function theme_bracket_view(&$node, $teaser=FALSE, $page=FALSE) {
 
-  $output = '<div class="bracket"><p>' . l(t('Click here for a printable version'), 'node/' . $node->nid . '/pdf') . '</p>';
-  $output .= '<img src="' . url('node/' . $node->nid . '/image') . '">';
-  $output .= '</div>';
+  // Add the css file
+  drupal_add_css(drupal_get_path('module', 'bracket') . '/bracket.css');
+
+  $output = '<div class="bracket">' . "\n";
+  $output .= '<div class="bracket-print-link">' . l(t('Click here for a printable version'), 'node/' . $node->nid . '/pdf') . "</div>\n";
+  $output .= '<div class="bracket-img"><img src="' . url('node/' . $node->nid . '/image') . '"></div>' . "\n";
+  $output .= "</div>\n";
 
   return $output;
 }
