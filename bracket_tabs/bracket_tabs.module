@@ -1,0 +1,194 @@
+<?php
+// $Id
+
+/**
+ * @file
+ * This module places tabs on tournament brackets.
+ *
+ * @author Jim Bullington <jimb@jrbcs.com>
+ */
+
+//=========================================================================
+// drupal hooks
+//=========================================================================
+
+/**
+ * Implementation of hook_node_info().
+ */
+function bracket_tabs_node_info() {
+
+  return array(
+    'bracket_tabs' => array(
+      'name' => t('Bracket Tabs'),
+      'module' => 'bracket_tabs',
+      'description' => t('Create link tabs for tournament brackets.')
+    )
+  );
+}
+
+
+/**
+ * Implementation of hook_menu().
+ */
+function bracket_tabs_menu($may_cache) {
+
+  global $user;
+
+  $items = array();
+
+  if ($may_cache) {
+
+    $items[] = array(
+      'path' => 'admin/settings/bracket_tabs',
+      'title' => t('Bracket Tabs'),
+      'description' => t('Change bracket tabs settings'),
+      'callback' => 'bracket_tabs_settings',
+      'access' => ($user->uid == 1),
+      'type' => MENU_NORMAL_ITEM,
+    );
+  }
+  
+  return $items;
+}
+
+/**
+ * Implementation of hook_nodeapi().
+ */
+function bracket_tabs_nodeapi(&$node, $op, $a3, $a4) {
+
+  // must be a bracket view not teaser
+  if ($node->type == 'bracket') {
+    if ($op == 'view' && !$a3) {
+      $node->content['tabs'] = array(
+        '#value' => theme('bracket_tabs_view', $node, $a3, $a4),
+        '#weight' => 9
+      );    
+    }
+  }
+}
+
+/**
+ * Theming function for bracket_tabs_view
+ */
+function theme_bracket_tabs_view(&$node, $teaser = 0, $page = 0) {
+
+  $output = '';
+  
+  // query for matching brackets based on match criteria
+  $sql = "SELECT n.nid, b.season, b.sport, b.division, b.brgroup 
+          FROM {node} n 
+          JOIN {bracket} b on b.nid = n.nid 
+          WHERE n.type = 'bracket'";
+  $match = variable_get('bracket_tabs_match', array());
+  $title = variable_get('bracket_tabs_title', '');
+  $args = array();
+  // must be criteria specified as well as bracket fields present
+  if (count($match) > 0 && $title != '' &&
+      ($node->season || $node->sport || 
+       $node->division || $node->brgroup)) {
+    foreach ($match as $m) {
+      if ($m === 'season') {
+        $sql .= " AND b.season = '%s'";
+        $args[] = $node->season;
+      }
+      else if ($m === 'sport') {
+        $sql .= " AND b.sport = '%s'";
+        $args[] = $node->sport;
+      }
+      else if ($m === 'division') {
+        $sql .= " AND b.division = '%s'";
+        $args[] = $node->division;
+      }
+      else if ($m === 'group') {
+        $sql .= " AND b.brgroup = '%s'";
+        $args[] = $node->brgroup;
+      }
+    }
+    // if criteria found, get matching brackets
+    if (count(args) > 0) {
+      $tabs = array();
+      $a = array();
+      $result = db_query($sql, $args);
+      // substitute into title
+      while ($row = db_fetch_object($result)) {
+        $tmp = $title;
+        $tmp = str_replace('[season]', $row->season, $tmp);
+        $tmp = str_replace('[sport]', $row->sport, $tmp);
+        $tmp = str_replace('[division]', $row->division, $tmp);
+        $tmp = str_replace('[group]', $row->brgroup, $tmp);
+        $a[] = ltrim($tmp);
+        $tabs[] .= '<li' . ($row->nid == $node->nid ? ' class="active"' : '') . '>' . 
+          l(trim($tmp), 'node/' . $row->nid) . '</li>';
+      }
+      
+      // sort by title
+      array_multisort($a, $tabs);
+      
+      // format titles as tabs
+      if (count($tabs) > 1) {
+        $output .= '<div class="tabs"><ul class="tabs primary">';
+        $output .= implode($tabs);
+        $output .= "</ul></div>\n";
+      }
+    }
+  }
+  
+  return $output;
+}
+
+//=========================================================================
+// bracket_tabs settings
+//=========================================================================
+
+function bracket_tabs_settings() {
+
+  return drupal_get_form('bracket_tabs_settings_form');
+}
+
+function bracket_tabs_settings_form() {
+
+  $form = array();
+
+  $form['general'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Bracket Tabs Settings'),
+    '#collapsible' => FALSE,
+    '#collapsed' => FALSE
+  );
+
+  $form['general']['match'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Match Brackets With the Same'),
+    '#default_value' => variable_get('bracket_tabs_match', array()),
+    '#options' => array(
+      'season' => t('Season'), 
+      'sport' => t('Sport'), 
+      'division' => t('Division'),
+      'group' => t('Group')
+    ),
+    '#description' => t('Select fields that will group brackets together as tabs.')
+  );
+
+  $form['general']['title'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Tab Title Pattern'),
+    '#default_value' => variable_get('bracket_tabs_title', ''),
+    '#description' => t('Enter the pattern to be used for bracket tabs - [season], [sport], [division], [group] will be substituted for the actual bracket values.')
+  );
+  
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save Configuration Settings'),
+  );
+
+  return $form;
+}
+
+function bracket_tabs_settings_form_submit($form_id, $form_values) {
+
+  variable_set('bracket_tabs_match', $form_values['match']);
+  variable_set('bracket_tabs_title', $form_values['title']);
+
+  drupal_set_message(t('Configuration settings were saved.'));
+}
+

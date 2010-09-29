@@ -1,0 +1,13 @@
+/* $Id$ */
+
+/**
+ * @file
+ * Styles for the Bracket module.
+ *
+ */
+ 
+div.bracket-print-link {
+    display: block;
+    float: left;
+    clear: left;
+}
