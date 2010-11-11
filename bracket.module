@@ -63,18 +63,27 @@ function bracket_node_info() {
 /**
  * Implementation of hook_access
  */
-function bracket_access($op, $node, $account) {
+function bracket_access($op, $node) {
 
+  global $user;
+  
   switch ($op) {
     case 'view':
-      return user_access('view brackets', $account);
+      // if node is published, return view access
+      if ($node->status) {
+        return user_access('view brackets');
+      }
+      // if unpublished, return update access - users who can update the node should be able to view it
+      else  {
+        return node_access('update', $node);
+      }
       break;
     case 'create':
-      return user_access('create brackets', $account);
+      return user_access('create brackets');
       break;
     case 'update':
     case 'delete':
-      return user_access("edit brackets") || (user_access("edit own brackets") && ($account->uid == $node->uid));
+      return user_access("edit brackets") || (user_access("edit own brackets") && ($user->uid == $node->uid));
       break;
   }
 }
@@ -1194,9 +1203,9 @@ function bracket_export_form_submit($form_id, &$form_state) {
   $fname = preg_replace('/[^0-9a-z\.\_\-]/i','_', $node->title);
 
   // prepare to download
-  header('Content-Type: text/plain');
-  header('Content-Length: ' . strlen($output));
-  header('Content-Disposition: attachment; filename="' . $fname . '.xml"');
+  drupal_set_header('Content-Type: text/plain');
+  drupal_set_header('Content-Length: ' . strlen($output));
+  drupal_set_header('Content-Disposition: attachment; filename="' . $fname . '.xml"');
 
   // send the output
   echo $output;
@@ -1369,7 +1378,7 @@ function bracket_image($node) {
     $img = call_user_func_array($function, $args);
 
     // send image
-    header('Content-type: image/png');
+    drupal_set_header('Content-type: image/png');
     echo $img;
   }
 }
@@ -1390,20 +1399,20 @@ function bracket_pdf($node) {
     $img = call_user_func_array($function, $args);
 
     // force PDF download
-    header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+    drupal_set_header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 
     if(isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'],'MSIE')) {
-      header('Content-Type: application/force-download');
+      drupal_set_header('Content-Type: application/force-download');
     }
     else {
-      header('Content-Type: application/octet-stream');
+      drupal_set_header('Content-Type: application/octet-stream');
     }
 
     // make a file name from title
     $fname = preg_replace('/[^0-9a-z\.\_\-]/i','_', $node->title);
 
-    header('Content-disposition: attachment; filename="' . $fname .'.pdf"');
-    header('Content-Length: '.strlen($img));
+    drupal_set_header('Content-disposition: attachment; filename="' . $fname .'.pdf"');
+    drupal_set_header('Content-Length: '.strlen($img));
     echo $img;
   }
 }
