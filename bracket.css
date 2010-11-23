@@ -8,6 +8,6 @@
  
 div.bracket-print-link {
     display: block;
-    float: left;
-    clear: left;
+    float: none;
+    clear: both;
 }

@@ -19,7 +19,7 @@
 function se8champ_create(&$node) {
 
   // set bracket bar option
-  $node->options['show_bracket_bar'] = TRUE;
+  $node->options['image_options']['show_bracket_bar'] = TRUE;
 
   // add competitors
   bracket_design_create_competitors($node, 8);
@@ -167,7 +167,7 @@ function se8champ_image($node) {
   }
 
   // bracket bar
-  if ($node->options['show_bracket_bar']) {
+  if ($node->options['image_options']['show_bracket_bar']) {
     bracket_image_setup_bar_colors($node, $img);
     $t = $top + $tb - ($spacing / 2);
     imagefilledrectangle($img, $left, $t-($h/2)-2, $l, $t+($h/2)+2, $bracket_image_bar_bg_color);
@@ -326,7 +326,7 @@ function se8champ_pdf($node) {
   }
 
   // bracket bar
-  if ($node->options['show_bracket_bar']) {
+  if ($node->options['image_options']['show_bracket_bar']) {
     bracket_pdf_setup_bar_colors($node, $pdf);
     $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_norm);
     $t = $top + $tb - ($spacing / 2);

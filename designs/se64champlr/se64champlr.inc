@@ -21,7 +21,7 @@
 function se64champlr_create(&$node) {
 
   // set bracket bar option
-  $node->options['show_bracket_bar'] = TRUE;
+  $node->options['image_options']['show_bracket_bar'] = TRUE;
 
   // add competitors
   bracket_design_create_competitors($node, 64);
@@ -201,7 +201,7 @@ function se64champlr_image($node) {
   bracket_image_imagetextwordwrap($img, $bracket_image_font_small, 10, $iheight-30, $iwidth-10, $node->footer, $bracket_image_fg_color, 'C');
 
   // bracket bar
-  if ($node->options['show_bracket_bar']) {
+  if ($node->options['image_options']['show_bracket_bar']) {
     bracket_image_setup_bar_colors($node, $img);
     $t = $top + $tb - ($spacing / 2);
     imagefilledrectangle($img, $left, $t-($h/2)-2, $iwidth-$left, $t+($h/2)+2, $bracket_image_bar_bg_color);
@@ -437,7 +437,7 @@ function se64champlr_pdf($node) {
   }
 
   // bracket bar
-  if ($node->options['show_bracket_bar']) {
+  if ($node->options['image_options']['show_bracket_bar']) {
     bracket_pdf_setup_bar_colors($node, $pdf);
     $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_small);
     $t = $top + $tb - $height;

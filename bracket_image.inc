@@ -96,13 +96,13 @@ function bracket_image_setup_colors($node, $img) {
   global $bracket_bg_color_default;
   global $bracket_fg_color_default;
 
-  $color = $node->options['bg_color'];
+  $color = $node->options['image_options']['bg_color'];
   if (bracket_validate_color($color)) {
     $rgb = bracket_html2rgb($color);
     $bracket_image_bg_color = imagecolorallocate($img, $rgb[0], $rgb[1], $rgb[2]);
   }
 
-  $color = $node->options['fg_color'];
+  $color = $node->options['image_options']['fg_color'];
   if (bracket_validate_color($color)) {
     $rgb = bracket_html2rgb($color);
     $bracket_image_fg_color = imagecolorallocate($img, $rgb[0], $rgb[1], $rgb[2]);
@@ -124,12 +124,12 @@ function bracket_image_setup_bar_colors($node, $img) {
   global $bracket_bar_bg_color_default;
   global $bracket_bar_fg_color_default;
 
-  $color = $node->options['bar_bg_color'];
+  $color = $node->options['image_options']['bar_bg_color'];
   if (bracket_validate_color($color)) {
     $rgb = bracket_html2rgb($color);
     $bracket_image_bar_bg_color = imagecolorallocate($img, $rgb[0], $rgb[1], $rgb[2]);
   }
-  $color = $node->options['bar_fg_color'];
+  $color = $node->options['image_options']['bar_fg_color'];
   if (bracket_validate_color($color)) {
     $rgb = bracket_html2rgb($color);
     $bracket_image_bar_fg_color = imagecolorallocate($img, $rgb[0], $rgb[1], $rgb[2]);
@@ -149,22 +149,22 @@ function bracket_image_setup_fonts($node) {
   global $bracket_image_font_italic_file;
   global $bracket_image_font_bolditalic_file;
 
-  $font = $node->options['image_fonts']['image_font'];
+  $font = $node->options['image_options']['image_fonts']['image_font'];
   if (trim($font) != '') {
     $bracket_image_font_file = $font;
   }
 
-  $font = $node->options['image_fonts']['image_font_bold'];
+  $font = $node->options['image_options']['image_fonts']['image_font_bold'];
   if (trim($font) != '') {
     $bracket_image_font_bold_file = $font;
   }
 
-  $font = $node->options['image_fonts']['image_font_italic'];
+  $font = $node->options['image_options']['image_fonts']['image_font_italic'];
   if (trim($font) != '') {
     $bracket_image_font_italic_file = $font;
   }
 
-  $font = $node->options['image_fonts']['image_font_bolditalic'];
+  $font = $node->options['image_options']['image_fonts']['image_font_bolditalic'];
   if (trim($font) != '') {
     $bracket_image_font_bolditalic_file = $font;
   }
@@ -556,52 +556,34 @@ function bracket_image_imagetextwordwrap($img, $fontsize, $x, $y, $w, $text, $co
  */
 function bracket_image_insert_image($img, $imgpath, $x, $y, $w = 0, $center = FALSE) {
 
-  $unlink = FALSE;
-  if (preg_match("/^https?:\/\//", $imgpath)) {
-    $content = file_get_contents($imgpath); 
-    if ($content) {
-      $ftype = strrchr($imgpath, '.');
-      $path = tempnam(file_directory_temp(), 'img');
-      $path .= $ftype;
-      file_put_contents($path, $content); 
-      $unlink = TRUE;
+  $path = bracket_logo_url($imgpath);
+  $size = getimagesize($path);
+  if ($size) {
+    $ftype = strrchr($path, '.');
+    if ($ftype == '.jpg' || $ftype == '.jpeg') {
+      $img2 = imagecreatefromjpeg($path);
     }
-  }
-  else {
-    $path = realpath($imgpath);
-  }
-  if (file_exists($path)) {
-    $size = getimagesize($path);
-    if ($size) {
-      $ftype = strrchr($path, '.');
-      if ($ftype == '.jpg' || $ftype == '.jpeg') {
-        $img2 = imagecreatefromjpeg($path);
-      }
-      if ($ftype == '.png') {
-        $img2 = imagecreatefrompng($path);
-      }
-      if ($img2) {
-        if ($w > 0) {
-          $dsth = ($size[1] / $size[0]) * $w;
-          if ($center) {
-            $x = $x - ($w / 2);
-            $y = $y - ($dsth / 2);
-          }
-          imagecopyresampled($img, $img2, $x, $y, 0, 0, $w, $dsth, $size[0], $size[1]);
-        }
-        else  {
-          if ($center) {
-            $x = $x - ($size[0] / 2);
-            $y = $y - ($size[1] / 2);
-          }
-          imagecopyresampled($img, $img2, $x, $y, 0, 0, $size[0], $size[1], $size[0], $size[1]);
-        }
-        imagedestroy($img2);
-      }
+    if ($ftype == '.png') {
+      $img2 = imagecreatefrompng($path);
     }
-  }
-  if ($unlink) {
-    unlink($path);
+    if ($img2) {
+      if ($w > 0) {
+        $dsth = ($size[1] / $size[0]) * $w;
+        if ($center) {
+          $x = $x - ($w / 2);
+          $y = $y - ($dsth / 2);
+        }
+        imagecopyresampled($img, $img2, $x, $y, 0, 0, $w, $dsth, $size[0], $size[1]);
+      }
+      else  {
+        if ($center) {
+          $x = $x - ($size[0] / 2);
+          $y = $y - ($size[1] / 2);
+        }
+        imagecopyresampled($img, $img2, $x, $y, 0, 0, $size[0], $size[1], $size[0], $size[1]);
+      }
+      imagedestroy($img2);
+    }
   }
 }
 

@@ -91,6 +91,8 @@ class Bracket {
     $this->options = array();   // bracket options
     
     // set default options
+    $node->options['display'] = variable_get('bracket_default_display', 'Image');
+    $node->options['hide_pdf']= FALSE;
     $this->options['show_match_id'] = FALSE;
     $this->options['fg_color'] = '';
     $this->options['bg_color'] = '';

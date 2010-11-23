@@ -42,7 +42,7 @@ function bracket_pdf_setup_colors($node, $pdf) {
   global $bracket_bg_color_default;
   global $bracket_fg_color_default;
 
-  $color = $node->options['fg_color'];
+  $color = $node->options['image_options']['fg_color'];
   if (bracket_validate_color($color)) {
     $rgb = bracket_html2rgb($color);
   }
@@ -66,7 +66,7 @@ function bracket_pdf_setup_bar_colors($node, $pdf) {
   global $bracket_bar_bg_color_default;
   global $bracket_bar_fg_color_default;
 
-  $color = $node->options['bar_fg_color'];
+  $color = $node->options['image_options']['bar_fg_color'];
   if (bracket_validate_color($color)) {
     $rgb = bracket_html2rgb($color);
   }
@@ -76,7 +76,7 @@ function bracket_pdf_setup_bar_colors($node, $pdf) {
   $pdf->setTextColor($rgb[0], $rgb[1], $rgb[2]);
   $pdf->setDrawColor($rgb[0], $rgb[1], $rgb[2]);
 
-  $color = $node->options['bar_bg_color'];
+  $color = $node->options['image_options']['bar_bg_color'];
   if (bracket_validate_color($color)) {
     $rgb = bracket_html2rgb($color);
   }
@@ -107,7 +107,7 @@ function bracket_pdf_setup_font($node) {
 
   global $bracket_pdf_font_name;
 
-  $font = $node->options['pdf_font'];
+  $font = $node->options['image_options']['pdf_font'];
   if (trim($font) != '') {
     $bracket_pdf_font_name = $font;
   }
@@ -372,24 +372,11 @@ function bracket_pdf_drawdashedline($pdf, $x1, $y1, $x2, $y2) {
  */
 function bracket_pdf_insert_image($pdf, $imgpath, $x, $y, $w=0, $center = FALSE) {
 
-  $unlink = FALSE;
-  if (preg_match("/^https?:\/\//", $imgpath)) {
-    $content = file_get_contents($imgpath); 
-    if ($content) {
-      $ftype = strrchr($imgpath, '.');
-      $path = tempnam(file_directory_temp(), 'img');
-      $path .= $ftype;
-      file_put_contents($path, $content); 
-      $unlink = TRUE;
-    }
-  }
-  else {
-    $path = realpath($imgpath);
-  }
+  $path = bracket_logo_url($imgpath);
   $ftype = strrchr($path, '.');
   if ($ftype == '.png' || $ftype == '.jpg' || $ftype == '.jpeg') {
-    if (file_exists($path)) {
-      $size = getimagesize($path);
+    $size = getimagesize($path);
+    if ($size) {      
       $h = $size[1] / 72;
       if ($w > 0) {
         $w2 = $size[0] / 72;
@@ -410,8 +397,5 @@ function bracket_pdf_insert_image($pdf, $imgpath, $x, $y, $w=0, $center = FALSE)
         $pdf->image($path, $x, $y);
       }
     }
-  }
-  if ($unlink) {
-    unlink($path);
   }
 }
