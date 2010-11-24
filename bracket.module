@@ -291,6 +291,18 @@ function bracket_theme() {
     'bracket_round_edit_form' => array(
       'arguments' => array('form' => NULL),
     ),
+    'bracket_match' => array(
+      'arguments' => array('node' => NULL, 'round_index' => NULL, 'match_index' => NULL, 'orientation' => NULL),
+      'template' => 'templates/bracket-match',
+    ),
+    'bracket_result' => array(
+      'arguments' => array('node' => NULL, 'result_index' => NULL, 'orientation' => NULL),
+      'template' => 'templates/bracket-result',
+    ),
+    'bracket_images' => array(
+      'arguments' => array('node' => NULL),
+      'template' => 'templates/bracket-images',
+    )
   );
   
   // add designs
@@ -298,13 +310,13 @@ function bracket_theme() {
 
     // form path and template name    
     $path = drupal_get_path('module', 'bracket') . '/designs/' . $key . '/';
-    $tpl = 'bracket_' . $key;
+    $tpl = 'bracket-' . $key;
 
     // only add if template file exists
     if (file_exists(realpath($path . $tpl . '.tpl.php'))) {
     
       // add to theme cache
-      $theme[$tpl] = array(
+      $theme['bracket_' . $key] = array(
         'arguments' => array('node' => NULL),
         'path' => $path,
         'template' => $tpl
@@ -427,7 +439,7 @@ function theme_bracket_view(&$node, $teaser=FALSE, $page=FALSE) {
   drupal_add_css(drupal_get_path('module', 'bracket') . '/bracket.css');
   
   $output = '<div class="bracket">' . "\n";
-  
+
   if (!$node->options['hide_pdf']) {
     $output .= '<div class="bracket-print-link">' . l(t('Click here for a printable version'), 'node/' . $node->nid . '/pdf') . "</div>\n";
   }
@@ -1425,7 +1437,7 @@ function bracket_image($node) {
     $img = call_user_func_array($function, $args);
 
     // send image
-    drupal_set_header('Content-type: image/png');
+    drupal_set_header('Content-Type: image/png');
     echo $img;
   }
 }
@@ -1458,7 +1470,7 @@ function bracket_pdf($node) {
     // make a file name from title
     $fname = preg_replace('/[^0-9a-z\.\_\-]/i','_', $node->title);
 
-    drupal_set_header('Content-disposition: attachment; filename="' . $fname .'.pdf"');
+    drupal_set_header('Content-Disposition: attachment; filename="' . $fname .'.pdf"');
     drupal_set_header('Content-Length: '.strlen($img));
     echo $img;
   }
