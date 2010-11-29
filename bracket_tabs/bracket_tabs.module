@@ -13,21 +13,6 @@
 //=========================================================================
 
 /**
- * Implementation of hook_node_info().
- */
-function bracket_tabs_node_info() {
-
-  return array(
-    'bracket_tabs' => array(
-      'name' => t('Bracket Tabs'),
-      'module' => 'bracket_tabs',
-      'description' => t('Create link tabs for tournament brackets.')
-    )
-  );
-}
-
-
-/**
  * Implementation of hook_menu().
  */
 function bracket_tabs_menu($may_cache) {
