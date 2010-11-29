@@ -1323,16 +1323,14 @@ function bracket_image($node) {
   // form cache key
   $key = 'bracket/' . $node->nid . '/image';
     
-  $img = bracket_fetch_from_cache($key);
-  
-  // image was cached, use it
-  if ($img) {
-
-    watchdog('bracket', 'Image fetched from cache: /node/' . $node->nid);
+  // don't retrieve from cache for update users
+  if (!bracket_access('update', $node)) {
+    // try to fetch from cache
+    $img = bracket_fetch_from_cache($key);
   }
   
   // if image not cached, generate image
-  else {
+  if (!$img) {
 
     // design image function
     $function = $node->design . '_image';
@@ -1344,12 +1342,11 @@ function bracket_image($node) {
       
       // save in cache
       cache_set($key, 'cache', $img, CACHE_PERMANENT);
-      watchdog('bracket', 'Image generated: /node/' . $node->nid);
     }
   }
  
   // send image
-  drupal_set_header('Content-type: image/png');
+  drupal_set_header('Content-Type: image/png');
   echo $img;
 }
 
@@ -1364,16 +1361,14 @@ function bracket_pdf($node) {
   // form cache key
   $key = 'bracket/' . $node->nid . '/pdf';
 
-  $img = bracket_fetch_from_cache($key);
-  
-  // pdf was cached, use it
-  if ($img) {
-
-    watchdog('bracket', 'PDF fetched from cache: /node/' . $node->nid);
+  // don't retrieve from cache for update users
+  if (!bracket_access('update', $node)) {
+    // try to fetch from cache
+    $img = bracket_fetch_from_cache($key);
   }
   
   // if pdf not cached, generate pdf
-  else {
+  if (!$img) {
 
     // design pdf function
     $function = $node->design . '_pdf';
@@ -1385,7 +1380,6 @@ function bracket_pdf($node) {
 
       // save in cache
       cache_set($key, 'cache', $img, CACHE_PERMANENT);
-      watchdog('bracket', 'PDF generated: /node/' . $node->nid);
     }
   }
   
@@ -1403,7 +1397,7 @@ function bracket_pdf($node) {
   $fname = preg_replace('/[^0-9a-z\.\_\-]/i','_', $node->title);
 
   // send PDF
-  drupal_set_header('Content-disposition: attachment; filename="' . $fname .'.pdf"');
+  drupal_set_header('Content-Disposition: attachment; filename="' . $fname .'.pdf"');
   drupal_set_header('Content-Length: '.strlen($img));
   echo $img;
 }
@@ -1420,11 +1414,6 @@ function bracket_fetch_from_cache($key) {
   
   // get cache setting
   $cancache = variable_get(BRACKET_CACHE, false);
-  
-  // don't retrieve from cache for update users
-  if (bracket_access('update', $node)) {
-    $cancache = false;
-  }
   
   // retrieve from cache if so configured
   if ($cancache) {
