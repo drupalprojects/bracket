@@ -33,6 +33,8 @@ if (module_exists('views')) {
   module_load_include('inc', 'bracket', 'bracket_views');
 }
 
+define('BRACKET_CACHE', 'bracket_cache');
+
 //=========================================================================
 // drupal hooks
 //=========================================================================
@@ -357,6 +359,18 @@ function bracket_settings_form($form_state) {
     '#default_value' => variable_get('bracket_default_display', 'Image'),
     '#description' => t('Select the default display option for brackets.')
   );
+
+  $form['general'][BRACKET_CACHE] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Cache Bracket Images'),
+    '#default_value' => variable_get(BRACKET_CACHE, FALSE),
+    '#description' => t('Cache bracket images and pdfs - may improve performance during peak loads.  Unlike the Drupal cache, brackets are cached for all users, except for those who have bracket update access.')
+  );
+    
+  $form['general']['purge_cache_now'] = array(
+    '#type' => 'submit',
+    '#value' => t('Purge Bracket Cache Now'),
+  );
   
   $form['general']['upload'] = array(
     '#type' => 'checkbox',
@@ -397,7 +411,16 @@ function bracket_settings_form_validate($form_id, &$form_state) {
 
 function bracket_settings_form_submit($form_id, &$form_state) {
 
+  if ($form_state['values']['op'] == $form_state['values']['purge_cache_now']) {
+    cache_clear_all('bracket', 'cache', TRUE);
+    $msg = 'Bracket cache was purged.';
+    watchdog('bracket', $msg);
+    drupal_set_message($msg, 'info');
+    return;
+  }
+  
   variable_set('bracket_default_display', $form_state['values']['display']);
+  variable_set(BRACKET_CACHE, $form_state['values'][BRACKET_CACHE]);
   variable_set('bracket_image_upload', $form_state['values']['upload']);
   variable_set('bracket_image_upload_path', $form_state['values']['upload_path']);
 
@@ -1028,6 +1051,9 @@ function bracket_update($node) {
   }
 
   bracket_db_update($node);
+
+  // delete bracket images from cache
+  bracket_clear_cache($node);
 }
 
 /**
@@ -1036,6 +1062,9 @@ function bracket_update($node) {
 function bracket_delete($node, $log = TRUE) {
 
   bracket_db_delete($node);
+
+  // delete bracket images from cache
+  bracket_clear_cache($node);
 }
 
 //=========================================================================
@@ -1433,17 +1462,34 @@ function bracket_create(&$node) {
  */
 function bracket_image($node) {
 
-  $function = $node->design . '_image';
-
-  if (function_exists($function)) {
-
-    $args = array($node);
-    $img = call_user_func_array($function, $args);
-
-    // send image
-    drupal_set_header('Content-Type: image/png');
-    echo $img;
+  // form cache key
+  $key = 'bracket/' . $node->nid . '/image';
+    
+  // don't retrieve from cache for update users
+  if (!bracket_access('update', $node)) {
+    // try to fetch from cache
+    $img = bracket_fetch_from_cache($key);
   }
+  
+  // if image not cached, generate image
+  if (!$img) {
+
+    // design image function
+    $function = $node->design . '_image';
+    if (function_exists($function)) {
+
+      // go generate image 
+      $args = array($node);
+      $img = call_user_func_array($function, $args);
+      
+      // save in cache
+      cache_set($key, $img, 'cache', CACHE_PERMANENT);
+    }
+  }
+ 
+  // send image
+  drupal_set_header('Content-Type: image/png');
+  echo $img;
 }
 
 /**
@@ -1454,30 +1500,87 @@ function bracket_image($node) {
  */
 function bracket_pdf($node) {
 
-  $function = $node->design . '_pdf';
+  // form cache key
+  $key = 'bracket/' . $node->nid . '/pdf';
 
-  if (function_exists($function)) {
-
-    $args = array($node);
-    $img = call_user_func_array($function, $args);
-
-    // force PDF download
-    drupal_set_header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-
-    if(isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'],'MSIE')) {
-      drupal_set_header('Content-Type: application/force-download');
-    }
-    else {
-      drupal_set_header('Content-Type: application/octet-stream');
-    }
-
-    // make a file name from title
-    $fname = preg_replace('/[^0-9a-z\.\_\-]/i','_', $node->title);
-
-    drupal_set_header('Content-Disposition: attachment; filename="' . $fname .'.pdf"');
-    drupal_set_header('Content-Length: '.strlen($img));
-    echo $img;
+  // don't retrieve from cache for update users
+  if (!bracket_access('update', $node)) {
+    // try to fetch from cache
+    $img = bracket_fetch_from_cache($key);
   }
+  
+  // if pdf not cached, generate pdf
+  if (!$img) {
+
+    // design pdf function
+    $function = $node->design . '_pdf';
+    if (function_exists($function)) {
+
+      // go generate pdf
+      $args = array($node);
+      $img = call_user_func_array($function, $args);
+
+      // save in cache
+      cache_set($key, $img, 'cache', CACHE_PERMANENT);
+    }
+  }
+  
+  // force PDF download
+  drupal_set_header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+
+  if(isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'],'MSIE')) {
+    drupal_set_header('Content-Type: application/force-download');
+  }
+  else {
+    drupal_set_header('Content-Type: application/octet-stream');
+  }
+    
+  // make a file name from title
+  $fname = preg_replace('/[^0-9a-z\.\_\-]/i','_', $node->title);
+
+  // send PDF
+  drupal_set_header('Content-Disposition: attachment; filename="' . $fname .'.pdf"');
+  drupal_set_header('Content-Length: '.strlen($img));
+  echo $img;
+}
+
+/**
+ * Fetch bracket image from cache
+ *
+ * @param $key
+ *   the cache key
+ */
+function bracket_fetch_from_cache($key) {
+
+  $img = FALSE;
+  
+  // get cache setting
+  $cancache = variable_get(BRACKET_CACHE, false);
+  
+  // retrieve from cache if so configured
+  if ($cancache) {
+    $cache = cache_get($key);
+    if (is_object($cache) && ($cache->data)) {
+      $img = $cache->data;
+    }
+  }
+  
+  return $img;
+}
+
+/**
+ * Clear bracket node imagesfrom cache
+ *
+ * @param $node
+ *   the node containing the bracket
+ */
+function bracket_clear_cache($node) {
+
+  // form cache key
+  $key = 'bracket/' . $node->nid;
+    
+  // clear bracket node from the cache
+  cache_clear_all($key, 'cache', TRUE);
 }
 
 /**
