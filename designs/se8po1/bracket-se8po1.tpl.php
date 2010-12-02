@@ -18,9 +18,9 @@ drupal_add_css(drupal_get_path('module', 'bracket') . '/designs/se8po1/bracket-s
   <?php if ($node->comments) { ?>
   <div class="bracket-comments"><?php print nl2br(filter_xss_admin($node->comments)) ?></div>
   <?php } ?>
-  <div id="round-1" class="bracket-round bracket-round-left">
+  <div id="round-1" class="bracket-round">
+    <div class="bracket-round-comment"><?php print $node->round[1]->comment ? filter_xss_admin($node->round[1]->comment) : '&nbsp;' ?></div>
     <div id="round-1-spacer"></div>
-    <div class="bracket-round-comment"><?php print filter_xss_admin($node->round[1]->comment) ?></div>
     <?php print theme('bracket_match', $node, 1, 1, 'left') ?>
     <div class="bracket-round-1-match-spacer"></div>
     <?php print theme('bracket_match', $node, 1, 2, 'left') ?>

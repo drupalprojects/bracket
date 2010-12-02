@@ -295,6 +295,10 @@ function bracket_theme() {
       'arguments' => array('node' => NULL, 'round_index' => NULL, 'match_index' => NULL, 'orientation' => NULL),
       'template' => 'templates/bracket-match',
     ),
+    'bracket_match_lr' => array(
+      'arguments' => array('node' => NULL, 'round_index' => NULL, 'match_index' => NULL),
+      'template' => 'templates/bracket-match-lr',
+    ),
     'bracket_result' => array(
       'arguments' => array('node' => NULL, 'result_index' => NULL, 'orientation' => NULL),
       'template' => 'templates/bracket-result',
@@ -450,7 +454,7 @@ function theme_bracket_view(&$node, $teaser=FALSE, $page=FALSE) {
     $output .= '<div class="bracket-img"><img src="' . url('node/' . $node->nid . '/image') . '"></div>' . "\n";
   }
   
-  $output .= "</div>\n";
+  $output .= '</div><div class="clear-block"></div>' . "\n";
 
   return $output;
 }

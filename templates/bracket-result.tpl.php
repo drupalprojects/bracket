@@ -12,9 +12,9 @@
  */
 ?>
 <div id="result-<?php print $result_index ?>" class="bracket-result-block">
-  <div class="bracket-result bracket-result-<?php print $orientation ?>"><?php print $node->result[$result_index]->cname ? $node->result[$result_index]->cname : '&nbsp;' ?></div>
-  <div class="bracket-result-separator">
-    <div class="bracket-result-comment bracket-result-comment-<?php print $orientation ?>"><?php print $node->result[$result_index]->comment ?></div>
+  <div id="result-<?php print $result_index ?>-competitor" class="bracket-result bracket-result-<?php print $orientation ?>"><?php print $node->result[$result_index]->cname ? $node->result[$result_index]->cname : '&nbsp;' ?></div>
+  <div id="result-<?php print $result_index ?>-separator" class="bracket-result-separator">
+    <div id="result-<?php print $result_index ?>-comment" class="bracket-result-comment bracket-result-comment-<?php print $orientation ?>"><?php print $node->result[$result_index]->comment ?></div>
   </div>
 </div>
  

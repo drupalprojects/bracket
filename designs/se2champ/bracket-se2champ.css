@@ -1,12 +1,12 @@
 /* $Id:  */
 
 /**
- * Styling for the se8champ bracket design
+ * Styling for the se2champ bracket design
  */
- 
+
 /* Bracket - set a width so browser will scroll bracket */
 div.bracket-block {
-  width: 800px;
+  width: 500px;
 }
 
 /* Fonts */
@@ -44,26 +44,16 @@ div.bracket-result-comment {
   font-size: 1.0em;
 }
 
-/* Round elements */
-div.bracket-round {
-  width: 200px;
-}
-
-/* Result elements */
-div.bracket-results {
-  width: 200px;
-}
-
 /* Logo images */
 div.bracket-logo-image-block {
   position: absolute;
   top: 0px;
-  left: 650px;
+  left: 600px;
 }
 div.bracket-sponsorlogo-image-block {
   position: absolute;
-  top: 550px;
-  left: 650px;
+  top: 200px;
+  left: 600px;
 }
 
 /* Defines the top of the first match in Round 1 */
@@ -74,36 +64,10 @@ div.bracket-sponsorlogo-image-block {
 div.round-1-match {
   height: 100px;  
 }
-/* Defines some space between matches in Round 1 */
-div.bracket-round-1-match-spacer {
-  height: 10px;
-}
-/* Defines the top of the first match in Round 2 */
-#round-2-spacer {
-  height: 60px;
-}
-/* Defines the height of each match in Round 2 */
-div.round-2-match {
-  height: 140px;  
-}
-/* Defines some space between matches in Round 1 */
-div.bracket-round-2-match-spacer {
-  height: 110px;
-}
-/* Defines the top of the first match in Round 3 */
-#round-3-spacer {
-  height: 130px;
-}
-/* Defines the height of each match in Round 3 */
-div.round-3-match {
-  height: 280px;  
-}
 /* Defines the top of first result */
 #results-spacer {
-  height: 240px;
+  height: 80px;
 }
-/* Defines the distance between results */
 div.bracket-result-spacer {
-  height: 40px;  
+  height: 20px;
 }
-

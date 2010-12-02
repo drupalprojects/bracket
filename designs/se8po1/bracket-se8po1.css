@@ -4,6 +4,11 @@
  * Styling for the se8po1 bracket design
  */
  
+/* Bracket - set a width so browser will scroll bracket */
+div.bracket-block {
+  width: 750px;
+}
+ 
 /* Fonts */
 div.bracket-subtitle {
   font-size: 1.25em;
@@ -50,30 +55,34 @@ div.bracket-results {
 }
 
 /* Logo images */
-div.bracket-logo-image {
+div.bracket-logo-image-block {
   position: absolute;
   top: 0px;
   left: 500px;
 }
-div.bracket-sponsorlogo-image {
+div.bracket-sponsorlogo-image-block {
   position: absolute;
   top: 500px;
   left: 500px;
 }
 
+/* Defines the top of the first match in Round 1 */
+#round-1-spacer {
+  height: 10px;
+}
 /* Defines height of each match in Round 1 */
 div.round-1-match {
   height: 100px;  
 }
 /* Defines some space between matches in Round 1 */
 div.bracket-round-1-match-spacer {
-  height: 30px;
-}
-/* Defines distance between results */
-div.bracket-result-separator {
-  height: 130px;  
+  height: 10px;
 }
 /* Defines start of first result */
 #results-spacer {
-  height: 70px;
+  height: 75px;
+}
+/* Defines distance between results */
+div.bracket-result-separator {
+  height: 125px;  
 }

@@ -3,12 +3,12 @@
 
 /**
  * @file
- * Template for se8champ bracket design
+ * Template for se16champ bracket design
  *
  * Available variables:
  * - $node: The node object for the bracket to be rendered.
  */
-drupal_add_css(drupal_get_path('module', 'bracket') . '/designs/se8champ/bracket-se8champ.css', 'theme', 'all', FALSE);
+drupal_add_css(drupal_get_path('module', 'bracket') . '/designs/se16champ/bracket-se16champ.css', 'theme', 'all', FALSE);
 ?>
 
 <div class="bracket-block">
@@ -28,6 +28,14 @@ drupal_add_css(drupal_get_path('module', 'bracket') . '/designs/se8champ/bracket
     <?php print theme('bracket_match', $node, 1, 3, 'left') ?>
     <div class="bracket-round-1-match-spacer"></div>
     <?php print theme('bracket_match', $node, 1, 4, 'left') ?>
+    <div class="bracket-round-1-match-spacer"></div>
+    <?php print theme('bracket_match', $node, 1, 5, 'left') ?>
+    <div class="bracket-round-1-match-spacer"></div>
+    <?php print theme('bracket_match', $node, 1, 6, 'left') ?>
+    <div class="bracket-round-1-match-spacer"></div>
+    <?php print theme('bracket_match', $node, 1, 7, 'left') ?>
+    <div class="bracket-round-1-match-spacer"></div>
+    <?php print theme('bracket_match', $node, 1, 8, 'left') ?>
     <div class="bracket-footer"><?php print nl2br(filter_xss_admin($node->footer)) ?></div>
   </div>
   <div id="round-2" class="bracket-round">
@@ -36,13 +44,24 @@ drupal_add_css(drupal_get_path('module', 'bracket') . '/designs/se8champ/bracket
     <?php print theme('bracket_match', $node, 2, 1, 'left') ?>
     <div class="bracket-round-2-match-spacer"></div>
     <?php print theme('bracket_match', $node, 2, 2, 'left') ?>
+    <div class="bracket-round-2-match-spacer"></div>
+    <?php print theme('bracket_match', $node, 2, 3, 'left') ?>
+    <div class="bracket-round-2-match-spacer"></div>
+    <?php print theme('bracket_match', $node, 2, 4, 'left') ?>
   </div>
   <div id="round-3" class="bracket-round">
     <div class="bracket-round-comment"><?php print $node->round[3]->comment ? filter_xss_admin($node->round[3]->comment) : '&nbsp;' ?></div>
     <div id="round-3-spacer"></div>
     <?php print theme('bracket_match', $node, 3, 1, 'left') ?>
+    <div class="bracket-round-3-match-spacer"></div>
+    <?php print theme('bracket_match', $node, 3, 2, 'left') ?>
   </div>
-  <div id="results" class="bracket-results bracket-results-left">
+  <div id="round-4" class="bracket-round">
+    <div class="bracket-round-comment"><?php print $node->round[4]->comment ? filter_xss_admin($node->round[4]->comment) : '&nbsp;' ?></div>
+    <div id="round-4-spacer"></div>
+    <?php print theme('bracket_match', $node, 4, 1, 'left') ?>
+  </div>
+  <div id="results" class="bracket-results">
     <div id="results-spacer"></div>
     <?php print theme('bracket_result', $node, 1, 'left') ?>
     <div class="bracket-result-spacer"></div>

@@ -4,6 +4,11 @@
  * Styling for the se4champ bracket design
  */
 
+/* Bracket - set a width so browser will scroll bracket */
+div.bracket-block {
+  width: 750px;
+}
+
 /* Fonts */
 div.bracket-subtitle {
   font-size: 1.25em;
@@ -40,12 +45,12 @@ div.bracket-result-comment {
 }
 
 /* Logo images */
-div.bracket-logo-image {
+div.bracket-logo-image-block {
   position: absolute;
   top: 0px;
   left: 600px;
 }
-div.bracket-sponsorlogo-image {
+div.bracket-sponsorlogo-image-block {
   position: absolute;
   top: 250px;
   left: 600px;
@@ -61,7 +66,7 @@ div.round-1-match {
 }
 /* Defines some space between matches in Round 1 */
 div.bracket-round-1-match-spacer {
-  height: 50px;
+  height: 30px;
 }
 /* Defines the top of the first match in Round 2 */
 #round-2-spacer {
@@ -69,9 +74,12 @@ div.bracket-round-1-match-spacer {
 }
 /* Defines the height of each match in Round 2 */
 div.round-2-match {
-  height: 170px;
+  height: 160px;
 }
 /* Defines the top of first result */
 #results-spacer {
-  height: 150px;
+  height: 130px;
+}
+div.bracket-result-spacer {
+  height: 20px;
 }
