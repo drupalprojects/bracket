@@ -33,6 +33,8 @@ if (module_exists('views')) {
   include_once 'bracket_views.inc';
 }
 
+define('BRACKET_CACHE', 'bracket_cache');
+
 //=========================================================================
 // drupal hooks
 //=========================================================================
