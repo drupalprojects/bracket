@@ -1,11 +1,11 @@
 <?php
-// $Id$
+// $Id: 
 
 /**
  * @file
- * This file contains the required functions for the se8champ bracket design
+ * This file contains the required functions for the se4champ bracket design
  *
- * This design consists of 8 competitors in a single elimination bracket
+ * This design consists of 4 competitors in a single elimination bracket
  *
  * @author Jim Bullington <jimb@jrbcs.com>
  */
@@ -16,19 +16,18 @@
  * @param $node
  *   the node object
  */
-function se8champ_create(&$node) {
+function se4champ_create(&$node) {
 
   // set bracket bar option
   $node->options['image_options']['show_bracket_bar'] = TRUE;
 
   // add competitors
-  bracket_design_create_competitors($node, 8);
+  bracket_design_create_competitors($node, 4);
   // add rounds
   bracket_design_create_winner_rounds($node);
   // name the rounds
-  $node->round[1]->name = t('Quarterfinals');
-  $node->round[2]->name = t('Semifinals');
-  $node->round[3]->name = t('Finals');
+  $node->round[1]->name = t('Semifinals');
+  $node->round[2]->name = t('Finals');
   // add championship results
   bracket_design_create_championship_results($node);
 }
@@ -41,7 +40,7 @@ function se8champ_create(&$node) {
  * @return
  *   the png image
  */
-function se8champ_image($node) {
+function se4champ_image($node) {
 
   global $bracket_image_font;
   global $bracket_image_font_bold;
@@ -57,13 +56,13 @@ function se8champ_image($node) {
 
   // setup positions and spacing
   $top = 75;
-  $left = 15;
-  $width = 130;
-  $height = 60;
+  $left = 40;
+  $width = 200;
+  $height = 100;
   $spacing = $height * 1.75;
 
   // spacing between top and bottom brackets
-  $tb = $spacing * 2.5;
+  $tb = $spacing * 1.5;
 
   // setup image
   $iwidth = 700;
@@ -80,39 +79,31 @@ function se8champ_image($node) {
   imagefill($img, 0, 0, $bracket_image_bg_color);
 
   // font sizes
-  $bracket_image_font_xlarge = 14;
-  $bracket_image_font_large = 12;
-  $bracket_image_font_norm = 10;
-  $bracket_image_font_small = 8;
-  $bracket_image_font_xsmall = 6.5;
+  $bracket_image_font_xlarge = 16;
+  $bracket_image_font_large = 14;
+  $bracket_image_font_norm = 12;
+  $bracket_image_font_small = 10;
+  $bracket_image_font_xsmall = 8;
 
   // font height
   $bbox = imagettfbbox($bracket_image_font_norm, 0, $bracket_image_font, 'Q');
   $h = $bbox[1] - $bbox[7];
   $w = 10;
 
-  // quarters
-  bracket_image_drawbracketset($img, $node, $left, $top, $width, $height, $spacing, 1, 1, 2, 'L');
-  bracket_image_drawbracketset($img, $node, $left, $top+$tb, $width, $height, $spacing, 1, 3, 4, 'L');
-
   // semis
+  bracket_image_drawbracketset($img, $node, $left, $top, $width, $height, $spacing, 1, 1, 1, 'L');
+  bracket_image_drawbracketset($img, $node, $left, $top+$tb, $width, $height, $spacing, 1, 2, 2, 'L');
+
+  // finals
   $l = $left + $width;
-  $hh = $spacing;
+  $hh = $tb;
   $sp = $spacing * 2;
   // new top - add half prev height
   $t = $top + ($height / 2);
-  bracket_image_drawbracketset($img, $node, $l, $t, $width, $hh, $sp, 2, 1, 1, 'L');
-  bracket_image_drawbracketset($img, $node, $l, $t+$tb, $width, $hh, $sp, 2, 2, 2, 'L');
-
-  // finals
-  $l += $width;
-  $t += ($hh / 2);
-  $hh = $sp + ($spacing / 2);
-  $sp = $sp * 2;
-  bracket_image_drawbracketset($img, $node, $l, $t, $width, $hh, $sp, 3, 1, 1, 'L', FALSE);
+  bracket_image_drawbracketset($img, $node, $l, $t, $width, $hh, $sp, 2, 1, 1, 'L', FALSE, FALSE);
 
   // get match
-  $match = $node->round[3]->match[1];
+  $match = $node->round[2]->match[1];
   // finals comments
   if ($match->comment[1] != '' || $match->comment[2] != '') {
     // comment left position
@@ -131,6 +122,12 @@ function se8champ_image($node) {
     if ($match->comment[2] != '') {
       bracket_image_imagetextalign($img, $bracket_image_font_small, $cl, $ct, $width-5, $match->comment[2], $bracket_image_fg_color, 'L');
     }
+  }
+  
+  // display match id if needed
+  if ($node->options['show_match_id']) {
+    $ct = $t + ($hh / 2) - 50;
+    bracket_image_imageTextAlign($img, $bracket_image_font_xsmall, $l+$width-15, $ct, $w, '#' . $match->id, $bracket_image_fg_color, 'L');
   }
 
   // winner and runner-up
@@ -158,7 +155,7 @@ function se8champ_image($node) {
 
   // bracket logo
   if ($node->logopath != '') {
-    bracket_image_insert_image($img, $node->logopath, $iwidth-250, 80, 150);
+    bracket_image_insert_image($img, $node->logopath, $iwidth-200, 50, 175);
   }
 
   // sponsor logo
@@ -195,7 +192,7 @@ function se8champ_image($node) {
  * @return
  *   the pdf document
  */
-function se8champ_pdf($node) {
+function se4champ_pdf($node) {
 
   global $bracket_pdf_font_name;
   global $bracket_pdf_font_xlarge;
@@ -211,15 +208,15 @@ function se8champ_pdf($node) {
   $iheight = 11.0;
 
   // positions and spacing
-  $top = 3.0;
-  $left = 0.75;
-  $width = 1.5;
-  $height = 0.75;
+  $top = 3.5;
+  $left = 1.0;
+  $width = 2.0;
+  $height = 1.0;
   $spacing = $height * 1.5;
   $pdf->setMargins($top, $left);
 
   // spacing between top and bottom brackets
-  $tb = $spacing * 2.5;
+  $tb = $spacing * 1.5;
 
   // set pdf colors
   bracket_pdf_setup_colors($node, $pdf);
@@ -228,34 +225,26 @@ function se8champ_pdf($node) {
   bracket_pdf_setup_font($node, $pdf);
 
   // set font sizes
-  $bracket_pdf_font_norm = 8;
-  $bracket_pdf_font_small = 7;
+  $bracket_pdf_font_norm = 10;
+  $bracket_pdf_font_small = 8;
   $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_norm);
 
   // start pdf
   $pdf->addPage();
 
-  // quarters
-  bracket_pdf_drawbracketset($pdf, $node, $left, $top, $width, $height, $spacing, 1, 1, 2, 'L');
-  bracket_pdf_drawbracketset($pdf, $node, $left, $top + $tb, $width, $height, $spacing, 1, 3, 4, 'L');
-
   // semis
-  $l = $left + $width;
-  $t = $top + ($height / 2);
-  $hh = $spacing;
-  $sp = $spacing * 2;
-  bracket_pdf_drawbracketset($pdf, $node, $l, $t, $width, $hh, $sp, 2, 1, 1, 'L');
-  bracket_pdf_drawbracketset($pdf, $node, $l, $t + $tb, $width, $hh, $sp, 2, 2, 2, 'L');
+  bracket_pdf_drawbracketset($pdf, $node, $left, $top, $width, $height, $spacing, 1, 1, 1, 'L');
+  bracket_pdf_drawbracketset($pdf, $node, $left, $top + $tb, $width, $height, $spacing, 1, 2, 2, 'L');
 
   // finals
-  $l += $width;
-  $t += ($hh / 2);
-  $hh = $sp + ($spacing / 2);
-  $sp = $sp * 2;
-  bracket_pdf_drawbracketset($pdf, $node, $l, $t, $width, $hh, $sp, 3, 1, 1, 'L', FALSE);
+  $l = $left + $width;
+  $t = $top + ($height / 2);
+  $hh = $tb;
+  $sp = $spacing * 2;
+  // get final match
+  $match = $node->round[2]->match[1];
+  bracket_pdf_drawcell($pdf, $l, $t, $width, $hh, $match, 'L', FALSE, FALSE);  
 
-  // get match
-  $match = $node->round[3]->match[1];
   // draw comments
   if ($match->comment[1] != '' || $match->comment[2] != '') {
     // draw bracket cell comments
@@ -274,6 +263,13 @@ function se8champ_pdf($node) {
       $pdf->setXY($l, $t2);
       $pdf->cell($width, 0.125, $match->comment[2], 0, 0, 'L');
     }
+  }
+
+  // display match id if needed
+  if ($node->options['show_match_id']) {
+    $pdf->setXY($l + $width - 0.125, $t + ($hh / 2) - 0.5);
+    $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_xsmall);
+    $pdf->cell(0.125, 0.125, '#' . $match->id, 0, 0, 'L');
   }
 
   // winner and runner-up
@@ -312,17 +308,17 @@ function se8champ_pdf($node) {
 
   // bracket footnote
   $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_small);
-  $pdf->setXY($left, $iheight - 0.5);
+  $pdf->setXY($left, $iheight - 1.0);
   $pdf->multicell($iwidth - ($left * 2), 0.125, $node->footer, 0, 'C');
 
   // bracket logo
   if ($node->logopath != '') {
-    bracket_pdf_insert_image($pdf, $node->logopath, 6.5, 1.75, 2.0);
+    bracket_pdf_insert_image($pdf, $node->logopath, 4.25, 2.0, 2.0, TRUE);
   }
 
   // sponsor logo
   if ($node->sponsorlogopath != '') {
-    bracket_pdf_insert_image($pdf, $node->sponsorlogopath, 4.25, 9.5, 0.75);
+    bracket_pdf_insert_image($pdf, $node->sponsorlogopath, 4.25, 9.0, 0.75, TRUE);
   }
 
   // bracket bar

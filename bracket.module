@@ -33,6 +33,8 @@ if (module_exists('views')) {
   module_load_include('inc', 'bracket', 'bracket_views');
 }
 
+define('BRACKET_CACHE', 'bracket_cache');
+
 //=========================================================================
 // drupal hooks
 //=========================================================================
@@ -291,10 +293,45 @@ function bracket_theme() {
     'bracket_round_edit_form' => array(
       'arguments' => array('form' => NULL),
     ),
+    'bracket_match' => array(
+      'arguments' => array('node' => NULL, 'round_index' => NULL, 'match_index' => NULL, 'orientation' => NULL),
+      'template' => 'templates/bracket-match',
+    ),
+    'bracket_match_lr' => array(
+      'arguments' => array('node' => NULL, 'round_index' => NULL, 'match_index' => NULL),
+      'template' => 'templates/bracket-match-lr',
+    ),
+    'bracket_result' => array(
+      'arguments' => array('node' => NULL, 'result_index' => NULL, 'orientation' => NULL),
+      'template' => 'templates/bracket-result',
+    ),
+    'bracket_images' => array(
+      'arguments' => array('node' => NULL),
+      'template' => 'templates/bracket-images',
+    )
   );
+  
+  // add designs
+  foreach (bracket_design_list() as $key => $desc) {
+
+    // form path and template name    
+    $path = drupal_get_path('module', 'bracket') . '/designs/' . $key . '/';
+    $tpl = 'bracket-' . $key;
+
+    // only add if template file exists
+    if (file_exists(realpath($path . $tpl . '.tpl.php'))) {
+    
+      // add to theme cache
+      $theme['bracket_' . $key] = array(
+        'arguments' => array('node' => NULL),
+        'path' => $path,
+        'template' => $tpl
+        );
+    }
+  }
+  
   return $theme;
 }
-
 
 //=========================================================================
 // bracket settings
@@ -315,6 +352,26 @@ function bracket_settings_form($form_state) {
     '#collapsed' => FALSE
   );
 
+  $form['general']['display'] = array(
+    '#type' => 'select',
+    '#title' => t('Default Display'),
+    '#options' => bracket_display_options(),
+    '#default_value' => variable_get('bracket_default_display', 'Image'),
+    '#description' => t('Select the default display option for brackets.')
+  );
+
+  $form['general'][BRACKET_CACHE] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Cache Bracket Images'),
+    '#default_value' => variable_get(BRACKET_CACHE, FALSE),
+    '#description' => t('Cache bracket images and pdfs - may improve performance during peak loads.  Unlike the Drupal cache, brackets are cached for all users, except for those who have bracket update access.')
+  );
+    
+  $form['general']['purge_cache_now'] = array(
+    '#type' => 'submit',
+    '#value' => t('Purge Bracket Cache Now'),
+  );
+  
   $form['general']['upload'] = array(
     '#type' => 'checkbox',
     '#title' => t('Allow Image Uploads'),
@@ -354,6 +411,16 @@ function bracket_settings_form_validate($form_id, &$form_state) {
 
 function bracket_settings_form_submit($form_id, &$form_state) {
 
+  if ($form_state['values']['op'] == $form_state['values']['purge_cache_now']) {
+    cache_clear_all('bracket', 'cache', TRUE);
+    $msg = 'Bracket cache was purged.';
+    watchdog('bracket', $msg);
+    drupal_set_message($msg, 'info');
+    return;
+  }
+  
+  variable_set('bracket_default_display', $form_state['values']['display']);
+  variable_set(BRACKET_CACHE, $form_state['values'][BRACKET_CACHE]);
   variable_set('bracket_image_upload', $form_state['values']['upload']);
   variable_set('bracket_image_upload_path', $form_state['values']['upload_path']);
 
@@ -397,11 +464,20 @@ function theme_bracket_view(&$node, $teaser=FALSE, $page=FALSE) {
 
   // Add the css file
   drupal_add_css(drupal_get_path('module', 'bracket') . '/bracket.css');
-
+  
   $output = '<div class="bracket">' . "\n";
-  $output .= '<div class="bracket-print-link">' . l(t('Click here for a printable version'), 'node/' . $node->nid . '/pdf') . "</div>\n";
-  $output .= '<div class="bracket-img"><img src="' . url('node/' . $node->nid . '/image') . '"></div>' . "\n";
-  $output .= "</div>\n";
+
+  if (!$node->options['hide_pdf']) {
+    $output .= '<div class="bracket-print-link">' . l(t('Click here for a printable version'), 'node/' . $node->nid . '/pdf') . "</div>\n";
+  }
+  if ($node->options['display'] == 'HTML') {
+    $output .= theme('bracket_' . $node->design, $node);
+  }
+  else {
+    $output .= '<div class="bracket-img"><img src="' . url('node/' . $node->nid . '/image') . '"></div>' . "\n";
+  }
+  
+  $output .= '</div><div class="clear-block"></div>' . "\n";
 
   return $output;
 }
@@ -584,20 +660,13 @@ function bracket_form(&$node) {
   $upl = variable_get('bracket_image_upload_path', FALSE);
   
   if ($node->logopath) {
-    $abs = preg_match("/^https?:\/\//", $node->logopath);
-    if ($abs) {
-      $imgurl = $node->logopath;
-    }
-    else {
-      $imgurl = file_create_url($node->logopath);
-    }
     $form['bracket']['logo']['current_logo'] = array(
       '#type' => 'markup',
-      '#value' => '&nbsp;<br /><img src="' . $imgurl . '">'
+      '#value' => '&nbsp;<br /><img src="' . bracket_logo_url($node->logopath) . '">'
     );
 
     // only allow delete, if file exists in the upload directory
-    if (!$abs && $upl) {
+    if (!bracket_path_is_url($node->logopath) && $upl) {
       if (file_check_location($node->logopath, $upl)) {  
         $form['bracket']['logo']['delete_logo'] = array(
           '#type' => 'checkbox',
@@ -633,20 +702,13 @@ function bracket_form(&$node) {
   );
 
   if ($node->sponsorlogopath) {
-    $abs = preg_match("/^https?:\/\//", $node->sponsorlogopath);
-    if ($abs) {
-      $imgurl = $node->sponsorlogopath;
-    }
-    else {
-      $imgurl = file_create_url($node->sponsorlogopath);
-    }
     $form['bracket']['sponsorlogo']['current_sponsorlogo'] = array(
       '#type' => 'markup',
-      '#value' => '&nbsp;<br /><img src="' . $imgurl . '">'
+      '#value' => '&nbsp;<br /><img src="' . bracket_logo_url($node->sponsorlogopath) . '">'
     );
 
     // only allow delete, if file exists in the upload directory
-    if (!$abs && $upl) {
+    if (!bracket_path_is_url($node->sponsorlogopath) && $upl) {
       if (file_check_location($node->sponsorlogopath, $upl)) {  
         $form['bracket']['sponsorlogo']['delete_sponsorlogo'] = array(
           '#type' => 'checkbox',
@@ -671,6 +733,21 @@ function bracket_form(&$node) {
     '#tree' => TRUE
   );
 
+  $form['bracket']['options']['display'] = array(
+    '#type' => 'select',
+    '#title' => t('Display'),
+    '#options' => bracket_display_options(),
+    '#default_value' => $node->options['display'],
+    '#description' => t('Select the display option for this bracket.')
+  );
+  
+  $form['bracket']['options']['hide_pdf'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Hide PDF Link'),
+    '#default_value' => $node->options['hide_pdf'],
+    '#description' => t('If checked, the link to download a PDF version of the bracket will not appear above the bracket.')
+  );
+
   $form['bracket']['options']['show_match_id'] = array(
     '#type' => 'checkbox',
     '#title' => t('Show Match IDs'),
@@ -678,69 +755,78 @@ function bracket_form(&$node) {
     '#description' => t('Check to display match IDs on the bracket.')
   );
 
-  if (trim($node->options['fg_color']) == '') {
-    $node->options['fg_color'] = $bracket_fg_color_default;
+  $form['bracket']['options']['image_options'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Image and PDF Options'),
+    '#collapsed' => FALSE,
+    '#collapsible' => FALSE,
+    '#tree' => TRUE,
+    '#description' => t('These options apply to Image and PDF output only.'),
+  );
+  
+  if (trim($node->options['image_options']['fg_color']) == '') {
+    $node->options['image_options']['fg_color'] = $bracket_fg_color_default;
   }
-  $form['bracket']['options']['fg_color'] = array(
+  $form['bracket']['options']['image_options']['fg_color'] = array(
     '#type' => 'textfield',
     '#title' => t('Foreground & Text Color'),
     '#size' => 7,
     '#maxlength' => 7,
     '#required' => TRUE,
     '#description' => t('In HTML color format - #RRGGBB (Default is @color).', array('@color' => $bracket_fg_color_default)),
-    '#default_value' => $node->options['fg_color']
+    '#default_value' => $node->options['image_options']['fg_color']
   );
 
-  if (trim($node->options['bg_color']) == '') {
-    $node->options['bg_color'] = $bracket_bg_color_default;
+  if (trim($node->options['image_options']['bg_color']) == '') {
+    $node->options['image_options']['bg_color'] = $bracket_bg_color_default;
   }
-  $form['bracket']['options']['bg_color'] = array(
+  $form['bracket']['options']['image_options']['bg_color'] = array(
     '#type' => 'textfield',
     '#title' => t('Background Color'),
     '#size' => 7,
     '#maxlength' => 7,
     '#required' => TRUE,
     '#description' => t('In HTML color format - #RRGGBB (Default is @color).', array('@color' => $bracket_bg_color_default)),
-    '#default_value' => $node->options['bg_color']
+    '#default_value' => $node->options['image_options']['bg_color']
   );
 
-  $form['bracket']['options']['show_bracket_bar'] = array(
+  $form['bracket']['options']['image_options']['show_bracket_bar'] = array(
     '#type' => 'checkbox',
     '#title' => t('Show Bracket Bar'),
-    '#default_value' => $node->options['show_bracket_bar'],
+    '#default_value' => $node->options['image_options']['show_bracket_bar'],
     '#description' => t('Check to display bracket bar and round comments on bracket. Note: Some designs do not utilize this option.')
   );
 
-  if (trim($node->options['bar_bg_color']) == '') {
-    $node->options['bar_bg_color'] = $bracket_bar_bg_color_default;
+  if (trim($node->options['image_options']['bar_bg_color']) == '') {
+    $node->options['image_options']['bar_bg_color'] = $bracket_bar_bg_color_default;
   }
-  $form['bracket']['options']['bar_bg_color'] = array(
+  $form['bracket']['options']['image_options']['bar_bg_color'] = array(
     '#type' => 'textfield',
     '#title' => t('Bracket Bar Background Color'),
     '#size' => 7,
     '#maxlength' => 7,
     '#description' => t('In HTML color format - #RRGGBB (Default is @color).', array('@color' => $bracket_bar_bg_color_default)),
-    '#default_value' => $node->options['bar_bg_color']
+    '#default_value' => $node->options['image_options']['bar_bg_color']
   );
 
-  if (trim($node->options['bar_fg_color']) == '') {
-    $node->options['bar_fg_color'] = $bracket_bar_fg_color_default;
+  if (trim($node->options['image_options']['bar_fg_color']) == '') {
+    $node->options['image_options']['bar_fg_color'] = $bracket_bar_fg_color_default;
   }
-  $form['bracket']['options']['bar_fg_color'] = array(
+  $form['bracket']['options']['image_options']['bar_fg_color'] = array(
     '#type' => 'textfield',
     '#title' => t('Bracket Bar Foreground (Text) Color'),
     '#size' => 7,
     '#maxlength' => 7,
     '#description' => t('In HTML color format - #RRGGBB (Default is @color).', array('@color' => $bracket_bar_fg_color_default)),
-    '#default_value' => $node->options['bar_fg_color']
+    '#default_value' => $node->options['image_options']['bar_fg_color']
   );
 
-  $form['bracket']['options']['bar_example'] = array(
+  $form['bracket']['options']['image_options']['bar_example'] = array(
     '#type' => 'markup',
-    '#value' => '<div style="background-color:' . $node->options['bar_bg_color'] . ';color:' . $node->options['bar_fg_color'] . ';">' . t('Bracket Bar Example') .'</div>'
+    '#value' => '<div style="background-color:' . $node->options['image_options']['bar_bg_color'] . ';color:' . $node->options['image_options']['bar_fg_color'] . ';">' . t('Bracket Bar Example') .'</div>'
   );
 
-  $form['bracket']['options']['image_fonts'] = array(
+  $form['bracket']['options']['image_options']['image_fonts'] = array(
     '#type' => 'fieldset',
     '#title' => t('Image Font Files'),
     '#collapsed' => FALSE,
@@ -749,62 +835,62 @@ function bracket_form(&$node) {
     '#description' => t('Image font files must be present in the fonts folder of the bracket module.'),
   );
 
-  if (trim($node->options['image_fonts']['image_font']) == '') {
-    $node->options['image_fonts']['image_font'] = $bracket_image_font_file;
+  if (trim($node->options['image_options']['image_fonts']['image_font']) == '') {
+    $node->options['image_options']['image_fonts']['image_font'] = $bracket_image_font_file;
   }
-  $form['bracket']['options']['image_fonts']['image_font'] = array(
+  $form['bracket']['options']['image_options']['image_fonts']['image_font'] = array(
     '#type' => 'textfield',
     '#title' => t('Image Normal Font File'),
     '#size' => 50,
     '#maxlength' => 50,
     '#description' => t('Image font file for normal font (Default is @font).', array('@font' => $bracket_image_font_file)),
-    '#default_value' => $node->options['image_fonts']['image_font']
+    '#default_value' => $node->options['image_options']['image_fonts']['image_font']
   );
 
-  if (trim($node->options['image_fonts']['image_font_bold']) == '') {
-    $node->options['image_fonts']['image_font_bold'] = $bracket_image_font_bold_file;
+  if (trim($node->options['image_options']['image_fonts']['image_font_bold']) == '') {
+    $node->options['image_options']['image_fonts']['image_font_bold'] = $bracket_image_font_bold_file;
   }
-  $form['bracket']['options']['image_fonts']['image_font_bold'] = array(
+  $form['bracket']['options']['image_options']['image_fonts']['image_font_bold'] = array(
     '#type' => 'textfield',
     '#title' => t('Image Bold Font File'),
     '#size' => 50,
     '#maxlength' => 50,
     '#description' => t('Image font file for bold font (Default is @font).', array('@font' => $bracket_image_font_bold_file)),
-    '#default_value' => $node->options['image_fonts']['image_font_bold']
+    '#default_value' => $node->options['image_options']['image_fonts']['image_font_bold']
   );
 
-  if (trim($node->options['image_fonts']['image_font_italic']) == '') {
-    $node->options['image_fonts']['image_font_italic'] = $bracket_image_font_italic_file;
+  if (trim($node->options['image_options']['image_fonts']['image_font_italic']) == '') {
+    $node->options['image_options']['image_fonts']['image_font_italic'] = $bracket_image_font_italic_file;
   }
-  $form['bracket']['options']['image_fonts']['image_font_italic'] = array(
+  $form['bracket']['options']['image_options']['image_fonts']['image_font_italic'] = array(
     '#type' => 'textfield',
     '#title' => t('Image Italic Font File'),
     '#size' => 50,
     '#maxlength' => 50,
     '#description' => t('Image font file for italic font (Default is @font).', array('@font' => $bracket_image_font_italic_file)),
-    '#default_value' => $node->options['image_fonts']['image_font_italic']
+    '#default_value' => $node->options['image_options']['image_fonts']['image_font_italic']
   );
 
-  if (trim($node->options['image_fonts']['image_font_bolditalic']) == '') {
-    $node->options['image_fonts']['image_font_bolditalic'] = $bracket_image_font_bolditalic_file;
+  if (trim($node->options['image_options']['image_fonts']['image_font_bolditalic']) == '') {
+    $node->options['image_options']['image_fonts']['image_font_bolditalic'] = $bracket_image_font_bolditalic_file;
   }
-  $form['bracket']['options']['image_fonts']['image_font_bolditalic'] = array(
+  $form['bracket']['options']['image_options']['image_fonts']['image_font_bolditalic'] = array(
     '#type' => 'textfield',
     '#title' => t('Image Bold Italic Font File'),
     '#size' => 50,
     '#maxlength' => 50,
     '#description' => t('Image font file for bold italic font (Default is @font).', array('@font' => $bracket_image_font_bolditalic_file)),
-    '#default_value' => $node->options['image_fonts']['image_font_bolditalic']
+    '#default_value' => $node->options['image_options']['image_fonts']['image_font_bolditalic']
   );
 
   $options = bracket_pdf_font_options();
-  if (trim($node->options['pdf_font']) == '') {
-    $node->options['pdf_font'] = $bracket_pdf_font_name;
+  if (trim($node->options['image_options']['pdf_font']) == '') {
+    $node->options['image_options']['pdf_font'] = $bracket_pdf_font_name;
   }
-  $form['bracket']['options']['pdf_font'] = array(
+  $form['bracket']['options']['image_options']['pdf_font'] = array(
     '#type' => 'select',
     '#title' => t('PDF Font'),
-    '#default_value' => $node->options['pdf_font'],
+    '#default_value' => $node->options['image_options']['pdf_font'],
     '#options' => $options,
     '#description' => t('Select the PDF font for this bracket (Default is @font).', array('@font' => $bracket_pdf_font_name)),
    );
@@ -818,17 +904,17 @@ function bracket_form(&$node) {
 function bracket_validate($node) {
 
   $msg = 'Invalid HTML color code - must be #RRGGBB';
-  if (!bracket_validate_color($node->options['fg_color'])) {
-    form_set_error('options][fg_color', $msg);
+  if (!bracket_validate_color($node->options[image_options]['fg_color'])) {
+    form_set_error('options][image_options][fg_color', $msg);
   }
-  if (!bracket_validate_color($node->options['bg_color'])) {
-    form_set_error('options][bg_color', $msg);
+  if (!bracket_validate_color($node->options[image_options]['bg_color'])) {
+    form_set_error('options][image_options][bg_color', $msg);
   }
-  if (!bracket_validate_color($node->options['bar_fg_color'])) {
-    form_set_error('options][bar_fg_color', $msg);
+  if (!bracket_validate_color($node->options[image_options]['bar_fg_color'])) {
+    form_set_error('options][image_options][bar_fg_color', $msg);
   }
-  if (!bracket_validate_color($node->options['bar_bg_color'])) {
-    form_set_error('options][bar_bg_color', $msg);
+  if (!bracket_validate_color($node->options[image_options]['bar_bg_color'])) {
+    form_set_error('options][image_options][bar_bg_color', $msg);
   }
   $msg = t('Image type not supported');
   if (!bracket_check_image_type($node->logopath)) {
@@ -965,6 +1051,9 @@ function bracket_update($node) {
   }
 
   bracket_db_update($node);
+
+  // delete bracket images from cache
+  bracket_clear_cache($node);
 }
 
 /**
@@ -973,6 +1062,9 @@ function bracket_update($node) {
 function bracket_delete($node, $log = TRUE) {
 
   bracket_db_delete($node);
+
+  // delete bracket images from cache
+  bracket_clear_cache($node);
 }
 
 //=========================================================================
@@ -1370,17 +1462,34 @@ function bracket_create(&$node) {
  */
 function bracket_image($node) {
 
-  $function = $node->design . '_image';
-
-  if (function_exists($function)) {
-
-    $args = array($node);
-    $img = call_user_func_array($function, $args);
-
-    // send image
-    drupal_set_header('Content-type: image/png');
-    echo $img;
+  // form cache key
+  $key = 'bracket/' . $node->nid . '/image';
+    
+  // don't retrieve from cache for update users
+  if (!bracket_access('update', $node)) {
+    // try to fetch from cache
+    $img = bracket_fetch_from_cache($key);
   }
+  
+  // if image not cached, generate image
+  if (!$img) {
+
+    // design image function
+    $function = $node->design . '_image';
+    if (function_exists($function)) {
+
+      // go generate image 
+      $args = array($node);
+      $img = call_user_func_array($function, $args);
+      
+      // save in cache
+      cache_set($key, $img, 'cache', CACHE_PERMANENT);
+    }
+  }
+ 
+  // send image
+  drupal_set_header('Content-Type: image/png');
+  echo $img;
 }
 
 /**
@@ -1391,30 +1500,87 @@ function bracket_image($node) {
  */
 function bracket_pdf($node) {
 
-  $function = $node->design . '_pdf';
+  // form cache key
+  $key = 'bracket/' . $node->nid . '/pdf';
 
-  if (function_exists($function)) {
-
-    $args = array($node);
-    $img = call_user_func_array($function, $args);
-
-    // force PDF download
-    drupal_set_header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-
-    if(isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'],'MSIE')) {
-      drupal_set_header('Content-Type: application/force-download');
-    }
-    else {
-      drupal_set_header('Content-Type: application/octet-stream');
-    }
-
-    // make a file name from title
-    $fname = preg_replace('/[^0-9a-z\.\_\-]/i','_', $node->title);
-
-    drupal_set_header('Content-disposition: attachment; filename="' . $fname .'.pdf"');
-    drupal_set_header('Content-Length: '.strlen($img));
-    echo $img;
+  // don't retrieve from cache for update users
+  if (!bracket_access('update', $node)) {
+    // try to fetch from cache
+    $img = bracket_fetch_from_cache($key);
   }
+  
+  // if pdf not cached, generate pdf
+  if (!$img) {
+
+    // design pdf function
+    $function = $node->design . '_pdf';
+    if (function_exists($function)) {
+
+      // go generate pdf
+      $args = array($node);
+      $img = call_user_func_array($function, $args);
+
+      // save in cache
+      cache_set($key, $img, 'cache', CACHE_PERMANENT);
+    }
+  }
+  
+  // force PDF download
+  drupal_set_header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+
+  if(isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'],'MSIE')) {
+    drupal_set_header('Content-Type: application/force-download');
+  }
+  else {
+    drupal_set_header('Content-Type: application/octet-stream');
+  }
+    
+  // make a file name from title
+  $fname = preg_replace('/[^0-9a-z\.\_\-]/i','_', $node->title);
+
+  // send PDF
+  drupal_set_header('Content-Disposition: attachment; filename="' . $fname .'.pdf"');
+  drupal_set_header('Content-Length: '.strlen($img));
+  echo $img;
+}
+
+/**
+ * Fetch bracket image from cache
+ *
+ * @param $key
+ *   the cache key
+ */
+function bracket_fetch_from_cache($key) {
+
+  $img = FALSE;
+  
+  // get cache setting
+  $cancache = variable_get(BRACKET_CACHE, false);
+  
+  // retrieve from cache if so configured
+  if ($cancache) {
+    $cache = cache_get($key);
+    if (is_object($cache) && ($cache->data)) {
+      $img = $cache->data;
+    }
+  }
+  
+  return $img;
+}
+
+/**
+ * Clear bracket node imagesfrom cache
+ *
+ * @param $node
+ *   the node containing the bracket
+ */
+function bracket_clear_cache($node) {
+
+  // form cache key
+  $key = 'bracket/' . $node->nid;
+    
+  // clear bracket node from the cache
+  cache_clear_all($key, 'cache', TRUE);
 }
 
 /**
@@ -1448,4 +1614,44 @@ function bracket_html2rgb($color) {
   $b = hexdec($b);
 
   return array($r, $g, $b);
+}
+
+/**
+ * Return bracket display options
+ *
+ * @return
+ *   an array containing the display options
+ */
+function bracket_display_options() {
+  
+  return array('IMAGE' => t('Image'), 'HTML' => t('HTML'));
+}
+
+/**
+ * Return logo url based on path
+ *
+ * @return
+ *  logo url
+ */
+function bracket_logo_url($logopath) {
+
+  // if an absolue path, return it
+  if (bracket_path_is_url($logopath)) {
+    return $logopath;
+  }
+  // return url
+  else {
+    return file_create_url($logopath);
+  }
+}
+
+/**
+ * Return logo url based on path
+ *
+ * @return
+ *  true if path is an absolute url
+ */
+function bracket_path_is_url($path) {
+
+  return preg_match("/^https?:\/\//", $path);
 }
