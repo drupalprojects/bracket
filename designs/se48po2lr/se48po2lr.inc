@@ -23,7 +23,7 @@
 function se48po2lr_create(&$node) {
 
   // set bracket bar option
-  $node->options['image_options']['show_bracket_bar'] = TRUE;
+  $node->options['show_bracket_bar'] = TRUE;
 
   // add competitors
   bracket_design_create_competitors($node, 48);
@@ -61,7 +61,7 @@ function se48po2lr_image($node) {
   // setup positions and spacing
   $top = 25;
   $left = 15;
-  $width = 90;
+  $width = 100;
   $height = 45;
   $spacing = $height * 1.75;
 
@@ -279,7 +279,7 @@ function se48po2lr_pdf($node) {
 
   // bracket comments
   $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_large);
-  $pdf->setXY(($iwidth / 2) - (2.0 / 2), 2.5);
+  $pdf->setXY(($iwidth / 2) - (2.0 / 2), 3.5);
   $pdf->multicell(2.0, 0.125, $node->comments, 0, 'C');
 
   // bracket footnote
@@ -300,7 +300,7 @@ function se48po2lr_pdf($node) {
   // bracket bar
   if ($node->options['show_bracket_bar']) {
     bracket_pdf_setup_bar_colors($node, $pdf);
-    $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_norm);
+    $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_small);
     $t = $top + $tb - $height;
     $pdf->setXY($left, $t);
     $pdf->cell($iwidth - ($left * 2), 0.125, '', 0, 0, 'C', TRUE);

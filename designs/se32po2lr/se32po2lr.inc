@@ -23,7 +23,7 @@
 function se32po2lr_create(&$node) {
 
   // set bracket bar option
-  $node->options['image_options']['show_bracket_bar'] = TRUE;
+  $node->options['show_bracket_bar'] = TRUE;
 
   // add competitors
   bracket_design_create_competitors($node, 32);
@@ -61,7 +61,7 @@ function se32po2lr_image($node) {
   // setup positions and spacing
   $top = 25;
   $left = 15;
-  $width = 90;
+  $width = 100;
   $height = 45;
   $spacing = $height * 1.75;
 
@@ -222,7 +222,7 @@ function se32po2lr_pdf($node) {
   $pdf->addPage();
 
   // round 1
-  $right = 11.0 - $left;
+  $right = $iwidth - $left;
   bracket_pdf_drawbracketset($pdf, $node, $left, $top, $width, $height, $spacing, 1, 1, 4, 'L');
   bracket_pdf_drawbracketset($pdf, $node, $right, $top, $width, $height, $spacing, 1, 9, 12, 'R');
   bracket_pdf_drawbracketset($pdf, $node, $left, $top + $tb, $width, $height, $spacing, 1, 5, 8, 'L');
@@ -277,21 +277,21 @@ function se32po2lr_pdf($node) {
 
   // bracket logo
   if ($node->logopath != '') {
-    bracket_pdf_insert_image($pdf, $node->logopath, 5.5, 1.00, 1.75, TRUE);
+    bracket_pdf_insert_image($pdf, $node->logopath, $iwidth / 2, 1.5, 1.75, TRUE);
   }
 
   // sponsor logo
   if ($node->sponsorlogopath != '') {
-    bracket_pdf_insert_image($pdf, $node->sponsorlogopath, 5.5, 5.5, 0.75, TRUE);
+    bracket_pdf_insert_image($pdf, $node->sponsorlogopath, $iwidth / 2, 5.5, 0.75, TRUE);
   }
 
   // bracket bar
   if ($node->options['show_bracket_bar']) {
     bracket_pdf_setup_bar_colors($node, $pdf);
-    $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_norm);
+    $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_small);
     $t = $top + $tb - $height;
     $pdf->setXY($left, $t);
-    $pdf->cell(11.0 - ($left * 2), 0.125, '', 0, 0, 'C', TRUE);
+    $pdf->cell($iwidth - ($left * 2), 0.125, '', 0, 0, 'C', TRUE);
     for ($i=1; $i<=sizeof($node->round) && $i <= 2; $i++) {
       $pdf->setXY($left + (($i-1) * $width), $t);
       $pdf->cell($width, 0.125, $node->round[$i]->comment, 0, 0, 'C');
