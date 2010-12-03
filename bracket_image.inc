@@ -657,3 +657,40 @@ function bracket_image_output_png($img) {
   return $png;
 }
 
+
+/**
+ * Draw a result cell on the given image
+ *
+ * A result cell is a single match result result
+ *
+ * @param $img
+ *   the img handle
+ * @param $lr
+ *   the left or right edge (x-coord) of the result cell (depending on orientation)
+ * @param $top
+ *   the top edge (y-coord) of the result set
+ * @param $width
+ *   the width of the result set
+ * @param $result
+ *   the result to draw
+ * @param $orient
+ *   the orientation of the bracket set - 'L'=left or 'R'=right
+ */
+function bracket_image_draw_result($img, $lr, $top, $width, $result, $orient='L') {
+
+  global $bracket_image_fg_color;
+  global $bracket_image_font_norm;
+
+  if ($orient == 'L') {
+    $lrx = $lr + 2;
+  }
+  else {
+    $lrx = $lr - $width;
+  }
+
+  imageline($img, $lrx, $top, $lrx+$width, $top, $bracket_image_fg_color);
+  bracket_image_imagetextalign($img, $bracket_image_font_norm, $lrx, $top-5, $width, $result->cname, $bracket_image_fg_color, $orient);
+  bracket_image_imagetextalign($img, $bracket_image_font_norm, $lrx, $top+10, $width, $result->comment, $bracket_image_fg_color, $orient);
+
+}
+

@@ -415,3 +415,42 @@ function bracket_pdf_insert_image($pdf, $imgpath, $x, $y, $w=0, $center = FALSE)
     unlink($path);
   }
 }
+
+
+/**
+ * Draw a result cell on the given image
+ *
+ * A result cell is a single match result result
+ *
+ * @param $pdf
+ *   the pdf object
+ * @param $lr
+ *   the left or right edge (x-coord) of the result cell (depending on orientation)
+ * @param $top
+ *   the top edge (y-coord) of the result set
+ * @param $width
+ *   the width of the result set
+ * @param $result
+ *   the result to draw
+ * @param $orient
+ *   the orientation of the bracket set - 'L'=left or 'R'=right
+ */
+function bracket_pdf_draw_result($pdf, $lr, $top, $width, $result, $orient='L') {
+
+  global $bracket_pdf_font_name;
+  global $bracket_pdf_font_norm;
+  
+  if ($orient == 'L') {
+    $lrx = $lr;
+  }
+  else {
+    $lrx = $lr - $width;
+  }
+
+  $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_norm);
+  $pdf->line($lrx, $top, $lrx + $width, $top);
+  $pdf->setXY($lrx, $top-0.125);
+  $pdf->cell($width, 0.125, $result->cname, 0, 0, $orient);
+  $pdf->setXY($lrx, $top);
+  $pdf->cell($width, 0.125, $result->comment, 0, 0, $orient);
+}

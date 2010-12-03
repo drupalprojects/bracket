@@ -1,13 +1,13 @@
 <?php
-// $Id$
+// $Id:
 
 /**
  * @file
- * This file contains the required functions for the se32po2lr bracket design
+ * This file contains the required functions for the se48po2lr bracket design
  *
- * This design consists of 32 competitors in a single elimination playoff bracket
+ * This design consists of 48 competitors in a single elimination playoff bracket
  *
- * The bracket is formatted as a left and right bracket with 16 competitors each
+ * The bracket is formatted as a left and right bracket with 24 competitors each
  *
  * competing for 2 rounds only
  *
@@ -20,13 +20,13 @@
  * @param $node
  *   the node object
  */
-function se32po2lr_create(&$node) {
+function se48po2lr_create(&$node) {
 
   // set bracket bar option
   $node->options['image_options']['show_bracket_bar'] = TRUE;
 
   // add competitors
-  bracket_design_create_competitors($node, 32);
+  bracket_design_create_competitors($node, 48);
   // add 2 rounds
   bracket_design_create_winner_rounds($node, 2);
   // add results
@@ -44,7 +44,7 @@ function se32po2lr_create(&$node) {
  * @return
  *   the png image
  */
-function se32po2lr_image($node) {
+function se48po2lr_image($node) {
 
   global $bracket_image_font;
   global $bracket_image_font_bold;
@@ -66,11 +66,11 @@ function se32po2lr_image($node) {
   $spacing = $height * 1.75;
 
   // spacing between top and bottom brackets
-  $tb = $spacing * 4.5;
+  $tb = $spacing * 6.5;
 
   // setup image
   $iwidth = 900;
-  $iheight = 750;
+  $iheight = 1050;
   $img = imagecreatetruecolor($iwidth, $iheight);
 
   // allocate colors
@@ -96,10 +96,10 @@ function se32po2lr_image($node) {
 
   // round 1
   $right = $iwidth - $left;
-  bracket_image_drawbracketset($img, $node, $left, $top, $width, $height, $spacing, 1, 1, 4, 'L');
-  bracket_image_drawbracketset($img, $node, $right, $top, $width, $height, $spacing, 1, 9, 12, 'R');
-  bracket_image_drawbracketset($img, $node, $left, $top + $tb, $width, $height, $spacing, 1, 5, 8, 'L');
-  bracket_image_drawbracketset($img, $node, $right, $top + $tb, $width, $height, $spacing, 1, 13, 16, 'R');
+  bracket_image_drawbracketset($img, $node, $left, $top, $width, $height, $spacing, 1, 1, 6, 'L');
+  bracket_image_drawbracketset($img, $node, $right, $top, $width, $height, $spacing, 1, 13, 18, 'R');
+  bracket_image_drawbracketset($img, $node, $left, $top + $tb, $width, $height, $spacing, 1, 7, 12, 'L');
+  bracket_image_drawbracketset($img, $node, $right, $top + $tb, $width, $height, $spacing, 1, 19, 24, 'R');
 
   // round 2
   $l = $left + $width;
@@ -108,10 +108,10 @@ function se32po2lr_image($node) {
   $sp = $spacing * 2;
   // new top - add half prev height
   $t = $top + ($height / 2);
-  bracket_image_drawbracketset($img, $node, $l, $t, $width, $hh, $sp, 2, 1, 2, 'L');
-  bracket_image_drawbracketset($img, $node, $r, $t, $width, $hh, $sp, 2, 5, 6, 'R');
-  bracket_image_drawbracketset($img, $node, $l, $t + $tb, $width, $hh, $sp, 2, 3, 4, 'L');
-  bracket_image_drawbracketset($img, $node, $r, $t + $tb, $width, $hh, $sp, 2, 7, 8, 'R');
+  bracket_image_drawbracketset($img, $node, $l, $t, $width, $hh, $sp, 2, 1, 3, 'L');
+  bracket_image_drawbracketset($img, $node, $r, $t, $width, $hh, $sp, 2, 7, 9, 'R');
+  bracket_image_drawbracketset($img, $node, $l, $t + $tb, $width, $hh, $sp, 2, 4, 6, 'L');
+  bracket_image_drawbracketset($img, $node, $r, $t + $tb, $width, $hh, $sp, 2, 10, 12, 'R');
 
   // results
   $l += $width;
@@ -119,15 +119,21 @@ function se32po2lr_image($node) {
   $t += ($hh / 2);
   $hh = $sp;
   bracket_image_draw_result($img, $l, $t, $width, $node->result[1], 'L');
-  bracket_image_draw_result($img, $r, $t, $width, $node->result[5], 'R');
-  bracket_image_draw_result($img, $l, $t+$tb, $width, $node->result[3], 'L');
-  bracket_image_draw_result($img, $r, $t+$tb, $width, $node->result[7], 'R');
-
+  bracket_image_draw_result($img, $r, $t, $width, $node->result[7], 'R');
+  bracket_image_draw_result($img, $l, $t+$tb, $width, $node->result[4], 'L');
+  bracket_image_draw_result($img, $r, $t+$tb, $width, $node->result[10], 'R');
+  
   $t += $hh;
   bracket_image_draw_result($img, $l, $t, $width, $node->result[2], 'L');
-  bracket_image_draw_result($img, $r, $t, $width, $node->result[6], 'R');
-  bracket_image_draw_result($img, $l, $t+$tb, $width, $node->result[4], 'L');
-  bracket_image_draw_result($img, $r, $t+$tb, $width, $node->result[8], 'R');
+  bracket_image_draw_result($img, $r, $t, $width, $node->result[8], 'R');
+  bracket_image_draw_result($img, $l, $t+$tb, $width, $node->result[5], 'L');
+  bracket_image_draw_result($img, $r, $t+$tb, $width, $node->result[11], 'R');
+  
+  $t += $hh;
+  bracket_image_draw_result($img, $l, $t, $width, $node->result[3], 'L');
+  bracket_image_draw_result($img, $r, $t, $width, $node->result[9], 'R');
+  bracket_image_draw_result($img, $l, $t+$tb, $width, $node->result[6], 'L');
+  bracket_image_draw_result($img, $r, $t+$tb, $width, $node->result[12], 'R');
 
   // bracket title
   bracket_image_imagetextalign($img, $bracket_image_font_xlarge, $iwidth / 2 - (400 / 2), 15, 400, $node->title, $bracket_image_fg_color, 'C');
@@ -160,7 +166,7 @@ function se32po2lr_image($node) {
 
   // sponsor logo
   if ($node->sponsorlogopath != '') {
-    bracket_image_insert_image($img, $node->sponsorlogopath, $iwidth / 2, 500, 75, TRUE);
+    bracket_image_insert_image($img, $node->sponsorlogopath, $iwidth / 2, 750, 75, TRUE);
   }
 
   // generate the png image stream
@@ -181,7 +187,7 @@ function se32po2lr_image($node) {
  * @return
  *   the pdf document
  */
-function se32po2lr_pdf($node) {
+function se48po2lr_pdf($node) {
 
   global $bracket_pdf_font_name;
   global $bracket_pdf_font_xlarge;
@@ -191,21 +197,21 @@ function se32po2lr_pdf($node) {
   global $bracket_pdf_font_xsmall;
 
   // setup pdf
-  $pdf = new FPDF('L', 'in', 'letter');
+  $pdf = new FPDF('P', 'in', 'letter');
   $pdf->setAutoPageBreak(FALSE);
-  $iwidth = 11.0;
-  $iheight = 8.5;
+  $iwidth = 8.5;
+  $iheight = 11.0;
 
   // positions and spacing
   $top = 0.75;
   $left = 0.50;
-  $width = 1.10;
-  $height = 0.5;
+  $width = 1.0;
+  $height = 0.45;
   $spacing = $height * 1.75;
   $pdf->setMargins($top, $left);
 
   // spacing between top and bottom brackets
-  $tb = $spacing * 4.5;
+  $tb = $spacing * 6.5;
 
   // set pdf colors
   bracket_pdf_setup_colors($node, $pdf);
@@ -222,11 +228,11 @@ function se32po2lr_pdf($node) {
   $pdf->addPage();
 
   // round 1
-  $right = 11.0 - $left;
-  bracket_pdf_drawbracketset($pdf, $node, $left, $top, $width, $height, $spacing, 1, 1, 4, 'L');
-  bracket_pdf_drawbracketset($pdf, $node, $right, $top, $width, $height, $spacing, 1, 9, 12, 'R');
-  bracket_pdf_drawbracketset($pdf, $node, $left, $top + $tb, $width, $height, $spacing, 1, 5, 8, 'L');
-  bracket_pdf_drawbracketset($pdf, $node, $right, $top + $tb, $width, $height, $spacing, 1, 13, 16, 'R');
+  $right = $iwidth - $left;
+  bracket_pdf_drawbracketset($pdf, $node, $left, $top, $width, $height, $spacing, 1, 1, 6, 'L');
+  bracket_pdf_drawbracketset($pdf, $node, $right, $top, $width, $height, $spacing, 1, 13, 18, 'R');
+  bracket_pdf_drawbracketset($pdf, $node, $left, $top + $tb, $width, $height, $spacing, 1, 7, 12, 'L');
+  bracket_pdf_drawbracketset($pdf, $node, $right, $top + $tb, $width, $height, $spacing, 1, 19, 24, 'R');
 
   // round 2
   $l = $left + $width;
@@ -234,10 +240,10 @@ function se32po2lr_pdf($node) {
   $t = $top + ($height / 2);
   $hh = $spacing;
   $sp = $spacing * 2;
-  bracket_pdf_drawbracketset($pdf, $node, $l, $t, $width, $hh, $sp, 2, 1, 2, 'L');
-  bracket_pdf_drawbracketset($pdf, $node, $r, $t, $width, $hh, $sp, 2, 5, 6, 'R');
-  bracket_pdf_drawbracketset($pdf, $node, $l, $t + $tb, $width, $hh, $sp, 2, 3, 4, 'L');
-  bracket_pdf_drawbracketset($pdf, $node, $r, $t + $tb, $width, $hh, $sp, 2, 7, 8, 'R');
+  bracket_pdf_drawbracketset($pdf, $node, $l, $t, $width, $hh, $sp, 2, 1, 3, 'L');
+  bracket_pdf_drawbracketset($pdf, $node, $r, $t, $width, $hh, $sp, 2, 7, 9, 'R');
+  bracket_pdf_drawbracketset($pdf, $node, $l, $t + $tb, $width, $hh, $sp, 2, 4, 6, 'L');
+  bracket_pdf_drawbracketset($pdf, $node, $r, $t + $tb, $width, $hh, $sp, 2, 10, 12, 'R');
 
   // results
   $l += $width;
@@ -245,15 +251,21 @@ function se32po2lr_pdf($node) {
   $t += ($hh / 2);
   $hh = $sp;
   bracket_pdf_draw_result($pdf, $l, $t, $width, $node->result[1], 'L');
-  bracket_pdf_draw_result($pdf, $r, $t, $width, $node->result[5], 'R');
-  bracket_pdf_draw_result($pdf, $l, $t+$tb, $width, $node->result[3], 'L');
-  bracket_pdf_draw_result($pdf, $r, $t+$tb, $width, $node->result[7], 'R');
-
+  bracket_pdf_draw_result($pdf, $r, $t, $width, $node->result[7], 'R');
+  bracket_pdf_draw_result($pdf, $l, $t+$tb, $width, $node->result[4], 'L');
+  bracket_pdf_draw_result($pdf, $r, $t+$tb, $width, $node->result[10], 'R');
+  
   $t += $hh;
   bracket_pdf_draw_result($pdf, $l, $t, $width, $node->result[2], 'L');
-  bracket_pdf_draw_result($pdf, $r, $t, $width, $node->result[6], 'R');
-  bracket_pdf_draw_result($pdf, $l, $t+$tb, $width, $node->result[4], 'L');
-  bracket_pdf_draw_result($pdf, $r, $t+$tb, $width, $node->result[8], 'R');
+  bracket_pdf_draw_result($pdf, $r, $t, $width, $node->result[8], 'R');
+  bracket_pdf_draw_result($pdf, $l, $t+$tb, $width, $node->result[5], 'L');
+  bracket_pdf_draw_result($pdf, $r, $t+$tb, $width, $node->result[11], 'R');
+  
+  $t += $hh;
+  bracket_pdf_draw_result($pdf, $l, $t, $width, $node->result[3], 'L');
+  bracket_pdf_draw_result($pdf, $r, $t, $width, $node->result[9], 'R');
+  bracket_pdf_draw_result($pdf, $l, $t+$tb, $width, $node->result[6], 'L');
+  bracket_pdf_draw_result($pdf, $r, $t+$tb, $width, $node->result[12], 'R');
 
   // bracket title
   $pdf->setFont($bracket_pdf_font_name, 'BI', $bracket_pdf_font_xlarge);
@@ -277,12 +289,12 @@ function se32po2lr_pdf($node) {
 
   // bracket logo
   if ($node->logopath != '') {
-    bracket_pdf_insert_image($pdf, $node->logopath, 5.5, 1.00, 1.75, TRUE);
+    bracket_pdf_insert_image($pdf, $node->logopath, $iwidth / 2, 2.25, 1.75, TRUE);
   }
 
   // sponsor logo
   if ($node->sponsorlogopath != '') {
-    bracket_pdf_insert_image($pdf, $node->sponsorlogopath, 5.5, 5.5, 0.75, TRUE);
+    bracket_pdf_insert_image($pdf, $node->sponsorlogopath, $iwidth / 2, 9.0, 0.75, TRUE);
   }
 
   // bracket bar
@@ -291,7 +303,7 @@ function se32po2lr_pdf($node) {
     $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_norm);
     $t = $top + $tb - $height;
     $pdf->setXY($left, $t);
-    $pdf->cell(11.0 - ($left * 2), 0.125, '', 0, 0, 'C', TRUE);
+    $pdf->cell($iwidth - ($left * 2), 0.125, '', 0, 0, 'C', TRUE);
     for ($i=1; $i<=sizeof($node->round) && $i <= 2; $i++) {
       $pdf->setXY($left + (($i-1) * $width), $t);
       $pdf->cell($width, 0.125, $node->round[$i]->comment, 0, 0, 'C');
