@@ -357,7 +357,12 @@ function bracket_settings_form($form_state) {
     '#title' => t('Default Display'),
     '#options' => bracket_display_options(),
     '#default_value' => variable_get('bracket_default_display', 'Image'),
-    '#description' => t('Select the default display option for brackets.')
+    '#description' => t('Select the default display option for brackets. Use the button below to update all bracket display options to the current default display option - set the desired option first.')
+  );
+
+  $form['general']['update_bracket_display'] = array(
+    '#type' => 'submit',
+    '#value' => t('Update All Bracket Displays'),
   );
 
   $form['general'][BRACKET_CACHE] = array(
@@ -419,12 +424,32 @@ function bracket_settings_form_submit($form_id, &$form_state) {
     return;
   }
   
+  if ($form_state['values']['op'] == $form_state['values']['update_bracket_display']) {
+    update_all_bracket_displays();
+    $msg = 'Bracket display options were updated.';
+    watchdog('bracket', $msg);
+    drupal_set_message($msg, 'info');
+    return;
+  }
+  
   variable_set('bracket_default_display', $form_state['values']['display']);
   variable_set(BRACKET_CACHE, $form_state['values'][BRACKET_CACHE]);
   variable_set('bracket_image_upload', $form_state['values']['upload']);
   variable_set('bracket_image_upload_path', $form_state['values']['upload_path']);
 
   drupal_set_message(t('Configuration settings were saved.'));
+}
+
+function update_all_bracket_displays() {
+
+  $option = variable_get('bracket_default_display', 'Image');
+  $result = db_query("SELECT n.nid, n.title FROM {node} n WHERE n.type = 'bracket'");
+  while ($row = db_fetch_object($result)) {
+    $node = node_load($row->nid);
+    $node->options['display'] = $option;
+    node_save($node);
+    watchdog('bracket', t('Updated bracket - ' . $row->title . ' (' . $row->nid . ') - to display option: ' . $option));
+  }
 }
 
 //=========================================================================
@@ -733,6 +758,9 @@ function bracket_form(&$node) {
     '#tree' => TRUE
   );
 
+  if ($node->options['display'] == '') {
+    $node->options['display'] = variable_get('bracket_default_display', 'Image');
+  }
   $form['bracket']['options']['display'] = array(
     '#type' => 'select',
     '#title' => t('Display'),
