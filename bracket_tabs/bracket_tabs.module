@@ -63,7 +63,7 @@ function bracket_tabs_nodeapi(&$node, $op, $a3, $a4) {
 /**
  * Theming function for bracket_tabs_view
  */
-function theme_bracket_tabs_view(&$node, $teaser = 0, $page = 0) {
+function theme_bracket_tabs_view($node, $teaser = 0, $page = 0) {
 
   $output = '';
   
@@ -98,7 +98,7 @@ function theme_bracket_tabs_view(&$node, $teaser = 0, $page = 0) {
       }
     }
     // if criteria found, get matching brackets
-    if (count(args) > 0) {
+    if (count($args) > 0) {
       $tabs = array();
       $a = array();
       $result = db_query($sql, $args);
