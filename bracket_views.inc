@@ -20,7 +20,7 @@ function bracket_views_data() {
   $data['bracket']['table']['group'] = t('Bracket');
   
   $data['bracket']['table']['base'] = array(
-    'field' => nid,
+    'field' => 'nid',
     'title' => t('Tournament Bracket'),
     'help' => t('Tournament Brackets for organizing competitions.'),
   );
