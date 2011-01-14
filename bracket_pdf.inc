@@ -374,7 +374,7 @@ function bracket_pdf_insert_image($pdf, $imgpath, $x, $y, $w=0, $center = FALSE)
     $content = file_get_contents($imgpath); 
     if ($content) {
       $ftype = strrchr($imgpath, '.');
-      $path = tempnam(sys_get_temp_dir(), 'img');
+      $path = tempnam(file_directory_temp(), 'img');
       $path .= $ftype;
       file_put_contents($path, $content); 
       $unlink = TRUE;
