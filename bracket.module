@@ -357,7 +357,12 @@ function bracket_settings_form($form_state) {
     '#title' => t('Default Display'),
     '#options' => bracket_display_options(),
     '#default_value' => variable_get('bracket_default_display', 'Image'),
-    '#description' => t('Select the default display option for brackets.')
+    '#description' => t('Select the default display option for brackets. Use the button below to update all bracket display options to the current default display option - set the desired option first.')
+  );
+
+  $form['general']['update_bracket_display'] = array(
+    '#type' => 'submit',
+    '#value' => t('Update All Bracket Displays'),
   );
 
   $form['general'][BRACKET_CACHE] = array(
@@ -419,12 +424,32 @@ function bracket_settings_form_submit($form_id, &$form_state) {
     return;
   }
   
+  if ($form_state['values']['op'] == $form_state['values']['update_bracket_display']) {
+    update_all_bracket_displays();
+    $msg = 'Bracket display options were updated.';
+    watchdog('bracket', $msg);
+    drupal_set_message($msg, 'info');
+    return;
+  }
+  
   variable_set('bracket_default_display', $form_state['values']['display']);
   variable_set(BRACKET_CACHE, $form_state['values'][BRACKET_CACHE]);
   variable_set('bracket_image_upload', $form_state['values']['upload']);
   variable_set('bracket_image_upload_path', $form_state['values']['upload_path']);
 
   drupal_set_message(t('Configuration settings were saved.'));
+}
+
+function update_all_bracket_displays() {
+
+  $option = variable_get('bracket_default_display', 'Image');
+  $result = db_query("SELECT n.nid, n.title FROM {node} n WHERE n.type = 'bracket'");
+  while ($row = db_fetch_object($result)) {
+    $node = node_load($row->nid);
+    $node->options['display'] = $option;
+    node_save($node);
+    watchdog('bracket', t('Updated bracket - ' . $row->title . ' (' . $row->nid . ') - to display option: ' . $option));
+  }
 }
 
 //=========================================================================
@@ -460,7 +485,7 @@ function bracket_view($node, $teaser=FALSE, $page=FALSE) {
 /**
  * Theming function for bracket_view
  */
-function theme_bracket_view($node, $teaser=FALSE, $page=FALSE) {
+function theme_bracket_view(&$node, $teaser=FALSE, $page=FALSE) {
 
   // Add the css file
   drupal_add_css(drupal_get_path('module', 'bracket') . '/bracket.css');
@@ -733,6 +758,9 @@ function bracket_form(&$node) {
     '#tree' => TRUE
   );
 
+  if (!isset($node->options['display'])) {
+    $node->options['display'] = variable_get('bracket_default_display', 'Image');
+  }
   $form['bracket']['options']['display'] = array(
     '#type' => 'select',
     '#title' => t('Display'),
@@ -741,6 +769,9 @@ function bracket_form(&$node) {
     '#description' => t('Select the display option for this bracket.')
   );
   
+  if (!isset($node->options['hide_pdf'])) {
+    $node->options['hide_pdf'] = FALSE;
+  }
   $form['bracket']['options']['hide_pdf'] = array(
     '#type' => 'checkbox',
     '#title' => t('Hide PDF Link'),
@@ -764,7 +795,7 @@ function bracket_form(&$node) {
     '#description' => t('These options apply to Image and PDF output only.'),
   );
   
-  if (trim($node->options['image_options']['fg_color']) == '') {
+  if (!isset($node->options['image_options']['fg_color'])) {
     $node->options['image_options']['fg_color'] = $bracket_fg_color_default;
   }
   $form['bracket']['options']['image_options']['fg_color'] = array(
@@ -777,7 +808,7 @@ function bracket_form(&$node) {
     '#default_value' => $node->options['image_options']['fg_color']
   );
 
-  if (trim($node->options['image_options']['bg_color']) == '') {
+  if (!isset($node->options['image_options']['bg_color'])) {
     $node->options['image_options']['bg_color'] = $bracket_bg_color_default;
   }
   $form['bracket']['options']['image_options']['bg_color'] = array(
@@ -790,6 +821,9 @@ function bracket_form(&$node) {
     '#default_value' => $node->options['image_options']['bg_color']
   );
 
+  if (!isset($node->options['image_options']['show_bracket_bar'])) {
+    $node->options['image_options']['show_bracket_bar'] = FALSE;
+  }
   $form['bracket']['options']['image_options']['show_bracket_bar'] = array(
     '#type' => 'checkbox',
     '#title' => t('Show Bracket Bar'),
@@ -797,7 +831,7 @@ function bracket_form(&$node) {
     '#description' => t('Check to display bracket bar and round comments on bracket. Note: Some designs do not utilize this option.')
   );
 
-  if (trim($node->options['image_options']['bar_bg_color']) == '') {
+  if (!isset($node->options['image_options']['bar_bg_color'])) {
     $node->options['image_options']['bar_bg_color'] = $bracket_bar_bg_color_default;
   }
   $form['bracket']['options']['image_options']['bar_bg_color'] = array(
@@ -809,7 +843,7 @@ function bracket_form(&$node) {
     '#default_value' => $node->options['image_options']['bar_bg_color']
   );
 
-  if (trim($node->options['image_options']['bar_fg_color']) == '') {
+  if (!isset($node->options['image_options']['bar_fg_color'])) {
     $node->options['image_options']['bar_fg_color'] = $bracket_bar_fg_color_default;
   }
   $form['bracket']['options']['image_options']['bar_fg_color'] = array(
@@ -835,7 +869,7 @@ function bracket_form(&$node) {
     '#description' => t('Image font files must be present in the fonts folder of the bracket module.'),
   );
 
-  if (trim($node->options['image_options']['image_fonts']['image_font']) == '') {
+  if (!isset($node->options['image_options']['image_fonts']['image_font'])) {
     $node->options['image_options']['image_fonts']['image_font'] = $bracket_image_font_file;
   }
   $form['bracket']['options']['image_options']['image_fonts']['image_font'] = array(
@@ -847,7 +881,7 @@ function bracket_form(&$node) {
     '#default_value' => $node->options['image_options']['image_fonts']['image_font']
   );
 
-  if (trim($node->options['image_options']['image_fonts']['image_font_bold']) == '') {
+  if (!isset($node->options['image_options']['image_fonts']['image_font_bold'])) {
     $node->options['image_options']['image_fonts']['image_font_bold'] = $bracket_image_font_bold_file;
   }
   $form['bracket']['options']['image_options']['image_fonts']['image_font_bold'] = array(
@@ -859,7 +893,7 @@ function bracket_form(&$node) {
     '#default_value' => $node->options['image_options']['image_fonts']['image_font_bold']
   );
 
-  if (trim($node->options['image_options']['image_fonts']['image_font_italic']) == '') {
+  if (!isset($node->options['image_options']['image_fonts']['image_font_italic'])) {
     $node->options['image_options']['image_fonts']['image_font_italic'] = $bracket_image_font_italic_file;
   }
   $form['bracket']['options']['image_options']['image_fonts']['image_font_italic'] = array(
@@ -871,7 +905,7 @@ function bracket_form(&$node) {
     '#default_value' => $node->options['image_options']['image_fonts']['image_font_italic']
   );
 
-  if (trim($node->options['image_options']['image_fonts']['image_font_bolditalic']) == '') {
+  if (!isset($node->options['image_options']['image_fonts']['image_font_bolditalic'])) {
     $node->options['image_options']['image_fonts']['image_font_bolditalic'] = $bracket_image_font_bolditalic_file;
   }
   $form['bracket']['options']['image_options']['image_fonts']['image_font_bolditalic'] = array(
@@ -884,7 +918,7 @@ function bracket_form(&$node) {
   );
 
   $options = bracket_pdf_font_options();
-  if (trim($node->options['image_options']['pdf_font']) == '') {
+  if (!isset($node->options['image_options']['pdf_font'])) {
     $node->options['image_options']['pdf_font'] = $bracket_pdf_font_name;
   }
   $form['bracket']['options']['image_options']['pdf_font'] = array(
@@ -1464,10 +1498,9 @@ function bracket_image($node) {
 
   // form cache key
   $key = 'bracket/' . $node->nid . '/image';
-  
-  $img = NULL;
-  
+
   // don't retrieve from cache for update users
+  $img = NULL;
   if (!bracket_access('update', $node)) {
     // try to fetch from cache
     $img = bracket_fetch_from_cache($key);
@@ -1506,6 +1539,7 @@ function bracket_pdf($node) {
   $key = 'bracket/' . $node->nid . '/pdf';
 
   // don't retrieve from cache for update users
+  $img = NULL;
   if (!bracket_access('update', $node)) {
     // try to fetch from cache
     $img = bracket_fetch_from_cache($key);

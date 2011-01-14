@@ -39,16 +39,16 @@ function bracket_xml_export($node, $opt = 'bracket') {
   $output .= '  <display>' . $node->options['display'] . '</display>' . "\n";
   $output .= '  <hide_pdf>' . $node->options['hide_pdf'] . '</hide_pdf>' . "\n";
   $output .= '  <show_match_id>' . $node->options['show_match_id'] . '</show_match_id>' . "\n";
-  $output .= '  <fg_color>' . $node->options['fg_color'] . '</fg_color>' . "\n";
-  $output .= '  <bg_color>' . $node->options['bg_color'] . '</bg_color>' . "\n";
-  $output .= '  <show_bracket_bar>' . $node->options['show_bracket_bar'] . '</show_bracket_bar>' . "\n";
-  $output .= '  <bar_fg_color>' . $node->options['bar_fg_color'] . '</bar_fg_color>' . "\n";
-  $output .= '  <bar_bg_color>' . $node->options['bar_bg_color'] . '</bar_bg_color>' . "\n";
-  $output .= '  <image_font>' . $node->options['image_fonts']['image_font'] . '</image_font>' . "\n";
-  $output .= '  <image_font_bold>' . $node->options['image_fonts']['image_font_bold'] . '</image_font_bold>' . "\n";
-  $output .= '  <image_font_italic>' . $node->options['image_fonts']['image_font_italic'] . '</image_font_italic>' . "\n";
-  $output .= '  <image_font_bolditalic>' . $node->options['image_fonts']['image_font_bolditalic'] . '</image_font_bolditalic>' . "\n";
-  $output .= '  <pdf_font>' . $node->options['pdf_font'] . '</pdf_font>' . "\n";
+  $output .= '  <fg_color>' . $node->options['image_options']['fg_color'] . '</fg_color>' . "\n";
+  $output .= '  <bg_color>' . $node->options['image_options']['bg_color'] . '</bg_color>' . "\n";
+  $output .= '  <show_bracket_bar>' . $node->options['image_options']['show_bracket_bar'] . '</show_bracket_bar>' . "\n";
+  $output .= '  <bar_fg_color>' . $node->options['image_options']['bar_fg_color'] . '</bar_fg_color>' . "\n";
+  $output .= '  <bar_bg_color>' . $node->options['image_options']['bar_bg_color'] . '</bar_bg_color>' . "\n";
+  $output .= '  <image_font>' . $node->options['image_options']['image_fonts']['image_font'] . '</image_font>' . "\n";
+  $output .= '  <image_font_bold>' . $node->options['image_options']['image_fonts']['image_font_bold'] . '</image_font_bold>' . "\n";
+  $output .= '  <image_font_italic>' . $node->options['image_options']['image_fonts']['image_font_italic'] . '</image_font_italic>' . "\n";
+  $output .= '  <image_font_bolditalic>' . $node->options['image_options']['image_fonts']['image_font_bolditalic'] . '</image_font_bolditalic>' . "\n";
+  $output .= '  <pdf_font>' . $node->options['image_options']['pdf_font'] . '</pdf_font>' . "\n";
 
   // export competitors
   for ($i=1; $i<=count($node->comp); $i++) {
@@ -299,44 +299,52 @@ function bracket_xml_import_bracket(&$node, $values) {
         $node->options['show_match_id'] = $e['value'];
       }
 
+      else if ($tag == 'display') {
+        $node->options['display'] = $e['value'];
+      }
+
+      else if ($tag == 'hide_pdf') {
+        $node->options['hide_pdf'] = $e['value'];
+      }
+
       else if ($tag == 'fg_color') {
-        $node->options['fg_color'] = $e['value'];
+        $node->options['image_options']['fg_color'] = $e['value'];
       }
 
       else if ($tag == 'bg_color') {
-        $node->options['bg_color'] = $e['value'];
+        $node->options['image_options']['bg_color'] = $e['value'];
       }
 
       else if ($tag == 'show_bracket_bar') {
-        $node->options['show_bracket_bar'] = $e['value'];
+        $node->options['image_options']['show_bracket_bar'] = $e['value'];
       }
 
       else if ($tag == 'bar_fg_color') {
-        $node->options['bar_fg_color'] = $e['value'];
+        $node->options['image_options']['bar_fg_color'] = $e['value'];
       }
 
       else if ($tag == 'bar_bg_color') {
-        $node->options['bar_bg_color'] = $e['value'];
+        $node->options['image_options']['bar_bg_color'] = $e['value'];
       }
 
       else if ($tag == 'image_font') {
-        $node->options['image_fonts']['image_font'] = $e['value'];
+        $node->options['image_options']['image_fonts']['image_font'] = $e['value'];
       }
 
       else if ($tag == 'image_font_bold') {
-        $node->options['image_fonts']['image_font_bold'] = $e['value'];
+        $node->options['image_options']['image_fonts']['image_font_bold'] = $e['value'];
       }
 
       else if ($tag == 'image_font_italic') {
-        $node->options['image_fonts']['image_font_italic'] = $e['value'];
+        $node->options['image_options']['image_fonts']['image_font_italic'] = $e['value'];
       }
 
       else if ($tag == 'image_font_bolditalic') {
-        $node->options['image_fonts']['image_font_bolditalic'] = $e['value'];
+        $node->options['image_options']['image_fonts']['image_font_bolditalic'] = $e['value'];
       }
 
       else if ($tag == 'pdf_font') {
-        $node->options['pdf_font'] = $e['value'];
+        $node->options['image_options']['pdf_font'] = $e['value'];
       }
 
       else if ($tag == 'id') {

@@ -461,10 +461,10 @@ function bracket_route_edit_form_validate($form_id, &$form_state) {
       $match = 'match' . $j;
       $m = $r->match[$j];
 
-      $wm = $form_state['values'][$round][$match]['winner_match'];
-      $wc = $form_state['values'][$round][$match]['winner_comp'];
-      $lm = $form_state['values'][$round][$match]['loser_match'];
-      $lc = $form_state['values'][$round][$match]['loser_comp'];
+      $wm = isset($form_state['values'][$round][$match]['winner_match']) ? $form_state['values'][$round][$match]['winner_match'] : 0;
+      $wc = isset($form_state['values'][$round][$match]['winner_comp']) ? $form_state['values'][$round][$match]['winner_comp'] : 0;
+      $lm = isset($form_state['values'][$round][$match]['loser_match']) ? $form_state['values'][$round][$match]['loser_match'] : 0;
+      $lc = isset($form_state['values'][$round][$match]['loser_comp']) ? $form_state['values'][$round][$match]['loser_comp'] : 0;
 
       if ($wm > 0 && $wc == 0) {
         form_set_error($round .']['. $match . '][winner_comp',
@@ -511,10 +511,10 @@ function bracket_route_edit_form_submit($form_id, &$form_state) {
       $m->id = $form_state['values'][$round][$match]['matchid'];
 
       // update the routing
-      $m->winner_match = $form_state['values'][$round][$match]['winner_match'];
-      $m->winner_comp = $form_state['values'][$round][$match]['winner_comp'];
-      $m->loser_match = $form_state['values'][$round][$match]['loser_match'];
-      $m->loser_comp = $form_state['values'][$round][$match]['loser_comp'];
+      $m->winner_match = isset($form_state['values'][$round][$match]['winner_match']) ? $form_state['values'][$round][$match]['winner_match'] : 0;
+      $m->winner_comp = isset($form_state['values'][$round][$match]['winner_comp']) ? $form_state['values'][$round][$match]['winner_comp'] : 0;
+      $m->loser_match = isset($form_state['values'][$round][$match]['loser_match']) ? $form_state['values'][$round][$match]['loser_match'] : 0;
+      $m->loser_comp = isset($form_state['values'][$round][$match]['loser_comp']) ? $form_state['values'][$round][$match]['loser_comp'] : 0;
      }
   }
 

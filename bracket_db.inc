@@ -37,6 +37,24 @@ function bracket_db_load($node) {
     $bracket->design = $row->design;
     $bracket->options = unserialize($row->options);
 
+    // convert options to new format if needed    
+    if (!isset($bracket->options['image_options'])) {
+      $bracket->options['image_options']['image_fonts'] = $bracket->options['image_fonts'];
+      $bracket->options['image_options']['bg_color'] = $bracket->options['bg_color'];
+      $bracket->options['image_options']['fg_color'] = $bracket->options['fg_color'];
+      $bracket->options['image_options']['bar_bg_color'] = $bracket->options['bar_bg_color'];
+      $bracket->options['image_options']['bar_fg_color'] = $bracket->options['bar_fg_color'];
+      $bracket->options['image_options']['show_bracket_bar'] = $bracket->options['show_bracket_bar'];
+      $bracket->options['image_options']['pdf_font'] = $bracket->options['pdf_font'];
+      unset($bracket->options['image_fonts']);
+      unset($bracket->options['bg_color']);
+      unset($bracket->options['fg_color']);
+      unset($bracket->options['bar_bg_color']);
+      unset($bracket->options['bar_fg_color']);
+      unset($bracket->options['show_bracket_bar']);
+      unset($bracket->options['pdf_font']);
+    }
+
     // load competitors
     $rs = db_query("SELECT * FROM {bracket_comp} WHERE nid = %d ORDER BY id", $node->nid);
     while($row = db_fetch_object($rs)) {
