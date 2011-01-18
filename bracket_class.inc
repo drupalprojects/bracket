@@ -94,16 +94,16 @@ class Bracket {
     $node->options['display'] = variable_get('bracket_default_display', 'Image');
     $node->options['hide_pdf']= FALSE;
     $this->options['show_match_id'] = FALSE;
-    $this->options['fg_color'] = '';
-    $this->options['bg_color'] = '';
-    $this->options['show_bracket_bar'] = FALSE;
-    $this->options['bar_fg_color'] = '';
-    $this->options['bar_bg_color'] = '';
-    $this->options['image_fonts']['image_font'] = '';
-    $this->options['image_fonts']['image_font_bold'] = '';
-    $this->options['image_fonts']['image_font_italic'] = '';
-    $this->options['image_fonts']['image_font_bolditalic'] = '';
-    $this->options['pdf_font'] = '';
+    $this->options['image_options']['fg_color'] = '';
+    $this->options['image_options']['bg_color'] = '';
+    $this->options['image_options']['show_bracket_bar'] = FALSE;
+    $this->options['image_options']['bar_fg_color'] = '';
+    $this->options['image_options']['bar_bg_color'] = '';
+    $this->options['image_options']['image_fonts']['image_font'] = '';
+    $this->options['image_options']['image_fonts']['image_font_bold'] = '';
+    $this->options['image_options']['image_fonts']['image_font_italic'] = '';
+    $this->options['image_options']['image_fonts']['image_font_bolditalic'] = '';
+    $this->options['image_options']['pdf_font'] = '';
   }
 }
 
