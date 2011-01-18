@@ -584,7 +584,8 @@ function bracket_form(&$node) {
     '#description' => t('Comments for this bracket')
   );
 
-  if (arg(1) == 'add') {
+  // only allow design selection at creation time
+  if (!isset($node->nid)) {
     $options = array('' => t('Select a bracket design')) + bracket_design_list();
     $form['bracket']['design'] = array(
       '#type' => 'select',
@@ -596,6 +597,7 @@ function bracket_form(&$node) {
       '#description' => t('Select a design for this bracket.'),
      );
   }
+  // display design readonly otherwise
   else {
     $tmp = bracket_design_description($node->design);
     if ($tmp == '') {
