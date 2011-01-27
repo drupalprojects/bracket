@@ -48,17 +48,17 @@ function se64champlr_create(&$node) {
  */
 function se64champlr_image($node) {
 
-  global $bracket_image_font;
-  global $bracket_image_font_bold;
-  global $bracket_image_font_xlarge;
-  global $bracket_image_font_large;
-  global $bracket_image_font_norm;
-  global $bracket_image_font_small;
-  global $bracket_image_font_xsmall;
-  global $bracket_image_bg_color;
-  global $bracket_image_fg_color;
-  global $bracket_image_bar_bg_color;
-  global $bracket_image_bar_fg_color;
+  global $_bracket_image_font;
+  global $_bracket_image_font_bold;
+  global $_bracket_image_font_xlarge;
+  global $_bracket_image_font_large;
+  global $_bracket_image_font_norm;
+  global $_bracket_image_font_small;
+  global $_bracket_image_font_xsmall;
+  global $_bracket_image_bg_color;
+  global $_bracket_image_fg_color;
+  global $_bracket_image_bar_bg_color;
+  global $_bracket_image_bar_fg_color;
 
   // setup positions and spacing
   $top = 25;
@@ -82,17 +82,17 @@ function se64champlr_image($node) {
   bracket_image_setup_fonts($node);
 
   // fill in background
-  imagefill($img, 0, 0, $bracket_image_bg_color);
+  imagefill($img, 0, 0, $_bracket_image_bg_color);
 
   // font sizes
-  $bracket_image_font_xlarge = 12;
-  $bracket_image_font_large = 10;
-  $bracket_image_font_norm = 7;
-  $bracket_image_font_small = 6.5;
-  $bracket_image_font_xsmall = 6;
+  $_bracket_image_font_xlarge = 12;
+  $_bracket_image_font_large = 10;
+  $_bracket_image_font_norm = 7;
+  $_bracket_image_font_small = 6.5;
+  $_bracket_image_font_xsmall = 6;
 
   // font height
-  $bbox = imagettfbbox($bracket_image_font_norm, 0, $bracket_image_font, 'Q');
+  $bbox = imagettfbbox($_bracket_image_font_norm, 0, $_bracket_image_font, 'Q');
   $h = $bbox[1] - $bbox[7];
   $w = $bbox[2] - $bbox[0];
 
@@ -144,77 +144,77 @@ function se64champlr_image($node) {
   $hh = $sp + $height;
   bracket_image_drawbracketset($img, $node, $l, $t, $width, $hh, $sp, 5, 1, 1, 'L', FALSE);
   $match = $node->round[4]->match[1];
-  bracket_image_imagetextalign($img, $bracket_image_font_small, $l-$w, $t + ($hh / 3), $width, $match->comment[1], $bracket_image_fg_color, 'R');
-  bracket_image_imagetextalign($img, $bracket_image_font_small, $l-$w, $t + ($hh / 3) + ($h * 2), $width, $match->comment[2], $bracket_image_fg_color, 'R');
+  bracket_image_imagetextalign($img, $_bracket_image_font_small, $l-$w, $t + ($hh / 3), $width, $match->comment[1], $_bracket_image_fg_color, 'R');
+  bracket_image_imagetextalign($img, $_bracket_image_font_small, $l-$w, $t + ($hh / 3) + ($h * 2), $width, $match->comment[2], $_bracket_image_fg_color, 'R');
   bracket_image_drawbracketset($img, $node, $r, $t, $width, $hh, $sp, 5, 2, 2, 'R', FALSE);
   $match = $node->round[4]->match[2];
-  bracket_image_imagetextalign($img, $bracket_image_font_small, $r-$width+$w, $t + $hh - ($hh / 3), $width, $match->comment[1], $bracket_image_fg_color, 'L');
-  bracket_image_imagetextalign($img, $bracket_image_font_small, $r-$width+$w, $t + $hh - ($hh / 3) + ($h * 2), $width, $match->comment[2], $bracket_image_fg_color, 'L');
+  bracket_image_imagetextalign($img, $_bracket_image_font_small, $r-$width+$w, $t + $hh - ($hh / 3), $width, $match->comment[1], $_bracket_image_fg_color, 'L');
+  bracket_image_imagetextalign($img, $_bracket_image_font_small, $r-$width+$w, $t + $hh - ($hh / 3) + ($h * 2), $width, $match->comment[2], $_bracket_image_fg_color, 'L');
 
   // finals
   $l += $width;
   $t += ($hh / 3);
   $match = $node->round[6]->match[1];
-  imageline($img, $l, $t, $l+$width, $t, $bracket_image_fg_color);
-  bracket_image_imagetextalign($img, $bracket_image_font_norm, $l+2, $t-2, $width, $match->cname[1], $bracket_image_fg_color, 'L');
-  bracket_image_imagetextalign($img, $bracket_image_font_small, $l+2, $t+$h+2, $width, $match->comp_comment[1], $bracket_image_fg_color, 'L');
-  bracket_image_imagetextalign($img, $bracket_image_font_norm, $l+$width-($w*2), $t-2, $w*2, $match->score[1], $bracket_image_fg_color, 'R');
+  imageline($img, $l, $t, $l+$width, $t, $_bracket_image_fg_color);
+  bracket_image_imagetextalign($img, $_bracket_image_font_norm, $l+2, $t-2, $width, $match->cname[1], $_bracket_image_fg_color, 'L');
+  bracket_image_imagetextalign($img, $_bracket_image_font_small, $l+2, $t+$h+2, $width, $match->comp_comment[1], $_bracket_image_fg_color, 'L');
+  bracket_image_imagetextalign($img, $_bracket_image_font_norm, $l+$width-($w*2), $t-2, $w*2, $match->score[1], $_bracket_image_fg_color, 'R');
   if ($match->home[1]) {
-    $bracket_image_imageTextAlign($img, $bracket_image_font_norm, $l+$width-($w*2), $t+$h, $w, 'H', $bracket_image_fg_color);
+    $_bracket_image_imageTextAlign($img, $_bracket_image_font_norm, $l+$width-($w*2), $t+$h, $w, 'H', $_bracket_image_fg_color);
   }
   $t += ($hh / 3);
   $r -= $width;
-  imageline($img, $r, $t, $r-$width, $t, $bracket_image_fg_color);
+  imageline($img, $r, $t, $r-$width, $t, $_bracket_image_fg_color);
 
-  bracket_image_imagetextalign($img, $bracket_image_font_norm, $r-$width, $t-2, $width, $match->cname[2], $bracket_image_fg_color, 'R');
-  bracket_image_imagetextalign($img, $bracket_image_font_small, $r-$width, $t+$h+2, $width, $match->comp_comment[2], $bracket_image_fg_color, 'R');
-  bracket_image_imagetextalign($img, $bracket_image_font_norm, $r-$width, $t-2, $w*2, $match->score[2], $bracket_image_fg_color, 'L');
+  bracket_image_imagetextalign($img, $_bracket_image_font_norm, $r-$width, $t-2, $width, $match->cname[2], $_bracket_image_fg_color, 'R');
+  bracket_image_imagetextalign($img, $_bracket_image_font_small, $r-$width, $t+$h+2, $width, $match->comp_comment[2], $_bracket_image_fg_color, 'R');
+  bracket_image_imagetextalign($img, $_bracket_image_font_norm, $r-$width, $t-2, $w*2, $match->score[2], $_bracket_image_fg_color, 'L');
   if ($match->home[2]) {
-    bracket_image_imagetextalign($img, $bracket_image_font_norm, $r-$width, $t+$h, $w, 'H', $bracket_image_fg_color);
+    bracket_image_imagetextalign($img, $_bracket_image_font_norm, $r-$width, $t+$h, $w, 'H', $_bracket_image_fg_color);
   }
 
-  bracket_image_imagetextalign($img, $bracket_image_font_small, $iwidth / 2 - ($width / 2), $t + ($h * 5), $width, $match->comment[1], $bracket_image_fg_color, 'C');
-  bracket_image_imagetextalign($img, $bracket_image_font_small, $iwidth / 2 - ($width / 2) , $t + ($h * 5) + ($h * 2), $width, $match->comment[2], $bracket_image_fg_color, 'C');
+  bracket_image_imagetextalign($img, $_bracket_image_font_small, $iwidth / 2 - ($width / 2), $t + ($h * 5), $width, $match->comment[1], $_bracket_image_fg_color, 'C');
+  bracket_image_imagetextalign($img, $_bracket_image_font_small, $iwidth / 2 - ($width / 2) , $t + ($h * 5) + ($h * 2), $width, $match->comment[2], $_bracket_image_fg_color, 'C');
 
   // winner and runner-up
   $t = $iheight - 130;
   $w = $width * 2;
   $l = ($iwidth / 2) - ($w / 2);
-  imageline($img, $l, $t, $l+$w, $t, $bracket_image_fg_color);
-  bracket_image_imagetextalign($img, $bracket_image_font_large, $l, $t-2, $w, $node->result[1]->cname, $bracket_image_fg_color, 'C');
-  bracket_image_imagetextalign($img, $bracket_image_font_norm, $l, $t+$h+1, $w, $node->result[1]->comment, $bracket_image_fg_color, 'C');
+  imageline($img, $l, $t, $l+$w, $t, $_bracket_image_fg_color);
+  bracket_image_imagetextalign($img, $_bracket_image_font_large, $l, $t-2, $w, $node->result[1]->cname, $_bracket_image_fg_color, 'C');
+  bracket_image_imagetextalign($img, $_bracket_image_font_norm, $l, $t+$h+1, $w, $node->result[1]->comment, $_bracket_image_fg_color, 'C');
   $t += 50;
-  imageline($img, $l, $t, $l+$w, $t, $bracket_image_fg_color);
-  bracket_image_imagetextalign($img, $bracket_image_font_large, $l, $t-2, $w, $node->result[2]->cname, $bracket_image_fg_color, 'C');
-  bracket_image_imagetextalign($img, $bracket_image_font_norm, $l, $t+$h+1, $w, $node->result[2]->comment, $bracket_image_fg_color, 'C');
+  imageline($img, $l, $t, $l+$w, $t, $_bracket_image_fg_color);
+  bracket_image_imagetextalign($img, $_bracket_image_font_large, $l, $t-2, $w, $node->result[2]->cname, $_bracket_image_fg_color, 'C');
+  bracket_image_imagetextalign($img, $_bracket_image_font_norm, $l, $t+$h+1, $w, $node->result[2]->comment, $_bracket_image_fg_color, 'C');
 
   // bracket title
-  bracket_image_imagetextalign($img, $bracket_image_font_xlarge, $iwidth / 2 - (400 / 2), 15, 400, $node->title, $bracket_image_fg_color, 'C');
+  bracket_image_imagetextalign($img, $_bracket_image_font_xlarge, $iwidth / 2 - (400 / 2), 15, 400, $node->title, $_bracket_image_fg_color, 'C');
 
   // bracket subtitle
-  bracket_image_imagetextalign($img, $bracket_image_font_norm, $iwidth / 2 - (400 / 2), 30, 400, $node->subtitle, $bracket_image_fg_color, 'C');
+  bracket_image_imagetextalign($img, $_bracket_image_font_norm, $iwidth / 2 - (400 / 2), 30, 400, $node->subtitle, $_bracket_image_fg_color, 'C');
 
   // bracket comments
-  bracket_image_imagetextwordwrap($img, $bracket_image_font_norm, ($iwidth / 2) - 100, 200, 200, $node->comments, $bracket_image_fg_color, 'C');
+  bracket_image_imagetextwordwrap($img, $_bracket_image_font_norm, ($iwidth / 2) - 100, 200, 200, $node->comments, $_bracket_image_fg_color, 'C');
 
   // bracket footnote
-  bracket_image_imagetextwordwrap($img, $bracket_image_font_small, 10, $iheight-30, $iwidth-10, $node->footer, $bracket_image_fg_color, 'C');
+  bracket_image_imagetextwordwrap($img, $_bracket_image_font_small, 10, $iheight-30, $iwidth-10, $node->footer, $_bracket_image_fg_color, 'C');
 
   // bracket bar
   if ($node->options['image_options']['show_bracket_bar']) {
     bracket_image_setup_bar_colors($node, $img);
     $t = $top + $tb - ($spacing / 2);
-    imagefilledrectangle($img, $left, $t-($h/2)-2, $iwidth-$left, $t+($h/2)+2, $bracket_image_bar_bg_color);
+    imagefilledrectangle($img, $left, $t-($h/2)-2, $iwidth-$left, $t+($h/2)+2, $_bracket_image_bar_bg_color);
     $t += 3;
     for ($i=1; $i<=count($node->round) && $i <= 5; $i++) {
-      bracket_image_imageTextAlign($img, $bracket_image_font_norm, $left + (($i-1) * $width), $t, $width, $node->round[$i]->comment, $bracket_image_bar_fg_color, 'C');
-      bracket_image_imageTextAlign($img, $bracket_image_font_norm, $right - ($i * $width), $t, $width, $node->round[$i]->comment, $bracket_image_bar_fg_color, 'C');
+      bracket_image_imageTextAlign($img, $_bracket_image_font_norm, $left + (($i-1) * $width), $t, $width, $node->round[$i]->comment, $_bracket_image_bar_fg_color, 'C');
+      bracket_image_imageTextAlign($img, $_bracket_image_font_norm, $right - ($i * $width), $t, $width, $node->round[$i]->comment, $_bracket_image_bar_fg_color, 'C');
     }
     $l = $left + (4 * $width);
     $r = $right - (4 * $width);
     $width = $r - $l;
     if (count($node->round) >= 6) {
-      bracket_image_imagetextalign($img, $bracket_image_font_norm, $l, $t, $width, $node->round[6]->comment, $bracket_image_bar_fg_color, 'C');
+      bracket_image_imagetextalign($img, $_bracket_image_font_norm, $l, $t, $width, $node->round[6]->comment, $_bracket_image_bar_fg_color, 'C');
     }
   }
 
@@ -235,7 +235,7 @@ function se64champlr_image($node) {
   imagedestroy($img);
 
   // return the image
-  return($png);
+  return $png;
 }
 
 /**
@@ -248,12 +248,12 @@ function se64champlr_image($node) {
  */
 function se64champlr_pdf($node) {
 
-  global $bracket_pdf_font_name;
-  global $bracket_pdf_font_xlarge;
-  global $bracket_pdf_font_large;
-  global $bracket_pdf_font_norm;
-  global $bracket_pdf_font_small;
-  global $bracket_pdf_font_xsmall;
+  global $_bracket_pdf_font_name;
+  global $_bracket_pdf_font_xlarge;
+  global $_bracket_pdf_font_large;
+  global $_bracket_pdf_font_norm;
+  global $_bracket_pdf_font_small;
+  global $_bracket_pdf_font_xsmall;
 
   // setup pdf
   $pdf = new FPDF('L', 'in', 'letter');
@@ -279,9 +279,9 @@ function se64champlr_pdf($node) {
   bracket_pdf_setup_font($node, $pdf);
 
   // font sizes
-  $bracket_pdf_font_norm = 7;
-  $bracket_pdf_font_small = 6;
-  $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_norm);
+  $_bracket_pdf_font_norm = 7;
+  $_bracket_pdf_font_small = 6;
+  $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_norm);
 
   // start pdf
   $pdf->addPage();
@@ -332,14 +332,14 @@ function se64champlr_pdf($node) {
   $t += ($hh / 2);
   $hh = $sp + $height;
   bracket_pdf_drawbracketset($pdf, $node, $l, $t, $width, $hh, $sp, 5, 1, 1, 'L', FALSE);
-  $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_small);
+  $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_small);
   $match = $node->round[4]->match[1];
   $pdf->setXY($l-0.125, $t + ($hh / 3) - 0.125);
   $pdf->cell($width, 0.125, $match->comment[1], 0, 0, 'R');
   $pdf->setXY($l-0.125, $t + ($hh / 3));
   $pdf->cell($width, 0.125, $match->comment[2], 0, 0, 'R');
   bracket_pdf_drawbracketset($pdf, $node, $r, $t, $width, $hh, $sp, 5, 2, 2, 'R', FALSE);
-  $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_small);
+  $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_small);
   $match = $node->round[4]->match[2];
   $pdf->setXY($r-$width+0.125, $t + ($hh - ($hh / 3)) - 0.125);
   $pdf->cell($width, 0.125, $match->comment[1], 0, 0, 'L');
@@ -347,7 +347,7 @@ function se64champlr_pdf($node) {
   $pdf->cell($width, 0.125, $match->comment[2], 0, 0, 'L');
 
   // finals
-  $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_norm);
+  $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_norm);
   $l += $width;
   $t += $hh / 3;
   $match = $node->round[6]->match[1];
@@ -355,10 +355,10 @@ function se64champlr_pdf($node) {
   $pdf->setXY($l, $t-0.125);
   $pdf->cell($width, 0.125, $match->cname[1], 0, 0, 'L');
   $pdf->setXY($l, $t+0.0625);
-  $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_small);
+  $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_small);
   $pdf->cell($width, 0.125, $match->comp_comment[1], 0, 0, 'L');
   $pdf->setXY($l+$width-0.25+0.03125, $t-0.125);
-  $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_norm);
+  $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_norm);
   $pdf->cell(0.25, 0.125, $match->score[1], 0, 0, 'R');
   if ($match->home[1]) {
     $pdf->setXY($l+$width-0.125, $t+0.0625);
@@ -370,17 +370,17 @@ function se64champlr_pdf($node) {
   $pdf->setXY($r-$width, $t-0.125);
   $pdf->cell($width, 0.125, $match->cname[2], 0, 0, 'R');
   $pdf->setXY($r, $t+0.0625);
-  $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_small);
+  $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_small);
   $pdf->cell($width, 0.125, $match->comp_comment[2], 0, 0, 'L');
   $pdf->setXY($r-$width, $t-0.125);
-  $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_norm);
+  $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_norm);
   $pdf->cell(0.25, 0.125, $match->score[2], 0, 0, 'L');
   if ($match->home[2]) {
     $pdf->setXY($r-$width, $t+0.0625);
-    $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_norm);
+    $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_norm);
     $pdf->cell(0.125, 0.125, 'H');
   }
-  $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_small);
+  $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_small);
   $pdf->setXY(5.5 - ($width/2), $t + 0.25);
   $pdf->cell($width, 0.125, $match->comment[1], 0, 0, 'C');
   $pdf->setXY(5.5 - ($width/2), $t + 0.25 + 0.125);
@@ -392,37 +392,37 @@ function se64champlr_pdf($node) {
   $l = 5.5 - ($w / 2);
   $pdf->line($l, $t, $l+$w, $t);
   $pdf->setXY($l, $t-0.125);
-  $pdf->setFont($bracket_pdf_font_name, 'B', $bracket_pdf_font_large);
+  $pdf->setFont($_bracket_pdf_font_name, 'B', $_bracket_pdf_font_large);
   $pdf->cell($w, 0.125, $node->result[1]->cname, 0, 0, 'C');
   $pdf->setXY($l, $t);
-  $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_norm);
+  $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_norm);
   $pdf->cell($w, 0.125, $node->result[1]->comment, 0, 0, 'C');
   $t += 0.5;
   $pdf->line($l, $t, $l+$w, $t);
   $pdf->setXY($l, $t-0.125);
-  $pdf->setFont($bracket_pdf_font_name, 'B', $bracket_pdf_font_large);
+  $pdf->setFont($_bracket_pdf_font_name, 'B', $_bracket_pdf_font_large);
   $pdf->cell($w, 0.125, $node->result[2]->cname, 0, 0, 'C');
   $pdf->setXY($l, $t);
-  $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_norm);
+  $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_norm);
   $pdf->cell($w, 0.125, $node->result[2]->comment, 0, 0, 'C');
 
   // bracket title
-  $pdf->setFont($bracket_pdf_font_name, 'BI', $bracket_pdf_font_xlarge);
+  $pdf->setFont($_bracket_pdf_font_name, 'BI', $_bracket_pdf_font_xlarge);
   $pdf->setXY($left, 0.5);
   $pdf->multicell($iwidth - ($left * 2) , 0.25, $node->title, 0, 'C');
 
   // bracket subtitle
-  $pdf->setFont($bracket_pdf_font_name, 'BI', $bracket_pdf_font_large);
+  $pdf->setFont($_bracket_pdf_font_name, 'BI', $_bracket_pdf_font_large);
   $pdf->setXY($left, 0.75);
   $pdf->multicell($iwidth - ($left * 2), 0.125, $node->subtitle, 0, 'C');
 
   // bracket comments
-  $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_norm);
+  $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_norm);
   $pdf->setXY(($iwidth / 2) - (1.0 / 2), 2.5);
   $pdf->multicell(1.0, 0.125, $node->comments, 0, 'C');
 
   // bracket footnote
-  $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_small);
+  $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_small);
   $pdf->setXY($left, $iheight - 0.5);
   $pdf->multicell($iwidth - ($left * 2), 0.125, $node->footer, 0, 'C');
 
@@ -439,7 +439,7 @@ function se64champlr_pdf($node) {
   // bracket bar
   if ($node->options['image_options']['show_bracket_bar']) {
     bracket_pdf_setup_bar_colors($node, $pdf);
-    $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_small);
+    $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_small);
     $t = $top + $tb - $height;
     $pdf->setXY($left, $t);
     $pdf->cell(11.0 - ($left * 2), 0.125, '', 0, 0, 'C', TRUE);
@@ -459,5 +459,5 @@ function se64champlr_pdf($node) {
   }
 
   // return pdf as a string
-  return($pdf->output('', 'S'));
+  return $pdf->output('', 'S');
 }

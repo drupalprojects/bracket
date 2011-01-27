@@ -67,7 +67,7 @@ function bracket_route_edit_form($form_state, $node) {
     // insert the loser matches
     $lfinalrnd = bracket_round_last_loser_round($node);
     for ($i=$lrnd; $i<=$lfinalrnd; $i++) {
-      bracket_route_edit_form_matches($node->round[$i], $form, $options, $comp_opt, false);
+      bracket_route_edit_form_matches($node->round[$i], $form, $options, $comp_opt, FALSE);
     }
   }
 
@@ -292,7 +292,7 @@ function theme_bracket_route_edit_form($form) {
     $rtype = 'loser';
 
     // header for loser matches
-    $output .= '<hr /><p><h2>' .t('Loser Matches') . '</h2></p>';
+    $output .= '<hr /><p><h2>' . t('Loser Matches') . '</h2></p>';
 
     $output .= "\n<!--loser_table_begin-->\n<table><tr>";
 
@@ -432,7 +432,7 @@ function bracket_route_edit_form_validate($form_id, &$form_state) {
     $round = 'round' . $i;
     $r = $node->round[$i];
 
-    for($j=1; $j<=count($r->match); $j++) {
+    for ($j=1; $j<=count($r->match); $j++) {
 
       $match = 'match' . $j;
       $m = $r->match[$j];
@@ -456,7 +456,7 @@ function bracket_route_edit_form_validate($form_id, &$form_state) {
     $round = 'round' . $i;
     $r = $node->round[$i];
 
-    for($j=1; $j<=count($r->match); $j++) {
+    for ($j=1; $j<=count($r->match); $j++) {
 
       $match = 'match' . $j;
       $m = $r->match[$j];
@@ -502,7 +502,7 @@ function bracket_route_edit_form_submit($form_id, &$form_state) {
     $round = 'round' . $i;
     $r = $node->round[$i];
 
-    for($j=1; $j<=count($r->match); $j++) {
+    for ($j=1; $j<=count($r->match); $j++) {
 
       $match = 'match' . $j;
       $m = $r->match[$j];

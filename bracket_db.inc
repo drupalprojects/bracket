@@ -57,7 +57,7 @@ function bracket_db_load($node) {
 
     // load competitors
     $rs = db_query("SELECT * FROM {bracket_comp} WHERE nid = %d ORDER BY id", $node->nid);
-    while($row = db_fetch_object($rs)) {
+    while ($row = db_fetch_object($rs)) {
       $c = new Bracket_Competitor();
       $c->name = $row->name;
       $c->seedin = $row->seedin;
@@ -66,7 +66,7 @@ function bracket_db_load($node) {
 
     // load rounds
     $rs = db_query("SELECT * FROM {bracket_round} WHERE nid = %d ORDER BY id", $node->nid);
-    while($row = db_fetch_object($rs)) {
+    while ($row = db_fetch_object($rs)) {
 
       // add round
       $r = new Bracket_Round();
@@ -83,7 +83,7 @@ function bracket_db_load($node) {
                        JOIN {bracket_round} r on r.id = m.roundid
                        WHERE m.nid = %d AND m.roundid = %d
                        ORDER BY m.seq", $node->nid, $row->id);
-      while($row2 = db_fetch_object($rs2)) {
+      while ($row2 = db_fetch_object($rs2)) {
 
         // add the match
         $m = new Bracket_Match();
@@ -120,7 +120,7 @@ function bracket_db_load($node) {
 
     // load results
     $rs = db_query("SELECT * FROM {bracket_result} WHERE nid = %d ORDER BY id", $node->nid);
-    while($row = db_fetch_object($rs)) {
+    while ($row = db_fetch_object($rs)) {
       $s = new Bracket_Result();
       $s->compid = $row->compid;
       if ($s->compid > 0) {
@@ -188,7 +188,7 @@ function bracket_db_update_tree($node) {
   bracket_db_delete_tree($node);
 
   // insert competitors
-  for($i=1; $i<=count($node->comp); $i++) {
+  for ($i=1; $i<=count($node->comp); $i++) {
     $c = $node->comp[$i];
     db_query("INSERT INTO {bracket_comp} (nid, id, name, seedin)
               VALUES (%d, %d, '%s', '%s')",
@@ -196,13 +196,13 @@ function bracket_db_update_tree($node) {
   }
 
   // insert rounds
-  for($i=1; $i<=count($node->round); $i++) {
+  for ($i=1; $i<=count($node->round); $i++) {
     $r = $node->round[$i];
     db_query("INSERT INTO {bracket_round} (nid, id, round, loser, first, comment)
               VALUES (%d, %d, '%s', %d, %d, '%s')",
               $node->nid, $i, $r->name, $r->loser, $r->first, $r->comment);
     // insert matches for this round
-    for($j=1; $j<=count($r->match); $j++) {
+    for ($j=1; $j<=count($r->match); $j++) {
       $m = $r->match[$j];
       db_query("INSERT INTO {bracket_match} (nid, id, roundid, seq, compid1, score1, home1, win1, comp1_comment,
                                              compid2, score2, home2, win2, comp2_comment,
@@ -216,7 +216,7 @@ function bracket_db_update_tree($node) {
     }
   }
   // insert results
-  for($i=1; $i<=count($node->result); $i++) {
+  for ($i=1; $i<=count($node->result); $i++) {
     $s = $node->result[$i];
     db_query("INSERT INTO {bracket_result} (nid, id, compid, comment, seedout)
               VALUES (%d, %d, %d, '%s', '%s')",

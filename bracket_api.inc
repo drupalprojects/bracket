@@ -1,5 +1,5 @@
 <?php
-// $Id
+// $Id$
 
 /**
  * @file
@@ -353,7 +353,7 @@ function bracket_api_get_competitors($node) {
 
   $comp = array();
   
-  foreach($node->comp as $ci => $c) {
+  foreach ($node->comp as $ci => $c) {
     $comp[$ci] = array(
       'name' => $c->name,
       'seed' => $c->seedin
@@ -416,7 +416,7 @@ function bracket_api_set_seed(&$node, $comp_index, $seed, $seed_desc=FALSE) {
 function bracket_api_set_seeding(&$node, $seeds) {
 
   $index = 1;
-  foreach($seeds as $seed) {
+  foreach ($seeds as $seed) {
     // place next competitor
     if (is_array($seed)) {
       $s = '';
@@ -451,7 +451,7 @@ function bracket_api_set_seeding(&$node, $seeds) {
 function bracket_api_set_competitors(&$node, $competitors) {
 
   $id = 1;
-  foreach($competitors as $comp) {
+  foreach ($competitors as $comp) {
     // place next competitor
     $node->comp[$id]->name = $comp;
     // don't allow any past bracket limit
@@ -472,7 +472,7 @@ function bracket_api_set_competitors(&$node, $competitors) {
  */
 function bracket_api_seed_competitors(&$node, $comp) {
 
-  foreach($comp as $seed => $name) {
+  foreach ($comp as $seed => $name) {
     // get seed index
     $i = bracket_api_get_seed_index($node, $seed);
     // set competitor if seed was found
@@ -543,7 +543,7 @@ function bracket_api_clear_competitor_seeding(&$node) {
  */
 function bracket_api_locate_competitor($node, $name) {
 
-  foreach($node->comp as $ci => $c) {
+  foreach ($node->comp as $ci => $c) {
     if ($c->name == $name) {
       return $ci;
     }
@@ -616,7 +616,7 @@ function bracket_api_get_rounds($node) {
 
   $round = array();
   
-  foreach($node->round as $ri => $r) {
+  foreach ($node->round as $ri => $r) {
     
     $round[$ri] = bracket_api_get_round($node, $ri);
   }
@@ -647,7 +647,7 @@ function bracket_api_get_round($node, $round_index) {
       'loser' => $r->loser
     );
     
-    foreach($r->match as $mi => $m) {
+    foreach ($r->match as $mi => $m) {
       $round['match'][$mi] = bracket_api_get_match($node, $round_index, $mi);
     }
     
@@ -669,7 +669,7 @@ function bracket_api_get_round($node, $round_index) {
  */
 function bracket_api_locate_round($node, $name) {
   
-  foreach($node->round as $ri => $r) {
+  foreach ($node->round as $ri => $r) {
     if ($r->name == $name) {
       return $ri;
     }
@@ -771,9 +771,9 @@ function bracket_api_get_matches($node) {
 
   $match = array();
   
-  foreach($node->round as $ri => $r) {
+  foreach ($node->round as $ri => $r) {
   
-    foreach($r->match as $mi => $m) {
+    foreach ($r->match as $mi => $m) {
     
       $match[$m->id] = bracket_api_get_match_by_index($node, $ri, $mi);
     }
@@ -1129,7 +1129,7 @@ function bracket_api_get_results($node) {
 
   $result = array();
   
-  foreach($node->result as $ri => $r) {
+  foreach ($node->result as $ri => $r) {
 
     $cname = '';
     if ($r->compid > 0) {

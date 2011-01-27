@@ -10,14 +10,14 @@
  */
 
 // default color codes for images and pdfs
-global $bracket_bg_color_default;
-global $bracket_fg_color_default;
-global $bracket_bar_bg_color_default;
-global $bracket_bar_fg_color_default;
-$bracket_bg_color_default = '#FFFFFF';      // white
-$bracket_fg_color_default = '#000000';      // black
-$bracket_bar_bg_color_default = '#404080';  // dark blue
-$bracket_bar_fg_color_default = '#FFFFFF';  // white
+global $_bracket_bg_color_default;
+global $_bracket_fg_color_default;
+global $_bracket_bar_bg_color_default;
+global $_bracket_bar_fg_color_default;
+$_bracket_bg_color_default = '#FFFFFF';      // white
+$_bracket_fg_color_default = '#000000';      // black
+$_bracket_bar_bg_color_default = '#404080';  // dark blue
+$_bracket_bar_fg_color_default = '#FFFFFF';  // white
 
 module_load_include('inc', 'bracket', 'bracket_class');
 module_load_include('inc', 'bracket', 'bracket_db');
@@ -108,7 +108,7 @@ function bracket_menu() {
 
   // bracket listing.
   $items['admin/content/bracket'] = array(
-    'title' =>'Brackets',
+    'title' => 'Brackets',
     'page callback' => 'bracket_admin_content',
     'access callback' => 'user_access',
     'access arguments' => array('administer nodes'),
@@ -537,15 +537,15 @@ function bracket_load($node) {
  */
 function bracket_form(&$node) {
 
-  global $bracket_bg_color_default;
-  global $bracket_fg_color_default;
-  global $bracket_bar_bg_color_default;
-  global $bracket_bar_fg_color_default;
-  global $bracket_pdf_font_name;
-  global $bracket_image_font_file;
-  global $bracket_image_font_bold_file;
-  global $bracket_image_font_italic_file;
-  global $bracket_image_font_bolditalic_file;
+  global $_bracket_bg_color_default;
+  global $_bracket_fg_color_default;
+  global $_bracket_bar_bg_color_default;
+  global $_bracket_bar_fg_color_default;
+  global $_bracket_pdf_font_name;
+  global $_bracket_image_font_file;
+  global $_bracket_image_font_bold_file;
+  global $_bracket_image_font_italic_file;
+  global $_bracket_image_font_bolditalic_file;
 
   $form = array();
 
@@ -798,7 +798,7 @@ function bracket_form(&$node) {
   );
   
   if (!isset($node->options['image_options']['fg_color'])) {
-    $node->options['image_options']['fg_color'] = $bracket_fg_color_default;
+    $node->options['image_options']['fg_color'] = $_bracket_fg_color_default;
   }
   $form['bracket']['options']['image_options']['fg_color'] = array(
     '#type' => 'textfield',
@@ -806,12 +806,12 @@ function bracket_form(&$node) {
     '#size' => 7,
     '#maxlength' => 7,
     '#required' => TRUE,
-    '#description' => t('In HTML color format - #RRGGBB (Default is @color).', array('@color' => $bracket_fg_color_default)),
+    '#description' => t('In HTML color format - #RRGGBB (Default is @color).', array('@color' => $_bracket_fg_color_default)),
     '#default_value' => $node->options['image_options']['fg_color']
   );
 
   if (!isset($node->options['image_options']['bg_color'])) {
-    $node->options['image_options']['bg_color'] = $bracket_bg_color_default;
+    $node->options['image_options']['bg_color'] = $_bracket_bg_color_default;
   }
   $form['bracket']['options']['image_options']['bg_color'] = array(
     '#type' => 'textfield',
@@ -819,7 +819,7 @@ function bracket_form(&$node) {
     '#size' => 7,
     '#maxlength' => 7,
     '#required' => TRUE,
-    '#description' => t('In HTML color format - #RRGGBB (Default is @color).', array('@color' => $bracket_bg_color_default)),
+    '#description' => t('In HTML color format - #RRGGBB (Default is @color).', array('@color' => $_bracket_bg_color_default)),
     '#default_value' => $node->options['image_options']['bg_color']
   );
 
@@ -834,26 +834,26 @@ function bracket_form(&$node) {
   );
 
   if (!isset($node->options['image_options']['bar_bg_color'])) {
-    $node->options['image_options']['bar_bg_color'] = $bracket_bar_bg_color_default;
+    $node->options['image_options']['bar_bg_color'] = $_bracket_bar_bg_color_default;
   }
   $form['bracket']['options']['image_options']['bar_bg_color'] = array(
     '#type' => 'textfield',
     '#title' => t('Bracket Bar Background Color'),
     '#size' => 7,
     '#maxlength' => 7,
-    '#description' => t('In HTML color format - #RRGGBB (Default is @color).', array('@color' => $bracket_bar_bg_color_default)),
+    '#description' => t('In HTML color format - #RRGGBB (Default is @color).', array('@color' => $_bracket_bar_bg_color_default)),
     '#default_value' => $node->options['image_options']['bar_bg_color']
   );
 
   if (!isset($node->options['image_options']['bar_fg_color'])) {
-    $node->options['image_options']['bar_fg_color'] = $bracket_bar_fg_color_default;
+    $node->options['image_options']['bar_fg_color'] = $_bracket_bar_fg_color_default;
   }
   $form['bracket']['options']['image_options']['bar_fg_color'] = array(
     '#type' => 'textfield',
     '#title' => t('Bracket Bar Foreground (Text) Color'),
     '#size' => 7,
     '#maxlength' => 7,
-    '#description' => t('In HTML color format - #RRGGBB (Default is @color).', array('@color' => $bracket_bar_fg_color_default)),
+    '#description' => t('In HTML color format - #RRGGBB (Default is @color).', array('@color' => $_bracket_bar_fg_color_default)),
     '#default_value' => $node->options['image_options']['bar_fg_color']
   );
 
@@ -872,63 +872,63 @@ function bracket_form(&$node) {
   );
 
   if (!isset($node->options['image_options']['image_fonts']['image_font'])) {
-    $node->options['image_options']['image_fonts']['image_font'] = $bracket_image_font_file;
+    $node->options['image_options']['image_fonts']['image_font'] = $_bracket_image_font_file;
   }
   $form['bracket']['options']['image_options']['image_fonts']['image_font'] = array(
     '#type' => 'textfield',
     '#title' => t('Image Normal Font File'),
     '#size' => 50,
     '#maxlength' => 50,
-    '#description' => t('Image font file for normal font (Default is @font).', array('@font' => $bracket_image_font_file)),
+    '#description' => t('Image font file for normal font (Default is @font).', array('@font' => $_bracket_image_font_file)),
     '#default_value' => $node->options['image_options']['image_fonts']['image_font']
   );
 
   if (!isset($node->options['image_options']['image_fonts']['image_font_bold'])) {
-    $node->options['image_options']['image_fonts']['image_font_bold'] = $bracket_image_font_bold_file;
+    $node->options['image_options']['image_fonts']['image_font_bold'] = $_bracket_image_font_bold_file;
   }
   $form['bracket']['options']['image_options']['image_fonts']['image_font_bold'] = array(
     '#type' => 'textfield',
     '#title' => t('Image Bold Font File'),
     '#size' => 50,
     '#maxlength' => 50,
-    '#description' => t('Image font file for bold font (Default is @font).', array('@font' => $bracket_image_font_bold_file)),
+    '#description' => t('Image font file for bold font (Default is @font).', array('@font' => $_bracket_image_font_bold_file)),
     '#default_value' => $node->options['image_options']['image_fonts']['image_font_bold']
   );
 
   if (!isset($node->options['image_options']['image_fonts']['image_font_italic'])) {
-    $node->options['image_options']['image_fonts']['image_font_italic'] = $bracket_image_font_italic_file;
+    $node->options['image_options']['image_fonts']['image_font_italic'] = $_bracket_image_font_italic_file;
   }
   $form['bracket']['options']['image_options']['image_fonts']['image_font_italic'] = array(
     '#type' => 'textfield',
     '#title' => t('Image Italic Font File'),
     '#size' => 50,
     '#maxlength' => 50,
-    '#description' => t('Image font file for italic font (Default is @font).', array('@font' => $bracket_image_font_italic_file)),
+    '#description' => t('Image font file for italic font (Default is @font).', array('@font' => $_bracket_image_font_italic_file)),
     '#default_value' => $node->options['image_options']['image_fonts']['image_font_italic']
   );
 
   if (!isset($node->options['image_options']['image_fonts']['image_font_bolditalic'])) {
-    $node->options['image_options']['image_fonts']['image_font_bolditalic'] = $bracket_image_font_bolditalic_file;
+    $node->options['image_options']['image_fonts']['image_font_bolditalic'] = $_bracket_image_font_bolditalic_file;
   }
   $form['bracket']['options']['image_options']['image_fonts']['image_font_bolditalic'] = array(
     '#type' => 'textfield',
     '#title' => t('Image Bold Italic Font File'),
     '#size' => 50,
     '#maxlength' => 50,
-    '#description' => t('Image font file for bold italic font (Default is @font).', array('@font' => $bracket_image_font_bolditalic_file)),
+    '#description' => t('Image font file for bold italic font (Default is @font).', array('@font' => $_bracket_image_font_bolditalic_file)),
     '#default_value' => $node->options['image_options']['image_fonts']['image_font_bolditalic']
   );
 
   $options = bracket_pdf_font_options();
   if (!isset($node->options['image_options']['pdf_font'])) {
-    $node->options['image_options']['pdf_font'] = $bracket_pdf_font_name;
+    $node->options['image_options']['pdf_font'] = $_bracket_pdf_font_name;
   }
   $form['bracket']['options']['image_options']['pdf_font'] = array(
     '#type' => 'select',
     '#title' => t('PDF Font'),
     '#default_value' => $node->options['image_options']['pdf_font'],
     '#options' => $options,
-    '#description' => t('Select the PDF font for this bracket (Default is @font).', array('@font' => $bracket_pdf_font_name)),
+    '#description' => t('Select the PDF font for this bracket (Default is @font).', array('@font' => $_bracket_pdf_font_name)),
    );
 
   return $form;
@@ -972,7 +972,7 @@ function bracket_validate($node) {
  */
 function bracket_validate_color($color) {
 
-  if(preg_match('/^(#)([0-9a-fA-F]{3})([0-9a-fA-F]{3})?$/', $color)) {
+  if (preg_match('/^(#)([0-9a-fA-F]{3})([0-9a-fA-F]{3})?$/', $color)) {
     return TRUE;
   }
   return FALSE;
@@ -994,10 +994,10 @@ function bracket_check_image_type($path) {
     $pathinfo = pathinfo($path);
     $ext = strtoupper($pathinfo['extension']);
     if ($ext == '' || ($ext != 'JPG' && $ext != 'JPEG' && $ext != 'PNG')) {
-      return false;
+      return FALSE;
     }
   }
-  return true;
+  return TRUE;
 }
 
 /**
@@ -1147,7 +1147,7 @@ function bracket_clone_form_submit($form_id, &$form_state) {
   $node = node_load($form_state['values']['nid']);
 
   // make a new node and copy some info
-  $node2 = new StdClass();
+  $node2 = new stdClass();
   $node2->type = $node->type;
   $node2->uid = $user->uid;
   $node2->comment = $node->comment;
@@ -1328,7 +1328,7 @@ function bracket_export_form_submit($form_id, &$form_state) {
   $output = bracket_xml_export($node, $form_state['values']['opt']);
 
   // make a file name from title
-  $fname = preg_replace('/[^0-9a-z\.\_\-]/i','_', $node->title);
+  $fname = preg_replace('/[^0-9a-z\.\_\-]/i', '_', $node->title);
 
   // prepare to download
   drupal_set_header('Content-Type: text/plain');
@@ -1566,7 +1566,7 @@ function bracket_pdf($node) {
   // force PDF download
   drupal_set_header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 
-  if(isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'],'MSIE')) {
+  if (isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE')) {
     drupal_set_header('Content-Type: application/force-download');
   }
   else {
@@ -1574,11 +1574,11 @@ function bracket_pdf($node) {
   }
     
   // make a file name from title
-  $fname = preg_replace('/[^0-9a-z\.\_\-]/i','_', $node->title);
+  $fname = preg_replace('/[^0-9a-z\.\_\-]/i', '_', $node->title);
 
   // send PDF
   drupal_set_header('Content-Disposition: attachment; filename="' . $fname .'.pdf"');
-  drupal_set_header('Content-Length: '.strlen($img));
+  drupal_set_header('Content-Length: ' . strlen($img));
   echo $img;
 }
 
@@ -1593,7 +1593,7 @@ function bracket_fetch_from_cache($key) {
   $img = FALSE;
   
   // get cache setting
-  $cancache = variable_get(BRACKET_CACHE, false);
+  $cancache = variable_get(BRACKET_CACHE, FALSE);
   
   // retrieve from cache if so configured
   if ($cancache) {
@@ -1638,13 +1638,13 @@ function bracket_html2rgb($color) {
   }
 
   if (strlen($color) == 6) {
-    list($r, $g, $b) = array($color[0].$color[1], $color[2].$color[3], $color[4].$color[5]);
+    list($r, $g, $b) = array($color[0] . $color[1], $color[2] . $color[3], $color[4] . $color[5]);
   }
   elseif (strlen($color) == 3) {
-    list($r, $g, $b) = array($color[0].$color[0], $color[1].$color[1], $color[2].$color[2]);
+    list($r, $g, $b) = array($color[0] . $color[0], $color[1] . $color[1], $color[2] . $color[2]);
   }
   else {
-    return false;
+    return FALSE;
   }
 
   $r = hexdec($r);

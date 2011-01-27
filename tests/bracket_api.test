@@ -237,7 +237,7 @@ class BracketAPITest extends DrupalWebTestCase {
     bracket_api_set_seeding($node, $seed);
     $i = 0;
     $ok = TRUE;
-    foreach($node->comp as $comp) {
+    foreach ($node->comp as $comp) {
       if ($comp->seedin != $seed[$i++]) {
         $ok = FALSE;
       }
@@ -248,7 +248,7 @@ class BracketAPITest extends DrupalWebTestCase {
     // clear competitors
     bracket_api_clear_competitor_seeding($node);
     $ok = TRUE;
-    foreach($node->comp as $comp) {
+    foreach ($node->comp as $comp) {
       if ($comp->seedin != '') {
         $ok = FALSE;
       }
@@ -269,7 +269,7 @@ class BracketAPITest extends DrupalWebTestCase {
     bracket_api_set_seeding($node, $seed);
     $i = 0;
     $ok = TRUE;
-    foreach($node->comp as $comp) {
+    foreach ($node->comp as $comp) {
       if ($comp->seedin != $seed[$i++]['seed']) {
         $ok = FALSE;
       }
@@ -278,7 +278,7 @@ class BracketAPITest extends DrupalWebTestCase {
     $this->assertTrue($ok, $message);
     $i = 0;
     $ok = TRUE;
-    foreach($node->round[1]->match as $match) {
+    foreach ($node->round[1]->match as $match) {
       if ($match->comp_comment[1] != $seed[$i++]['desc']) {
         $ok = FALSE;
       }
@@ -302,7 +302,7 @@ class BracketAPITest extends DrupalWebTestCase {
     bracket_api_set_competitors($node, $comp);
     $i = 0;
     $ok = TRUE;
-    foreach($node->comp as $c) {
+    foreach ($node->comp as $c) {
       if ($c->name != $comp[$i++]) {
         $ok = FALSE;
       }
@@ -312,7 +312,7 @@ class BracketAPITest extends DrupalWebTestCase {
 
     bracket_api_clear_competitors($node);
     $ok = TRUE;
-    foreach($node->comp as $comp) {
+    foreach ($node->comp as $comp) {
       if ($comp->name != '') {
         $ok = FALSE;
       }
@@ -542,7 +542,7 @@ class BracketAPITest extends DrupalWebTestCase {
     // clear bracket results
     bracket_api_clear_results($node);
     $ok = TRUE;
-    foreach($node->round as $r) {
+    foreach ($node->round as $r) {
       foreach ($r->match as $m) {
         for ($i=1; $i<=2; $i++) {
           if ($m->win[$i] || $m->score[$i] != '') {
@@ -551,7 +551,7 @@ class BracketAPITest extends DrupalWebTestCase {
         }
       }
     }
-    foreach($node->result as $r) {
+    foreach ($node->result as $r) {
       if ($r->compid != 0) {
         $ok = FALSE;
       }

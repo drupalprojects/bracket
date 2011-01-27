@@ -162,7 +162,7 @@ function bracket_xml_string_import($xml, &$node, $opt = 'bracket') {
     if ($opt == 'bracket') {
       bracket_xml_import_bracket($node, $values);
     }
-    else if ($opt == 'results') {
+    elseif ($opt == 'results') {
       bracket_xml_import_results($node, $values);
     }
 
@@ -209,7 +209,7 @@ function bracket_xml_import_bracket(&$node, $values) {
         $c = $node->comp[$id];
       }
 
-      else if ($tag == 'round') {
+      elseif ($tag == 'round') {
         if ($otag) array_push($stack, $otag);
         $otag = $tag;
         $id = $e['attributes']['id'];
@@ -217,7 +217,7 @@ function bracket_xml_import_bracket(&$node, $values) {
         $r->id = $id;
       }
 
-      else if ($tag == 'match') {
+      elseif ($tag == 'match') {
         if ($otag) array_push($stack, $otag);
         $otag = $tag;
         $id = $e['attributes']['seq'];
@@ -226,13 +226,13 @@ function bracket_xml_import_bracket(&$node, $values) {
         }
       }
 
-      else if ($tag == 'match-competitor') {
+      elseif ($tag == 'match-competitor') {
         if ($otag) array_push($stack, $otag);
         $otag = $tag;
         $mcid = $e['attributes']['id'];
       }
 
-      else if ($tag == 'result') {
+      elseif ($tag == 'result') {
         if ($otag) array_push($stack, $otag);
         $otag = $tag;
         $id = $e['attributes']['place'];
@@ -245,7 +245,7 @@ function bracket_xml_import_bracket(&$node, $values) {
     }   // end - if ($e['type'] == 'open')...
 
     // complete tag - set a value
-    else if ($e['type'] == 'complete' && array_key_exists('value', $e)) {
+    elseif ($e['type'] == 'complete' && array_key_exists('value', $e)) {
 
       $tag = $e['tag'];
 
@@ -253,39 +253,39 @@ function bracket_xml_import_bracket(&$node, $values) {
         $node->subtitle = $e['value'];
       }
 
-      else if ($tag == 'comments') {
+      elseif ($tag == 'comments') {
         $node->comments = $e['value'];
       }
 
-      else if ($tag == 'sport') {
+      elseif ($tag == 'sport') {
         $node->sport = $e['value'];
       }
 
-      else if ($tag == 'division') {
+      elseif ($tag == 'division') {
         $node->division = $e['value'];
       }
 
-      else if ($tag == 'season') {
+      elseif ($tag == 'season') {
         $node->season = $e['value'];
       }
 
-      else if ($tag == 'brgroup') {
+      elseif ($tag == 'brgroup') {
         $node->brgroup = $e['value'];
       }
 
-      else if ($tag == 'footer') {
+      elseif ($tag == 'footer') {
         $node->footer = $e['value'];
       }
 
-      else if ($tag == 'logopath') {
+      elseif ($tag == 'logopath') {
         $node->logopath = $e['value'];
       }
 
-      else if ($tag == 'sponsorlogopath') {
+      elseif ($tag == 'sponsorlogopath') {
         $node->sponsorlogopath = $e['value'];
       }
 
-      else if ($tag == 'design') {
+      elseif ($tag == 'design') {
         $d = $e['value'];
         if ($node->design != $d) {
           drupal_set_message(t('Imported bracket design - @d - does not match current bracket design - @c.
@@ -295,65 +295,65 @@ function bracket_xml_import_bracket(&$node, $values) {
         }
       }
 
-      else if ($tag == 'show_match_id') {
+      elseif ($tag == 'show_match_id') {
         $node->options['show_match_id'] = $e['value'];
       }
 
-      else if ($tag == 'display') {
+      elseif ($tag == 'display') {
         $node->options['display'] = $e['value'];
       }
 
-      else if ($tag == 'hide_pdf') {
+      elseif ($tag == 'hide_pdf') {
         $node->options['hide_pdf'] = $e['value'];
       }
 
-      else if ($tag == 'fg_color') {
+      elseif ($tag == 'fg_color') {
         $node->options['image_options']['fg_color'] = $e['value'];
       }
 
-      else if ($tag == 'bg_color') {
+      elseif ($tag == 'bg_color') {
         $node->options['image_options']['bg_color'] = $e['value'];
       }
 
-      else if ($tag == 'show_bracket_bar') {
+      elseif ($tag == 'show_bracket_bar') {
         $node->options['image_options']['show_bracket_bar'] = $e['value'];
       }
 
-      else if ($tag == 'bar_fg_color') {
+      elseif ($tag == 'bar_fg_color') {
         $node->options['image_options']['bar_fg_color'] = $e['value'];
       }
 
-      else if ($tag == 'bar_bg_color') {
+      elseif ($tag == 'bar_bg_color') {
         $node->options['image_options']['bar_bg_color'] = $e['value'];
       }
 
-      else if ($tag == 'image_font') {
+      elseif ($tag == 'image_font') {
         $node->options['image_options']['image_fonts']['image_font'] = $e['value'];
       }
 
-      else if ($tag == 'image_font_bold') {
+      elseif ($tag == 'image_font_bold') {
         $node->options['image_options']['image_fonts']['image_font_bold'] = $e['value'];
       }
 
-      else if ($tag == 'image_font_italic') {
+      elseif ($tag == 'image_font_italic') {
         $node->options['image_options']['image_fonts']['image_font_italic'] = $e['value'];
       }
 
-      else if ($tag == 'image_font_bolditalic') {
+      elseif ($tag == 'image_font_bolditalic') {
         $node->options['image_options']['image_fonts']['image_font_bolditalic'] = $e['value'];
       }
 
-      else if ($tag == 'pdf_font') {
+      elseif ($tag == 'pdf_font') {
         $node->options['image_options']['pdf_font'] = $e['value'];
       }
 
-      else if ($tag == 'id') {
+      elseif ($tag == 'id') {
         if ($otag == 'match' && $m != NULL) {
           $m->id = $e['value'];
         }
       }
       
-      else if ($tag == 'name') {
+      elseif ($tag == 'name') {
         if ($otag == 'competitor' && $c != NULL) {
           $c->name = $e['value'];
         }
@@ -362,25 +362,25 @@ function bracket_xml_import_bracket(&$node, $values) {
         }
       }
 
-      else if ($tag == 'seedin') {
+      elseif ($tag == 'seedin') {
         if ($otag == 'competitor' && $c != NULL) {
           $c->seedin = $e['value'];
         }
       }
 
-      else if ($tag == 'seedout') {
+      elseif ($tag == 'seedout') {
         if ($otag == 'result' && $s != NULL) {
           $s->seedout = $e['value'];
         }
       }
 
-      else if ($tag == 'loser') {
+      elseif ($tag == 'loser') {
         if ($otag == 'round' && $r != NULL) {
           $r->loser = $e['value'];
         }
       }
 
-      else if ($tag == 'comment') {
+      elseif ($tag == 'comment') {
         if ($otag == 'round' && $r != NULL) {
           $r->comment = $e['value'];
         }
@@ -389,19 +389,19 @@ function bracket_xml_import_bracket(&$node, $values) {
         }
       }
 
-      else if ($tag == 'comment1') {
+      elseif ($tag == 'comment1') {
         if ($otag == 'match' && $m != NULL) {
           $m->comment[1] = $e['value'];
         }
       }
 
-      else if ($tag == 'comment2') {
+      elseif ($tag == 'comment2') {
         if ($otag == 'match' && $m != NULL) {
           $m->comment[2] = $e['value'];
         }
       }
 
-      else if ($tag == 'compid') {
+      elseif ($tag == 'compid') {
         if ($otag == 'match-competitor' && $m != NULL && $mcid > 0) {
           $m->compid[$mcid] = $e['value'];
         }
@@ -410,67 +410,67 @@ function bracket_xml_import_bracket(&$node, $values) {
         }
       }
 
-      else if ($tag == 'comp_comment') {
+      elseif ($tag == 'comp_comment') {
         if ($otag == 'match-competitor' && $m != NULL && $mcid > 0) {
           $m->comp_comment[$mcid] = $e['value'];
         }
       }
 
-      else if ($tag == 'score') {
+      elseif ($tag == 'score') {
         if ($otag == 'match-competitor' && $m != NULL && $mcid > 0) {
           $m->score[$mcid] = $e['value'];
         }
       }
 
-      else if ($tag == 'win') {
+      elseif ($tag == 'win') {
         if ($otag == 'match-competitor' && $m != NULL && $mcid > 0) {
           $m->win[$mcid] = $e['value'];
         }
       }
 
-      else if ($tag == 'home') {
+      elseif ($tag == 'home') {
         if ($otag == 'match-competitor' && $m != NULL && $mcid > 0) {
           $m->home[$mcid] = $e['value'];
         }
       }
 
-      else if ($tag == 'winner_match') {
+      elseif ($tag == 'winner_match') {
         if ($otag == 'match' && $m != NULL) {
           $m->winner_match = $e['value'];
         }
       }
 
-      else if ($tag == 'winner_comp') {
+      elseif ($tag == 'winner_comp') {
         if ($otag == 'match' && $m != NULL) {
           $m->winner_comp = $e['value'];
         }
       }
 
-      else if ($tag == 'loser_match') {
+      elseif ($tag == 'loser_match') {
         if ($otag == 'match' && $m != NULL) {
           $m->loser_match = $e['value'];
         }
       }
 
-      else if ($tag == 'loser_comp') {
+      elseif ($tag == 'loser_comp') {
         if ($otag == 'match' && $m != NULL) {
           $m->loser_comp = $e['value'];
         }
       }
 
-      else if ($tag == 'winner_result') {
+      elseif ($tag == 'winner_result') {
         if ($otag == 'match' && $m != NULL) {
           $m->winner_result = $e['value'];
         }
       }
 
-      else if ($tag == 'loser_result') {
+      elseif ($tag == 'loser_result') {
         if ($otag == 'match' && $m != NULL) {
           $m->loser_result = $e['value'];
         }
       }
 
-      else if ($tag == 'win_use_result') {
+      elseif ($tag == 'win_use_result') {
         if ($otag == 'match' && $m != NULL) {
           $m->win_use__result = $e['value'];
         }
@@ -479,42 +479,42 @@ function bracket_xml_import_bracket(&$node, $values) {
       else {
         continue;
       }
-    }   // end - else if ($e['type'] == 'complete')...
+    }   // end - elseif ($e['type'] == 'complete')...
 
     // close the open object and pop the previous open object
-    else if ($e['type'] == 'close') {
+    elseif ($e['type'] == 'close') {
 
       $tag = $e['tag'];
 
       if ($tag == 'competitor') {
         $otag = array_pop($stack);
-        $c = null;
+        $c = NULL;
       }
 
-      else if ($tag == 'round') {
+      elseif ($tag == 'round') {
         $otag = array_pop($stack);
-        $r = null;
+        $r = NULL;
       }
 
-      else if ($tag == 'match') {
+      elseif ($tag == 'match') {
         $otag = array_pop($stack);
-        $m = null;
+        $m = NULL;
       }
 
-      else if ($tag == 'match-competitor') {
+      elseif ($tag == 'match-competitor') {
         $otag = array_pop($stack);
         $mcid = 0;
       }
 
-      else if ($tag == 'result') {
+      elseif ($tag == 'result') {
         $otag = array_pop($stack);
-        $s = null;
+        $s = NULL;
       }
 
       else {
         continue;
       }
-    }   // end - else if ($e['type'] == 'close')...
+    }   // end - elseif ($e['type'] == 'close')...
 
     else {
       continue;
@@ -559,7 +559,7 @@ function bracket_xml_import_results(&$node, $values) {
         $b->comp[$id] = $c;
       }
 
-      else if ($tag == 'result') {
+      elseif ($tag == 'result') {
         if ($otag) array_push($stack, $otag);
         $otag = $tag;
         $id = $e['attributes']['place'];
@@ -573,7 +573,7 @@ function bracket_xml_import_results(&$node, $values) {
     }   // end - if ($tag == 'competitor')...
 
     // complete tag - set a value
-    else if ($e['type'] == 'complete') {
+    elseif ($e['type'] == 'complete') {
 
       $tag = $e['tag'];
 
@@ -583,13 +583,13 @@ function bracket_xml_import_results(&$node, $values) {
         }
       }
 
-      else if ($tag == 'compid') {
+      elseif ($tag == 'compid') {
         if ($otag == 'result' && $s != NULL) {
           $s->compid = $e['value'];
         }
       }
 
-      else if ($tag == 'seedout') {
+      elseif ($tag == 'seedout') {
         if ($otag == 'result' && $s != NULL) {
           $s->seedout = $e['value'];
         }
@@ -598,27 +598,27 @@ function bracket_xml_import_results(&$node, $values) {
       else {
         continue;
       }
-    }   // end - else if ($e['type'] == 'complete')...
+    }   // end - elseif ($e['type'] == 'complete')...
 
     // close the open object and pop the previous open object
-    else if ($e['type'] == 'close') {
+    elseif ($e['type'] == 'close') {
 
       $tag = $e['tag'];
 
       if ($tag == 'competitor') {
         $otag = array_pop($stack);
-        $c = null;
+        $c = NULL;
       }
 
-      else if ($tag == 'result') {
+      elseif ($tag == 'result') {
         $otag = array_pop($stack);
-        $s = null;
+        $s = NULL;
       }
 
       else {
         continue;
       }
-    }   // end - else if ($e['type'] == 'close')...
+    }   // end - elseif ($e['type'] == 'close')...
 
     else {
       continue;

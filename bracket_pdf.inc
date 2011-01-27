@@ -14,20 +14,20 @@ if (!class_exists('FPDF')) {
 }
 
 // bracket pdf globals
-global $bracket_pdf_font_name;
-global $bracket_pdf_font_xlarge;
-global $bracket_pdf_font_large;
-global $bracket_pdf_font_norm;
-global $bracket_pdf_font_small;
-global $bracket_pdf_font_xsmall;
+global $_bracket_pdf_font_name;
+global $_bracket_pdf_font_xlarge;
+global $_bracket_pdf_font_large;
+global $_bracket_pdf_font_norm;
+global $_bracket_pdf_font_small;
+global $_bracket_pdf_font_xsmall;
 
 // bracket pdf default values
-$bracket_pdf_font_name = 'Helvetica';
-$bracket_pdf_font_xlarge = 14;
-$bracket_pdf_font_large = 10;
-$bracket_pdf_font_norm = 8;
-$bracket_pdf_font_small = 7;
-$bracket_pdf_font_xsmall = 6;
+$_bracket_pdf_font_name = 'Helvetica';
+$_bracket_pdf_font_xlarge = 14;
+$_bracket_pdf_font_large = 10;
+$_bracket_pdf_font_norm = 8;
+$_bracket_pdf_font_small = 7;
+$_bracket_pdf_font_xsmall = 6;
 
 /**
  * Setup pdf colors
@@ -39,15 +39,15 @@ $bracket_pdf_font_xsmall = 6;
  */
 function bracket_pdf_setup_colors($node, $pdf) {
 
-  global $bracket_bg_color_default;
-  global $bracket_fg_color_default;
+  global $_bracket_bg_color_default;
+  global $_bracket_fg_color_default;
 
   $color = $node->options['image_options']['fg_color'];
   if (bracket_validate_color($color)) {
     $rgb = bracket_html2rgb($color);
   }
   else {
-    $rgb = bracket_html2rgb($bracket_fg_color_default);
+    $rgb = bracket_html2rgb($_bracket_fg_color_default);
   }
   $pdf->setTextColor($rgb[0], $rgb[1], $rgb[2]);
   $pdf->setDrawColor($rgb[0], $rgb[1], $rgb[2]);
@@ -63,15 +63,15 @@ function bracket_pdf_setup_colors($node, $pdf) {
  */
 function bracket_pdf_setup_bar_colors($node, $pdf) {
 
-  global $bracket_bar_bg_color_default;
-  global $bracket_bar_fg_color_default;
+  global $_bracket_bar_bg_color_default;
+  global $_bracket_bar_fg_color_default;
 
   $color = $node->options['image_options']['bar_fg_color'];
   if (bracket_validate_color($color)) {
     $rgb = bracket_html2rgb($color);
   }
   else {
-    $rgb = bracket_html2rgb($bracket_bar_fg_color_default);
+    $rgb = bracket_html2rgb($_bracket_bar_fg_color_default);
   }
   $pdf->setTextColor($rgb[0], $rgb[1], $rgb[2]);
   $pdf->setDrawColor($rgb[0], $rgb[1], $rgb[2]);
@@ -81,7 +81,7 @@ function bracket_pdf_setup_bar_colors($node, $pdf) {
     $rgb = bracket_html2rgb($color);
   }
   else {
-    $rgb = bracket_html2rgb($bracket_bar_bg_color_default);
+    $rgb = bracket_html2rgb($_bracket_bar_bg_color_default);
   }
   $pdf->setFillColor($rgb[0], $rgb[1], $rgb[2]);
 }
@@ -105,11 +105,11 @@ function bracket_pdf_font_options() {
  */
 function bracket_pdf_setup_font($node) {
 
-  global $bracket_pdf_font_name;
+  global $_bracket_pdf_font_name;
 
   $font = $node->options['image_options']['pdf_font'];
   if (trim($font) != '') {
-    $bracket_pdf_font_name = $font;
+    $_bracket_pdf_font_name = $font;
   }
 }
 
@@ -183,10 +183,10 @@ function bracket_pdf_drawbracketset($pdf, $node, $lr, $top, $width, $height, $sp
  */
 function bracket_pdf_drawcell($pdf, $lr, $top, $width, $height, $match, $orient, $comments=TRUE, $matchid=FALSE, $dashed=FALSE) {
 
-  global $bracket_pdf_font_name;
-  global $bracket_pdf_font_norm;
-  global $bracket_pdf_font_small;
-  global $bracket_pdf_font_xsmall;
+  global $_bracket_pdf_font_name;
+  global $_bracket_pdf_font_norm;
+  global $_bracket_pdf_font_small;
+  global $_bracket_pdf_font_xsmall;
 
   // cell height
   $h = 0.125;
@@ -228,20 +228,20 @@ function bracket_pdf_drawcell($pdf, $lr, $top, $width, $height, $match, $orient,
     $lrx = $lr - $width;
   }
   $pdf->setXY($lrx, $top-$h);
-  $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_norm);
+  $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_norm);
   $pdf->cell($width, $h, $match->cname[1], 0, 0, $orient);
   $pdf->setXY($lrx, $top);
-  $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_small);
+  $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_small);
   $pdf->cell($width, $h, $match->comp_comment[1], 0, 0, $orient);
 
   // draw top competitor score
   if ($orient == 'L') {
     $pdf->setXY($lr+$width-0.25+0.03125, $top-$h);
-    $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_norm);
+    $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_norm);
     $pdf->cell(0.25, $h, $match->score[1], 0, 0, 'R');
     if ($match->home[1]) {
       $pdf->setXY($lr+$width-0.150, $top);
-      $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_small);
+      $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_small);
       $pdf->cell(0.150, $h, 'H');
     }
   }
@@ -250,7 +250,7 @@ function bracket_pdf_drawcell($pdf, $lr, $top, $width, $height, $match, $orient,
     $pdf->cell(0.25, $h, $match->score[1], 0, 0, 'L');
     if ($match->home[1]) {
       $pdf->setXY($lrx, $top);
-      $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_small);
+      $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_small);
       $pdf->cell(0.25, $h, 'H');
     }
   }
@@ -259,7 +259,7 @@ function bracket_pdf_drawcell($pdf, $lr, $top, $width, $height, $match, $orient,
   if ($comments && ($match->comment[1] != '' || $match->comment[2] != '')) {
     // draw bracket cell comments
     $t2 = $top + ($height / 2);
-    $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_small);
+    $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_small);
     if ($match->comment[1] != '' && $match->comment[2] != '') {
       $t2 -= $h;
     }
@@ -287,26 +287,26 @@ function bracket_pdf_drawcell($pdf, $lr, $top, $width, $height, $match, $orient,
     else {
       $pdf->setXY($lrx, $top + ($height / 2) - ($h / 2));
     }
-    $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_xsmall);
+    $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_xsmall);
     $pdf->cell($h, $h, '#' . $match->id, 0, 0, $co);
   }
 
   // draw bottom competitor
   $pdf->setXY($lrx, $top+$height-$h);
-  $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_norm);
+  $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_norm);
   $pdf->cell($width, $h, $match->cname[2], 0, 0, $orient);
   $pdf->setXY($lrx, $top+$height);
-  $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_small);
+  $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_small);
   $pdf->cell($width, $h, $match->comp_comment[2], 0, 0, $orient);
 
   // draw bottom competitor score
   if ($orient == 'L') {
     $pdf->setXY($lr+$width-0.25+0.03125, $top+$height-$h);
-    $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_norm);
+    $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_norm);
     $pdf->cell(0.25, $h, $match->score[2], 0, 0, 'R');
     if ($match->home[2]) {
       $pdf->setXY($lr+$width-0.150, $top+$height);
-      $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_small);
+      $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_small);
       $pdf->cell(0.150, $h, 'H');
     }
   }
@@ -315,7 +315,7 @@ function bracket_pdf_drawcell($pdf, $lr, $top, $width, $height, $match, $orient,
     $pdf->cell(0.25, $h, $match->score[2], 0, 0, 'L');
     if ($match->home[2]) {
       $pdf->setXY($lrx, $top+$height);
-      $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_small);
+      $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_small);
       $pdf->cell(0.25, $h, 'H');
     }
   }
@@ -398,4 +398,42 @@ function bracket_pdf_insert_image($pdf, $imgpath, $x, $y, $w=0, $center = FALSE)
       }
     }
   }
+}
+
+/**
+ * Draw a result cell on the given image
+ *
+ * A result cell is a single match result result
+ *
+ * @param $pdf
+ *   the pdf object
+ * @param $lr
+ *   the left or right edge (x-coord) of the result cell (depending on orientation)
+ * @param $top
+ *   the top edge (y-coord) of the result set
+ * @param $width
+ *   the width of the result set
+ * @param $result
+ *   the result to draw
+ * @param $orient
+ *   the orientation of the bracket set - 'L'=left or 'R'=right
+ */
+function bracket_pdf_draw_result($pdf, $lr, $top, $width, $result, $orient='L') {
+
+  global $_bracket_pdf_font_name;
+  global $_bracket_pdf_font_norm;
+  
+  if ($orient == 'L') {
+    $lrx = $lr;
+  }
+  else {
+    $lrx = $lr - $width;
+  }
+
+  $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_norm);
+  $pdf->line($lrx, $top, $lrx + $width, $top);
+  $pdf->setXY($lrx, $top-0.125);
+  $pdf->cell($width, 0.125, $result->cname, 0, 0, $orient);
+  $pdf->setXY($lrx, $top);
+  $pdf->cell($width, 0.125, $result->comment, 0, 0, $orient);
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: 
+// $Id$
 
 /**
  * @file
@@ -41,17 +41,17 @@ function se2champ_create(&$node) {
  */
 function se2champ_image($node) {
 
-  global $bracket_image_font;
-  global $bracket_image_font_bold;
-  global $bracket_image_font_xlarge;
-  global $bracket_image_font_large;
-  global $bracket_image_font_norm;
-  global $bracket_image_font_small;
-  global $bracket_image_font_xsmall;
-  global $bracket_image_bg_color;
-  global $bracket_image_fg_color;
-  global $bracket_image_bar_bg_color;
-  global $bracket_image_bar_fg_color;
+  global $_bracket_image_font;
+  global $_bracket_image_font_bold;
+  global $_bracket_image_font_xlarge;
+  global $_bracket_image_font_large;
+  global $_bracket_image_font_norm;
+  global $_bracket_image_font_small;
+  global $_bracket_image_font_xsmall;
+  global $_bracket_image_bg_color;
+  global $_bracket_image_fg_color;
+  global $_bracket_image_bar_bg_color;
+  global $_bracket_image_bar_fg_color;
 
   // setup positions and spacing
   $top = 160;
@@ -71,22 +71,22 @@ function se2champ_image($node) {
   bracket_image_setup_fonts($node);
 
   // fill in background
-  imagefill($img, 0, 0, $bracket_image_bg_color);
+  imagefill($img, 0, 0, $_bracket_image_bg_color);
 
   // font sizes
-  $bracket_image_font_xlarge = 16;
-  $bracket_image_font_large = 14;
-  $bracket_image_font_norm = 12;
-  $bracket_image_font_small = 10;
-  $bracket_image_font_xsmall = 8;
+  $_bracket_image_font_xlarge = 16;
+  $_bracket_image_font_large = 14;
+  $_bracket_image_font_norm = 12;
+  $_bracket_image_font_small = 10;
+  $_bracket_image_font_xsmall = 8;
 
   // font height
-  $bbox = imagettfbbox($bracket_image_font_norm, 0, $bracket_image_font, 'Q');
+  $bbox = imagettfbbox($_bracket_image_font_norm, 0, $_bracket_image_font, 'Q');
   $h = $bbox[1] - $bbox[7];
   $w = 10;
 
   // round comment
-  bracket_image_imagetextalign($img, $bracket_image_font_norm, $left, $top-40, $width, $node->round[1]->comment, $bracket_image_fg_color, 'C');
+  bracket_image_imagetextalign($img, $_bracket_image_font_norm, $left, $top-40, $width, $node->round[1]->comment, $_bracket_image_fg_color, 'C');
 
   // finals
   bracket_image_drawbracketset($img, $node, $left, $top, $width, $height, 0, 1, 1, 1, 'L');
@@ -94,21 +94,21 @@ function se2champ_image($node) {
   // winner
   $t = $top + ($height / 2);
   $l = $left + $width;
-  imageline($img, $l, $t, $l+$width, $t, $bracket_image_fg_color);
-  bracket_image_imagetextalign($img, $bracket_image_font_large, $l+2, $t-2, $width, $node->result[1]->cname, $bracket_image_fg_color, 'L');
-  bracket_image_imagetextalign($img, $bracket_image_font_norm, $l+2, $t+$h+1, $width, $node->result[1]->comment, $bracket_image_fg_color, 'L');
+  imageline($img, $l, $t, $l+$width, $t, $_bracket_image_fg_color);
+  bracket_image_imagetextalign($img, $_bracket_image_font_large, $l+2, $t-2, $width, $node->result[1]->cname, $_bracket_image_fg_color, 'L');
+  bracket_image_imagetextalign($img, $_bracket_image_font_norm, $l+2, $t+$h+1, $width, $node->result[1]->comment, $_bracket_image_fg_color, 'L');
 
   // bracket title
-  bracket_image_imagetextalign($img, $bracket_image_font_xlarge, $iwidth / 2 - (400 / 2), 15, 400, $node->title, $bracket_image_fg_color, 'C');
+  bracket_image_imagetextalign($img, $_bracket_image_font_xlarge, $iwidth / 2 - (400 / 2), 15, 400, $node->title, $_bracket_image_fg_color, 'C');
 
   // bracket subtitle
-  bracket_image_imagetextalign($img, $bracket_image_font_norm, $iwidth / 2 - (400 / 2), 30, 400, $node->subtitle, $bracket_image_fg_color, 'C');
+  bracket_image_imagetextalign($img, $_bracket_image_font_norm, $iwidth / 2 - (400 / 2), 30, 400, $node->subtitle, $_bracket_image_fg_color, 'C');
 
   // bracket comments
-  bracket_image_imagetextwordwrap($img, $bracket_image_font_small, $iwidth / 2 - (400 / 2), 60, 400, $node->comments, $bracket_image_fg_color, 'C');
+  bracket_image_imagetextwordwrap($img, $_bracket_image_font_small, $iwidth / 2 - (400 / 2), 60, 400, $node->comments, $_bracket_image_fg_color, 'C');
 
   // bracket footnote
-  bracket_image_imagetextwordwrap($img, $bracket_image_font_small, $left, $iheight-$h, $iwidth-($left*2), $node->footer, $bracket_image_fg_color, 'C');
+  bracket_image_imagetextwordwrap($img, $_bracket_image_font_small, $left, $iheight-$h, $iwidth-($left*2), $node->footer, $_bracket_image_fg_color, 'C');
 
   // bracket logo
   if ($node->logopath != '') {
@@ -127,7 +127,7 @@ function se2champ_image($node) {
   imagedestroy($img);
 
   // return the image
-  return($png);
+  return $png;
 }
 
 /**
@@ -140,12 +140,12 @@ function se2champ_image($node) {
  */
 function se2champ_pdf($node) {
 
-  global $bracket_pdf_font_name;
-  global $bracket_pdf_font_xlarge;
-  global $bracket_pdf_font_large;
-  global $bracket_pdf_font_norm;
-  global $bracket_pdf_font_small;
-  global $bracket_pdf_font_xsmall;
+  global $_bracket_pdf_font_name;
+  global $_bracket_pdf_font_xlarge;
+  global $_bracket_pdf_font_large;
+  global $_bracket_pdf_font_norm;
+  global $_bracket_pdf_font_small;
+  global $_bracket_pdf_font_xsmall;
 
   // setup pdf
   $pdf = new FPDF('P', 'in', 'letter');
@@ -167,16 +167,16 @@ function se2champ_pdf($node) {
   bracket_pdf_setup_font($node, $pdf);
 
   // set font sizes
-  $bracket_pdf_font_norm = 10;
-  $bracket_pdf_font_small = 8;
-  $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_norm);
+  $_bracket_pdf_font_norm = 10;
+  $_bracket_pdf_font_small = 8;
+  $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_norm);
 
   // start pdf
   $pdf->addPage();
 
   // round comment
   $pdf->setXY($left, $top-0.5);
-  $pdf->setFont($bracket_pdf_font_name, 'B', $bracket_pdf_font_norm);
+  $pdf->setFont($_bracket_pdf_font_name, 'B', $_bracket_pdf_font_norm);
   $pdf->cell($width, 0.125, $node->round[1]->comment, 0, 0, 'C');
   
   // semis
@@ -187,29 +187,29 @@ function se2champ_pdf($node) {
   $l = $left + $width;
   $pdf->line($l, $t, $l+$width, $t);
   $pdf->setXY($l, $t-0.125);
-  $pdf->setFont($bracket_pdf_font_name, 'B', $bracket_pdf_font_large);
+  $pdf->setFont($_bracket_pdf_font_name, 'B', $_bracket_pdf_font_large);
   $pdf->cell($width, 0.125, $node->result[1]->cname, 0, 0, 'L');
   $pdf->setXY($l, $t);
-  $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_norm);
+  $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_norm);
   $pdf->cell($width, 0.125, $node->result[1]->comment, 0, 0, 'L');
 
   // bracket title
-  $pdf->setFont($bracket_pdf_font_name, 'BI', $bracket_pdf_font_xlarge);
+  $pdf->setFont($_bracket_pdf_font_name, 'BI', $_bracket_pdf_font_xlarge);
   $pdf->setXY($left, 0.5);
   $pdf->multicell($iwidth - ($left * 2) , 0.25, $node->title, 0, 'C');
 
   // bracket subtitle
-  $pdf->setFont($bracket_pdf_font_name, 'BI', $bracket_pdf_font_large);
+  $pdf->setFont($_bracket_pdf_font_name, 'BI', $_bracket_pdf_font_large);
   $pdf->setXY($left, 0.75);
   $pdf->multicell($iwidth - ($left * 2), 0.125, $node->subtitle, 0, 'C');
 
   // bracket comments
-  $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_norm);
+  $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_norm);
   $pdf->setXY($left, 1.0);
   $pdf->multicell($iwidth - ($left * 2), 0.125, $node->comments, 0, 'C');
 
   // bracket footnote
-  $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_small);
+  $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_small);
   $pdf->setXY($left, $iheight - 1.0);
   $pdf->multicell($iwidth - ($left * 2), 0.125, $node->footer, 0, 'C');
 
@@ -224,5 +224,5 @@ function se2champ_pdf($node) {
   }
 
   // return pdf as a string
-  return($pdf->output('', 'S'));
+  return $pdf->output('', 'S');
 }

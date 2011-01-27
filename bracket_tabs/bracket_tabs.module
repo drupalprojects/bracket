@@ -1,5 +1,5 @@
 <?php
-// $Id
+// $Id$
 
 /**
  * @file
@@ -84,15 +84,15 @@ function theme_bracket_tabs_view($node, $teaser = 0, $page = 0) {
         $sql .= " AND b.season = '%s'";
         $args[] = $node->season;
       }
-      else if ($m === 'sport') {
+      elseif ($m === 'sport') {
         $sql .= " AND b.sport = '%s'";
         $args[] = $node->sport;
       }
-      else if ($m === 'division') {
+      elseif ($m === 'division') {
         $sql .= " AND b.division = '%s'";
         $args[] = $node->division;
       }
-      else if ($m === 'group') {
+      elseif ($m === 'group') {
         $sql .= " AND b.brgroup = '%s'";
         $args[] = $node->brgroup;
       }

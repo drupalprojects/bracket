@@ -27,7 +27,7 @@ function bracket_round_list_form($form_state, $node) {
     $link = 'node/'. $node->nid . '/edit/round/' . $r->id;
     
     $dc = 0;
-    foreach($r->match as $m) {
+    foreach ($r->match as $m) {
       if ($m->win[1] || $m->win[2]) {
         $dc++;
       }
@@ -415,7 +415,7 @@ function bracket_round_edit_form_submit($form_id, &$form_state) {
         $wcompid = $m->compid[1];
         $lcompid = $m->compid[2];
       }
-      else if ($m->win[2]) {
+      elseif ($m->win[2]) {
         if ($m->compid[2] == 0) {
           drupal_set_message(t('Competitor #2 has not been determined for Match @mid and cannot be selected as the winner',
                                    array('@mid' => $m->id)), 'error');
@@ -568,7 +568,7 @@ function bracket_round_check_tree(&$node, $ri, $mi, $comp) {
       if ($m->win[$comp] && $m->winner_result > 0 ) {
         $node->result[$m->winner_result]->compid = $m->compid[$comp];
       }
-      else if (!$m->win[$comp] && $m->loser_result > 0) {
+      elseif (!$m->win[$comp] && $m->loser_result > 0) {
         $node->result[$m->loser_result]->compid = $m->compid[$comp];
       }
     }
@@ -587,7 +587,7 @@ function bracket_round_check_tree(&$node, $ri, $mi, $comp) {
       }
     }
     // competitor did not win, check loser chain
-    else if ($m->loser_match > 0 && ($m->win[1] || $m->win[2])) {
+    elseif ($m->loser_match > 0 && ($m->win[1] || $m->win[2])) {
       if ($mindex = bracket_round_get_match_index($node, $m->loser_match)) {
         $m2 = $node->round[$mindex['round']]->match[$mindex['match']];
         if ($m2->compid[$m->loser_comp] != $m->compid[$comp]) {
