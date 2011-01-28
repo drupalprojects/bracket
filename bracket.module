@@ -485,7 +485,7 @@ function bracket_view($node, $teaser=FALSE, $page=FALSE) {
 /**
  * Theming function for bracket_view
  */
-function theme_bracket_view(&$node, $teaser=FALSE, $page=FALSE) {
+function theme_bracket_view($node, $teaser=FALSE, $page=FALSE) {
 
   // Add the css file
   drupal_add_css(drupal_get_path('module', 'bracket') . '/bracket.css');
