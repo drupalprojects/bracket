@@ -797,7 +797,7 @@ function bracket_form(&$node) {
     '#description' => t('These options apply to Image and PDF output only.'),
   );
   
-  if (!isset($node->options['image_options']['fg_color'])) {
+  if (!isset($node->options['image_options']['fg_color']) || empty($node->options['image_options']['fg_color'])) {
     $node->options['image_options']['fg_color'] = $_bracket_fg_color_default;
   }
   $form['bracket']['options']['image_options']['fg_color'] = array(
@@ -810,7 +810,7 @@ function bracket_form(&$node) {
     '#default_value' => $node->options['image_options']['fg_color']
   );
 
-  if (!isset($node->options['image_options']['bg_color'])) {
+  if (!isset($node->options['image_options']['bg_color']) || empty($node->options['image_options']['bg_color'])) {
     $node->options['image_options']['bg_color'] = $_bracket_bg_color_default;
   }
   $form['bracket']['options']['image_options']['bg_color'] = array(
@@ -833,7 +833,7 @@ function bracket_form(&$node) {
     '#description' => t('Check to display bracket bar and round comments on bracket. Note: Some designs do not utilize this option.')
   );
 
-  if (!isset($node->options['image_options']['bar_bg_color'])) {
+  if (!isset($node->options['image_options']['bar_bg_color']) || empty($node->options['image_options']['bar_bg_color'])) {
     $node->options['image_options']['bar_bg_color'] = $_bracket_bar_bg_color_default;
   }
   $form['bracket']['options']['image_options']['bar_bg_color'] = array(
@@ -845,7 +845,7 @@ function bracket_form(&$node) {
     '#default_value' => $node->options['image_options']['bar_bg_color']
   );
 
-  if (!isset($node->options['image_options']['bar_fg_color'])) {
+  if (!isset($node->options['image_options']['bar_fg_color']) || empty($node->options['image_options']['bar_fg_color'])) {
     $node->options['image_options']['bar_fg_color'] = $_bracket_bar_fg_color_default;
   }
   $form['bracket']['options']['image_options']['bar_fg_color'] = array(
@@ -871,7 +871,7 @@ function bracket_form(&$node) {
     '#description' => t('Image font files must be present in the fonts folder of the bracket module.'),
   );
 
-  if (!isset($node->options['image_options']['image_fonts']['image_font'])) {
+  if (!isset($node->options['image_options']['image_fonts']['image_font']) || empty($node->options['image_options']['image_fonts']['image_font'])) {
     $node->options['image_options']['image_fonts']['image_font'] = $_bracket_image_font_file;
   }
   $form['bracket']['options']['image_options']['image_fonts']['image_font'] = array(
@@ -883,7 +883,7 @@ function bracket_form(&$node) {
     '#default_value' => $node->options['image_options']['image_fonts']['image_font']
   );
 
-  if (!isset($node->options['image_options']['image_fonts']['image_font_bold'])) {
+  if (!isset($node->options['image_options']['image_fonts']['image_font_bold']) || empty($node->options['image_options']['image_fonts']['image_font_bold'])) {
     $node->options['image_options']['image_fonts']['image_font_bold'] = $_bracket_image_font_bold_file;
   }
   $form['bracket']['options']['image_options']['image_fonts']['image_font_bold'] = array(
@@ -895,7 +895,7 @@ function bracket_form(&$node) {
     '#default_value' => $node->options['image_options']['image_fonts']['image_font_bold']
   );
 
-  if (!isset($node->options['image_options']['image_fonts']['image_font_italic'])) {
+  if (!isset($node->options['image_options']['image_fonts']['image_font_italic']) || empty($node->options['image_options']['image_fonts']['image_font_italic'])) {
     $node->options['image_options']['image_fonts']['image_font_italic'] = $_bracket_image_font_italic_file;
   }
   $form['bracket']['options']['image_options']['image_fonts']['image_font_italic'] = array(
@@ -907,7 +907,7 @@ function bracket_form(&$node) {
     '#default_value' => $node->options['image_options']['image_fonts']['image_font_italic']
   );
 
-  if (!isset($node->options['image_options']['image_fonts']['image_font_bolditalic'])) {
+  if (!isset($node->options['image_options']['image_fonts']['image_font_bolditalic']) || empty($node->options['image_options']['image_fonts']['image_font_bolditalic'])) {
     $node->options['image_options']['image_fonts']['image_font_bolditalic'] = $_bracket_image_font_bolditalic_file;
   }
   $form['bracket']['options']['image_options']['image_fonts']['image_font_bolditalic'] = array(
@@ -920,7 +920,7 @@ function bracket_form(&$node) {
   );
 
   $options = bracket_pdf_font_options();
-  if (!isset($node->options['image_options']['pdf_font'])) {
+if (!isset($node->options['image_options']['pdf_font']) || empty($node->options['image_options']['pdf_font'])) {
     $node->options['image_options']['pdf_font'] = $_bracket_pdf_font_name;
   }
   $form['bracket']['options']['image_options']['pdf_font'] = array(
