@@ -20,4 +20,3 @@ You may embed it freely in your application (commercial or not), with or without
 modifications. 
 
 
-$Id$
