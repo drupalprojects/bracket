@@ -2,4 +2,3 @@ Bracket 1.0 Changelog
 ---------------------
 - Initial version
 
-$Id$

@@ -17,4 +17,3 @@ Upgrading from any previous version
 3. Run upgrade.php (at http://www.yourdrupalsite/update.php)
 
 
-$Id$
