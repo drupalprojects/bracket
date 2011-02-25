@@ -1,4 +1,3 @@
-$Id$
 
 Bracket 6.x Version Changelog
 ------------------------------
