@@ -5,9 +5,6 @@
  */
 function bracket_install() {
 
-  // create tables
-  drupal_install_schema('bracket');
-
   drupal_set_message(t('The bracket module was successfully installed'));
 }
 
@@ -364,9 +361,6 @@ function bracket_schema() {
  * Implementation of hook_uninstall().
  */
 function bracket_uninstall() {
-
-  // Drop tables
-  drupal_uninstall_schema('bracket');
 
   drupal_set_message(t('The bracket module was successfully uninstalled'));
 }

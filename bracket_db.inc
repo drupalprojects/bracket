@@ -17,100 +17,93 @@
  */
 function bracket_db_load($node) {
 
-  // make a bracket
-  $bracket = new Bracket();
-
   // try to load from the db
-  if ($row = db_fetch_object(db_query("SELECT * FROM {bracket} WHERE nid = %d", $node->nid))) {
-
-    // copy info
-    $bracket->subtitle = $row->subtitle;
-    $bracket->comments = $row->comments;
-    $bracket->sport = $row->sport;
-    $bracket->division = $row->division;
-    $bracket->season = $row->season;
-    $bracket->brgroup = $row->brgroup;
-    $bracket->footer = $row->footer;
-    $bracket->logopath = $row->logopath;
-    $bracket->sponsorlogopath = $row->sponsorlogopath;
-    $bracket->design = $row->design;
-    $bracket->options = unserialize($row->options);
+  $result = db_query(
+    "SELECT * FROM {bracket} WHERE nid = :nid", 
+    array(':nid' => $node->nid), 
+    array('fetch' => 'Bracket')
+  );
+  if ($bracket = $result->fetchObject()) {
 
     // load competitors
-    $rs = db_query("SELECT * FROM {bracket_comp} WHERE nid = %d ORDER BY id", $node->nid);
-    while($row = db_fetch_object($rs)) {
-      $c = new Bracket_Competitor();
-      $c->name = $row->name;
-      $c->seedin = $row->seedin;
-      $bracket->comp[$row->id] = $c;
+    $result = db_query(
+      "SELECT * FROM {bracket_comp} WHERE nid = :nid ORDER BY id", 
+      array(':nid' => $node->nid),
+      array('fetch' =>'Bracket_Competitor')
+    );
+    while($c = $result->fetchObject()) {
+      $bracket->comp[$c->id] = $c;
     }
 
     // load rounds
-    $rs = db_query("SELECT * FROM {bracket_round} WHERE nid = %d ORDER BY id", $node->nid);
-    while($row = db_fetch_object($rs)) {
+    $result = db_query(
+      "SELECT * FROM {bracket_round} WHERE nid = :nid ORDER BY id", 
+      array(':nid' => $node->nid),
+      array('fetch' => 'Bracket_Round')
+    );
+    while($r = $result->fetchObject()) {
 
-      // add round
-      $r = new Bracket_Round();
-      $r->id = $row->id;
-      $r->name = $row->round;
-      $r->loser = $row->loser;
-      $r->first = $row->first;
-      $r->comment = $row->comment;
       $bracket->round[$row->id] = $r;
 
       // load matches for this round
-      $rs2 = db_query("SELECT m.*, r.loser
-                       FROM {bracket_match} m
-                       JOIN {bracket_round} r on r.id = m.roundid
-                       WHERE m.nid = %d AND m.roundid = %d
-                       ORDER BY m.seq", $node->nid, $row->id);
-      while($row2 = db_fetch_object($rs2)) {
+      $result2 = db_query(
+        "SELECT m.*, r.loser
+         FROM {bracket_match} m
+         JOIN {bracket_round} r on r.id = m.roundid
+         WHERE m.nid = :nid AND m.roundid = :roundid
+         ORDER BY m.seq", 
+        array(':nid' => $node->nid, ':roundid' => $row->id)
+      );
+      while($record2 = $result2->fetchObject()) {
 
         // add the match
         $m = new Bracket_Match();
-        $m->id = $row2->id;
-        $m->compid[1] = $row2->compid1;
+        $m->id = $record2->id;
+        $m->compid[1] = $record2->compid1;
         if ($m->compid[1] > 0) {
           $m->cname[1] = $bracket->comp[$m->compid[1]]->name;
         }
-        $m->score[1] = $row2->score1;
-        $m->home[1] = $row2->home1;
-        $m->win[1] = $row2->win1;
-        $m->comp_comment[1] = $row2->comp1_comment;
-        $m->compid[2] = $row2->compid2;
+        $m->score[1] = $record2->score1;
+        $m->home[1] = $record2->home1;
+        $m->win[1] = $record2->win1;
+        $m->comp_comment[1] = $record2->comp1_comment;
+        $m->compid[2] = $record2->compid2;
         if ($m->compid[2] > 0)
           $m->cname[2] = $bracket->comp[$m->compid[2]]->name;
-        $m->score[2] = $row2->score2;
-        $m->home[2] = $row2->home2;
-        $m->win[2] = $row2->win2;
-        $m->comp_comment[2] = $row2->comp2_comment;
-        $m->roundid = $row2->roundid;
-        $m->comment[1] = $row2->match_comment1;
-        $m->comment[2] = $row2->match_comment2;
-        $m->winner_match = $row2->winner_match;
-        $m->winner_comp = $row2->winner_comp;
-        $m->loser_match = $row2->loser_match;
-        $m->loser_comp = $row2->loser_comp;
-        $m->winner_result = $row2->winner_result;
-        $m->loser_result = $row2->loser_result;
-        $m->win_use_result = $row2->win_use_result;
+        $m->score[2] = $record2->score2;
+        $m->home[2] = $record2->home2;
+        $m->win[2] = $record2->win2;
+        $m->comp_comment[2] = $record2->comp2_comment;
+        $m->roundid = $record2->roundid;
+        $m->comment[1] = $record2->match_comment1;
+        $m->comment[2] = $record2->match_comment2;
+        $m->winner_match = $record2->winner_match;
+        $m->winner_comp = $record2->winner_comp;
+        $m->loser_match = $record2->loser_match;
+        $m->loser_comp = $record2->loser_comp;
+        $m->winner_result = $record2->winner_result;
+        $m->loser_result = $record2->loser_result;
+        $m->win_use_result = $record2->win_use_result;
 
-        $bracket->round[$r->id]->match[$row2->seq] = $m;
+        $bracket->round[$r->id]->match[$record2->seq] = $m;
       }
     }
 
     // load results
-    $rs = db_query("SELECT * FROM {bracket_result} WHERE nid = %d ORDER BY id", $node->nid);
-    while($row = db_fetch_object($rs)) {
-      $s = new Bracket_Result();
-      $s->compid = $row->compid;
+    $result = db_query(
+      "SELECT * FROM {bracket_result} WHERE nid = :nid ORDER BY id", 
+      array(':nid' => $node->nid),
+      array('fetch' => 'Bracket_Result'));
+    while($s = $result->fetchObject()) {
       if ($s->compid > 0) {
         $s->cname = $bracket->comp[$s->compid]->name;
       }
-      $s->comment = $row->comment;
-      $s->seedout = $row->seedout;
       $bracket->result[$row->id] = $s;
     }
+  }
+  else {
+    // make an empty bracket if none found
+    $bracket = new Bracket();
   }
 
   // load the design if set
@@ -132,11 +125,22 @@ function bracket_db_insert($node) {
 
   bracket_db_update_tree($node);
 
-  db_query("INSERT INTO {bracket} (nid, subtitle, comments, sport, division, season, brgroup, footer, design,
-                                   logopath, sponsorlogopath, options)
-            VALUES (%d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
-            $node->nid, $node->subtitle, $node->comments, $node->sport, $node->division, $node->season,
-            $node->brgroup, $node->footer, $node->design, $node->logopath, $node->sponsorlogopath, serialize($node->options));
+  db_insert('bracket')
+    ->fields(array(
+      'nid' => $node->nid,
+      'subtitle' => $node->subtitle,
+      'comments' => $node->comments,
+      'sport' => $node->sport,
+      'division' => $node->division,
+      'season' => $node->season,
+      'brgroup' => $node->brgroup,
+      'footer' => $node->footer,
+      'design' => $node->design,
+      'logopath' => $node->logopath,
+      'sponsorlogopath' => $node->sponsorlogopath,
+      'options' => serialize($node->options),
+    ))
+    ->execute();
 }
 
 /**
@@ -149,12 +153,21 @@ function bracket_db_update($node) {
 
   bracket_db_update_tree($node);
 
-  db_query("UPDATE {bracket}
-            SET subtitle = '%s', comments = '%s', sport = '%s', division = '%s', season = '%s', brgroup = '%s',
-                footer = '%s', logopath ='%s', sponsorlogopath = '%s', options = '%s'
-            WHERE nid = %d",
-           $node->subtitle, $node->comments, $node->sport, $node->division, $node->season, $node->brgroup,
-           $node->footer, $node->logopath, $node->sponsorlogopath, serialize($node->options), $node->nid);
+  db_update('bracket')
+    ->fields(array(
+      'subtitle' => $node->subtitle,
+      'comments' => $node->comments,
+      'sport' => $node->sport,
+      'division' => $node->division,
+      'season' => $node->season,
+      'brgroup' => $node->brgroup,
+      'footer' => $node->footer,
+      'logopath' => $node->logopath,
+      'sponsorlogopath' => $node->sponsorlogopath,
+      'options' => serialize($node->options),
+    ))
+    ->condition('id', $node->nid)
+    ->execute();
 }
 
 /**
@@ -171,37 +184,78 @@ function bracket_db_update_tree($node) {
   // insert competitors
   for($i=1; $i<=count($node->comp); $i++) {
     $c = $node->comp[$i];
-    db_query("INSERT INTO {bracket_comp} (nid, id, name, seedin)
-              VALUES (%d, %d, '%s', '%s')",
-              $node->nid, $i, $c->name, $c->seedin);
+
+    db_insert('bracket_comp')
+      ->fields(array(
+        'nid' => $node->nid,
+        'id' => $i,
+        'name' => $c->name,
+        'seedin' => $c->seedin,
+    ))
+    ->execute();
   }
 
   // insert rounds
   for($i=1; $i<=count($node->round); $i++) {
     $r = $node->round[$i];
-    db_query("INSERT INTO {bracket_round} (nid, id, round, loser, first, comment)
-              VALUES (%d, %d, '%s', %d, %d, '%s')",
-              $node->nid, $i, $r->name, $r->loser, $r->first, $r->comment);
+
+    db_insert('bracket_round')
+      ->fields(array(
+        'nid' => $node->nid,
+        'id' => $i,
+        'round' => $r->name,
+        'loser' => $r->loser,
+        'first' => $r->first,
+        'comment' => $r->comment,
+    ))
+    ->execute();
+
     // insert matches for this round
     for($j=1; $j<=count($r->match); $j++) {
       $m = $r->match[$j];
-      db_query("INSERT INTO {bracket_match} (nid, id, roundid, seq, compid1, score1, home1, win1, comp1_comment,
-                                             compid2, score2, home2, win2, comp2_comment,
-                                             match_comment1, match_comment2, winner_match, winner_comp,
-                                             loser_match, loser_comp, winner_result, loser_result, win_use_result)
-                VALUES (%d, %d, %d, %d, %d, '%s', %d, %d, '%s', %d, '%s', %d, %d, '%s', '%s', '%s', %d, %d, %d, %d, %d, %d, %d)",
-                $node->nid, $m->id, $i, $j, $m->compid[1], $m->score[1], $m->home[1], $m->win[1], $m->comp_comment[1],
-                $m->compid[2], $m->score[2], $m->home[2], $m->win[2], $m->comp_comment[2],
-                $m->comment[1], $m->comment[2], $m->winner_match, $m->winner_comp, $m->loser_match, $m->loser_comp,
-                $m->winner_result, $m->loser_result, $m->win_use_result);
+
+    db_insert('bracket_match')
+      ->fields(array(
+        'nid' => $node->nid,
+        'id' => $m->id,
+        'roundid' => $i,
+        'seq' => $j,
+        'compid1' => $m->compid[1],
+        'score1' => $m->score[1],
+        'home1' => $m->home[1],
+        'win1' => $m->win[1],
+        'comp1_comment' => $m->comp_comment[1],
+        'compid2' => $m->compid[2],
+        'score2' => $m->score[2],
+        'home2' => $m->home[2],
+        'win2' => $m->win[2],
+        'comp2_comment' => $m->comp_comment[2],
+        'match_comment1' => $m->comment[1],
+        'match_comment2' => $m->comment[2],
+        'winner_match' => $m->winner_match,
+        'winner_comp' => $m->winner_comp,
+        'loser_match' => $m->loser_match,
+        'loser_comp' => $m->loser_comp,
+        'winner_result' => $m->winner_result,
+        'loser_result' => $m->loser_result,
+        'win_use_result' => $m->win_use_result,
+      ))
+      ->execute();
     }
   }
   // insert results
   for($i=1; $i<=count($node->result); $i++) {
     $s = $node->result[$i];
-    db_query("INSERT INTO {bracket_result} (nid, id, compid, comment, seedout)
-              VALUES (%d, %d, %d, '%s', '%s')",
-              $node->nid, $i, $s->compid, $s->comment, $s->seedout);
+
+    db_insert('bracket_result')
+      ->fields(array(
+        'nid' => $node->nid,
+        'id' => $i,
+        'compid' => $s->compid,
+        'comment' => $s->comment,
+        'seedout' => $s->seedout,
+      ))
+      ->execute();
   }
 }
 
@@ -215,7 +269,9 @@ function bracket_db_delete($node) {
 
   bracket_db_delete_tree($node);
 
-  db_query("DELETE FROM {bracket} WHERE nid = %d", $node->nid);
+  db_delete('bracket')
+    ->condition('nid', $node->nid)
+    ->execute();
 }
 
 /**
@@ -226,8 +282,16 @@ function bracket_db_delete($node) {
  */
 function bracket_db_delete_tree($node) {
 
-  db_query("DELETE FROM {bracket_comp} WHERE nid = %d", $node->nid);
-  db_query("DELETE FROM {bracket_match} WHERE nid = %d", $node->nid);
-  db_query("DELETE FROM {bracket_round} WHERE nid = %d", $node->nid);
-  db_query("DELETE FROM {bracket_result} WHERE nid = %d", $node->nid);
+  db_delete('bracket_comp')
+    ->condition('nid', $node->nid)
+    ->execute();
+  db_delete('bracket_match')
+    ->condition('nid', $node->nid)
+    ->execute();
+  db_delete('bracket_round')
+    ->condition('nid', $node->nid)
+    ->execute();
+  db_delete('bracket_result')
+    ->condition('nid', $node->nid)
+    ->execute();
 }

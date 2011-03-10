@@ -2,6 +2,6 @@
 
 name = Bracket Tabs
 description = The Bracket Tabs module creates link tabs for groups of tournament brackets
-core = 6.x
+core = 7.x
 dependencies[] = bracket
 

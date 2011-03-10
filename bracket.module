@@ -38,11 +38,28 @@ define('BRACKET_CACHE', 'bracket_cache');
 // drupal hooks
 //=========================================================================
 /**
- * Implementation of hook_perm().
+ * Implementation of hook_permission().
  */
-function bracket_perm() {
+function bracket_permission() {
 
-  return array('view brackets', 'create brackets', 'edit brackets', 'edit own brackets');
+  return array(
+    'view brackets' => array(
+      'title' => t('View Brackets'), 
+      'description' => t('View Bracket Nodes.'),
+    ),
+    'create brackets' => array(
+      'title' => t('Create Brackets'), 
+      'description' => t('Create Bracket Nodes.'),
+    ),
+    'edit brackets' => array(
+      'title' => t('Edit Brackets'), 
+      'description' => t('Edit Any Bracket Nodes.'),
+    ),
+    'edit own brackets' => array(
+      'title' => t('Edit Own Brackets'), 
+      'description' => t('Edit Only Bracket Nodes Created by User.'),
+    ),
+  );
 }
 
 /**
@@ -53,7 +70,7 @@ function bracket_node_info() {
   $info = array(
     'bracket' => array(
       'name' => t('Bracket'),
-      'module' => 'bracket',
+      'base' => 'bracket',
       'description' => t('Create a tournament bracket.')
      )
    );
@@ -62,30 +79,45 @@ function bracket_node_info() {
 }
 
 /**
- * Implementation of hook_access
+ * Implementation of hook_node_access
  */
-function bracket_access($op, $node) {
+function bracket_node_access($op, $node, $account) {
 
-  global $user;
-  
   switch ($op) {
     case 'view':
       // if node is published, return view access
       if ($node->status) {
-        return user_access('view brackets');
+        if (user_access('view brackets')) {
+          return NODE_ACCESS_ALLOW;
+        }
+        else {
+          return NODE_ACCESS_DENY;
+        }
       }
       // if unpublished, return update access - users who can update the node should be able to view it
       else  {
-        return node_access('update', $node);
+        if (node_access('update', $node, $account)) {
+          return NODE_ACCESS_ALLOW;
+        }
+        else {
+          return NODE_ACCESS_DENY;
+        }
       }
-      break;
     case 'create':
-      return user_access('create brackets');
-      break;
+      if (user_access('create brackets')) {
+        return NODE_ACCESS_ALLOW;
+      }
+      else {
+        return NODE_ACCESS_DENY;
+      }
     case 'update':
     case 'delete':
-      return user_access("edit brackets") || (user_access("edit own brackets") && ($user->uid == $node->uid));
-      break;
+      if (user_access('edit brackets') || (user_access('edit own brackets') && ($account->uid == $node->uid))) {
+        return NODE_ACCESS_ALLOW;
+      }
+      else {
+        return NODE_ACCESS_DENY;
+      }
   }
 }
 
@@ -96,22 +128,22 @@ function bracket_menu() {
 
   $items = array();
 
-  $items['admin/settings/bracket'] = array(
+  $items['admin/content/bracket'] = array(
+    'title' => 'Brackets',
+    'page callback' => 'bracket_admin_content',
+    'access callback' => 'user_access',
+    'access arguments' => array('administer nodes'),
+    'description' => 'View and edit all the brackets on your site.',
+    'file' => 'includes/webform.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+  
+  $items['admin/config/content/bracket'] = array(
     'title' => 'Brackets',
     'description' => 'Change bracket settings',
     'page callback' => 'bracket_settings',
     'access callback' => 'user_access',
     'access arguments' => array('administer site configuration'),
-    'type' => MENU_NORMAL_ITEM,
-  );
-
-  // bracket listing.
-  $items['admin/content/bracket'] = array(
-    'title' =>'Brackets',
-    'page callback' => 'bracket_admin_content',
-    'access callback' => 'user_access',
-    'access arguments' => array('administer nodes'),
-    'description' => 'View and edit all the brackets on your site.',
     'type' => MENU_NORMAL_ITEM,
   );
 
@@ -272,40 +304,37 @@ function bracket_theme() {
   
   $theme = array(
     'bracket_view' => array(
-      'arguments' => array('node' => NULL, 'teaser' => NULL, 'page' => NULL),
+      'render element' => 'bracket',
     ),
     'bracket_admin_content' => array(
-      'arguments' => array('nodes' => NULL),
+      'variables' => array('nodes' => NULL),
     ),
     'bracket_route_edit_form' => array(
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
     ),
     'bracket_route_select' => array(
-      'arguments' => array('element' => NULL),
+      'render element' => 'element',
     ),
     'bracket_route_form_element' => array(
-      'arguments' => array('title' => NULL, 'value' => NULL, 'description' => NULL,  'id' => NULL, 'required' => NULL, 'error' => NULL),
-    ),
-    'bracket_rounds' => array(
-      'arguments' => array('node' => NULL),
+      'render element' => 'element',
     ),
     'bracket_round_edit_form' => array(
-      'arguments' => array('form' => NULL),
+      'render element' => 'form',
     ),
     'bracket_match' => array(
-      'arguments' => array('node' => NULL, 'round_index' => NULL, 'match_index' => NULL, 'orientation' => NULL),
+      'variables' => array('node' => NULL, 'round_index' => NULL, 'match_index' => NULL, 'orientation' => NULL),
       'template' => 'templates/bracket-match',
     ),
     'bracket_match_lr' => array(
-      'arguments' => array('node' => NULL, 'round_index' => NULL, 'match_index' => NULL),
+      'variables' => array('node' => NULL, 'round_index' => NULL, 'match_index' => NULL),
       'template' => 'templates/bracket-match-lr',
     ),
     'bracket_result' => array(
-      'arguments' => array('node' => NULL, 'result_index' => NULL, 'orientation' => NULL),
+      'variables' => array('node' => NULL, 'result_index' => NULL, 'orientation' => NULL),
       'template' => 'templates/bracket-result',
     ),
     'bracket_images' => array(
-      'arguments' => array('node' => NULL),
+      'variables' => array('node' => NULL),
       'template' => 'templates/bracket-images',
     )
   );
@@ -322,7 +351,7 @@ function bracket_theme() {
     
       // add to theme cache
       $theme['bracket_' . $key] = array(
-        'arguments' => array('node' => NULL),
+        'variables' => array('node' => NULL),
         'path' => $path,
         'template' => $tpl
         );
@@ -443,8 +472,8 @@ function update_all_bracket_displays() {
 
   $option = variable_get('bracket_default_display', 'Image');
   $result = db_query("SELECT n.nid, n.title FROM {node} n WHERE n.type = 'bracket'");
-  while ($row = db_fetch_object($result)) {
-    $node = node_load($row->nid);
+  foreach ($result as $record) {
+    $node = node_load($record->nid);
     $node->options['display'] = $option;
     node_save($node);
     watchdog('bracket', t('Updated bracket - ' . $row->title . ' (' . $row->nid . ') - to display option: ' . $option));
@@ -523,12 +552,12 @@ function bracket_prepare(&$node) {
 /**
  * Implementation of hook_load().
  */
-function bracket_load($node) {
+function bracket_load(&$nodes) {
 
-  // load current node values
-  $bracket = bracket_db_load($node);
-
-  return $bracket;
+  // load bracket node values
+  foreach ($nodes as $nid => $node) {
+    $nodes[$nid]->bracket = bracket_db_load($node);
+  }
 }
 
 /**
@@ -1422,21 +1451,26 @@ function bracket_import_form_submit($form_id, &$form_state) {
  * Display bracket list for admin/content/bracket
  */
 function bracket_admin_content() {
-
-  $result = db_query(db_rewrite_sql("SELECT n.*, r.* FROM {node} n INNER JOIN {node_revisions} r ON n.vid = r.vid WHERE n.type = 'bracket'"));
+  
   $nodes = array();
-  while ($node = db_fetch_object($result)) {
-    $nodes[] = $node;
+  if ($webform_types) {
+    $nodes = db_select('node', 'n')
+      ->fields('n')
+      ->condition('n.type', 'bracket', '=')
+      ->execute()
+      ->fetchAllAssoc('nid');
   }
 
-  return theme('bracket_admin_content', $nodes);
+  return theme('bracket_admin_content', array('nodes', $nodes));
 }
 
 
 /**
  * Theme the list of brackets
  */
-function theme_bracket_admin_content($nodes) {
+function theme_bracket_admin_content($variables) {
+
+  $nodes = $variables['nodes'];
 
   $header = array(
     t('Title'),

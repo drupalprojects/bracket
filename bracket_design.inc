@@ -21,7 +21,7 @@ function bracket_design_list() {
 
     $dir = bracket_design_base_path();
 
-    $list = file_scan_directory($dir, '\.inc$');
+    $list = file_scan_directory($dir, '/\.inc$/');
 
     foreach($list as $file) {
         $desc = bracket_design_description($file->name);
