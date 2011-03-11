@@ -173,7 +173,7 @@ function se8po1_pdf($node) {
   global $_bracket_pdf_font_xsmall;
 
   // setup pdf
-  $pdf = new FPDF('P', 'in', 'letter');
+  $pdf = new PDF('P', 'in', 'letter');
   $pdf->setAutoPageBreak(FALSE);
   $iwidth = 8.5;
   $iheight = 11.0;

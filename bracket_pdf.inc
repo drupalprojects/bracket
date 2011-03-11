@@ -12,6 +12,15 @@ if (!class_exists('FPDF')) {
   require_once 'FPDF/fpdf.php';
 }
 
+// incoporate the FPDF alpha channel fix from: http://staff.dasdeck.de/valentin/fpdf/fpdf_alpha/
+if (!class_exists('PDF_ImageAlpha')) {
+  require_once 'FPDF/fpdf_alpha.php';
+}
+
+// extend FPDF class to try and insulate us from future FPDF updates
+class PDF extends PDF_ImageAlpha {
+}
+
 // bracket pdf globals
 global $_bracket_pdf_font_name;
 global $_bracket_pdf_font_xlarge;
