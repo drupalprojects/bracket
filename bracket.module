@@ -405,10 +405,12 @@ function bracket_settings_form_validate($form_id, &$form_state) {
   $upload = $form_state['values']['upload'];
   if ($upload) {
     $dir = $form_state['values']['upload_path'];
-    // must be writable
-    $is_writable = file_check_directory($dir, 1);
-    if (!$is_writable) {
-      form_set_error('upload_path', 'Upload path must be writeable');
+    if ($dir != '') {
+      // must be writable
+      $is_writable = file_check_directory($dir, 1);
+      if (!$is_writable) {
+        form_set_error('upload_path', 'Upload path must be writeable');
+      }
     }
   }
 }
