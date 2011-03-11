@@ -1004,28 +1004,6 @@ function bracket_validate_color($color) {
 }
 
 /**
- * Check that a given path is a supported image type (jpg or png)
- * based on file extension
- *
- * @param $path
- *   the path of the image file
- * @return
- *   true if path is supported image type or is empty,
- *     otherwise false if extension is not valid
- */
-function bracket_check_image_type($path) {
-
-  if ($path != '') {
-    $pathinfo = pathinfo($path);
-    $ext = strtoupper($pathinfo['extension']);
-    if ($ext == '' || ($ext != 'JPG' && $ext != 'JPEG' && $ext != 'PNG')) {
-      return FALSE;
-    }
-  }
-  return TRUE;
-}
-
-/**
  * validation hook of bracket form - handles image uploads and deletes
  */
 function bracket_form_validate($form_id, &$form_state) {
