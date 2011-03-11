@@ -21,80 +21,80 @@ drupal_add_css(drupal_get_path('module', 'bracket') . '/designs/se32po2lr/bracke
   <div id="round-1-left" class="bracket-round">
     <div class="bracket-round-comment"><?php print filter_xss_admin($node->round[1]->comment) ?></div>
     <div id="round-1-spacer"></div>
-    <?php print theme('bracket_match', $node, 1, 1, 'left') ?>
+    <?php print theme('bracket_match', array('node' => $node, 'round_index' => 1, 'match_index' => 1, 'orientation' => 'left')) ?>
     <div class="bracket-round-1-match-spacer"></div>
-    <?php print theme('bracket_match', $node, 1, 2, 'left') ?>
+    <?php print theme('bracket_match', array('node' => $node, 'round_index' => 1, 'match_index' => 2, 'orientation' => 'left')) ?>
     <div class="bracket-round-1-match-spacer"></div>
-    <?php print theme('bracket_match', $node, 1, 3, 'left') ?>
+    <?php print theme('bracket_match', array('node' => $node, 'round_index' => 1, 'match_index' => 3, 'orientation' => 'left')) ?>
     <div class="bracket-round-1-match-spacer"></div>
-    <?php print theme('bracket_match', $node, 1, 4, 'left') ?>
+    <?php print theme('bracket_match', array('node' => $node, 'round_index' => 1, 'match_index' => 4, 'orientation' => 'left')) ?>
     <div class="bracket-round-1-match-spacer"></div>
-    <?php print theme('bracket_match', $node, 1, 5, 'left') ?>
+    <?php print theme('bracket_match', array('node' => $node, 'round_index' => 1, 'match_index' => 5, 'orientation' => 'left')) ?>
     <div class="bracket-round-1-match-spacer"></div>
-    <?php print theme('bracket_match', $node, 1, 6, 'left') ?>
+    <?php print theme('bracket_match', array('node' => $node, 'round_index' => 1, 'match_index' => 6, 'orientation' => 'left')) ?>
     <div class="bracket-round-1-match-spacer"></div>
-    <?php print theme('bracket_match', $node, 1, 7, 'left') ?>
+    <?php print theme('bracket_match', array('node' => $node, 'round_index' => 1, 'match_index' => 7, 'orientation' => 'left')) ?>
     <div class="bracket-round-1-match-spacer"></div>
-    <?php print theme('bracket_match', $node, 1, 8, 'left') ?>
+    <?php print theme('bracket_match', array('node' => $node, 'round_index' => 1, 'match_index' => 8, 'orientation' => 'left')) ?>
     <div class="bracket-footer"><?php print nl2br(filter_xss_admin($node->footer)) ?></div>
   </div>
   <div id="round-2-left" class="bracket-round">
     <div class="bracket-round-comment"><?php print filter_xss_admin($node->round[2]->comment) ?></div>
     <div id="round-2-spacer"></div>
-    <?php print theme('bracket_match', $node, 2, 1, 'left') ?>
+    <?php print theme('bracket_match', array('node' => $node, 'round_index' => 2, 'match_index' => 1, 'orientation' => 'left')) ?>
     <div class="bracket-round-2-match-spacer"></div>
-    <?php print theme('bracket_match', $node, 2, 2, 'left') ?>
+    <?php print theme('bracket_match', array('node' => $node, 'round_index' => 2, 'match_index' => 2, 'orientation' => 'left')) ?>
     <div class="bracket-round-2-match-spacer"></div>
-    <?php print theme('bracket_match', $node, 2, 3, 'left') ?>
+    <?php print theme('bracket_match', array('node' => $node, 'round_index' => 2, 'match_index' => 3, 'orientation' => 'left')) ?>
     <div class="bracket-round-2-match-spacer"></div>
-    <?php print theme('bracket_match', $node, 2, 4, 'left') ?>
+    <?php print theme('bracket_match', array('node' => $node, 'round_index' => 2, 'match_index' => 4, 'orientation' => 'left')) ?>
   </div>
   <div id="results-left" class="bracket-results">
     <div id="results-spacer"></div>
-    <?php print theme('bracket_result', $node, 1, 'left') ?>
-    <?php print theme('bracket_result', $node, 2, 'left') ?>
-    <?php print theme('bracket_result', $node, 3, 'left') ?>
-    <?php print theme('bracket_result', $node, 4, 'left') ?>
+    <?php print theme('bracket_result', array('node' => $node, 'result_index' => 1, 'orientation' => 'left')) ?>
+    <?php print theme('bracket_result', array('node' => $node, 'result_index' => 2, 'orientation' => 'left')) ?>
+    <?php print theme('bracket_result', array('node' => $node, 'result_index' => 3, 'orientation' => 'left')) ?>
+    <?php print theme('bracket_result', array('node' => $node, 'result_index' => 4, 'orientation' => 'left')) ?>
   </div>
   <div id="round-spacer" class="bracket-round">&nbsp;</div>
   <div id="results-right" class="bracket-results">
     <div id="results-spacer"></div>
-    <?php print theme('bracket_result', $node, 5, 'right') ?>
-    <?php print theme('bracket_result', $node, 6, 'right') ?>
-    <?php print theme('bracket_result', $node, 7, 'right') ?>
-    <?php print theme('bracket_result', $node, 8, 'right') ?>
+    <?php print theme('bracket_result', array('node' => $node, 'result_index' => 5, 'orientation' => 'right')) ?>
+    <?php print theme('bracket_result', array('node' => $node, 'result_index' => 6, 'orientation' => 'right')) ?>
+    <?php print theme('bracket_result', array('node' => $node, 'result_index' => 7, 'orientation' => 'right')) ?>
+    <?php print theme('bracket_result', array('node' => $node, 'result_index' => 8, 'orientation' => 'right')) ?>
   </div>
   <div id="round-2-right" class="bracket-round">
     <div class="bracket-round-comment"><?php print filter_xss_admin($node->round[2]->comment) ?></div>
     <div id="round-2-spacer"></div>
-    <?php print theme('bracket_match', $node, 2, 5, 'right') ?>
+    <?php print theme('bracket_match', array('node' => $node, 'round_index' => 2, 'match_index' => 5, 'orientation' => 'right')) ?>
     <div class="bracket-round-2-match-spacer"></div>
-    <?php print theme('bracket_match', $node, 2, 6, 'right') ?>
+    <?php print theme('bracket_match', array('node' => $node, 'round_index' => 2, 'match_index' => 6, 'orientation' => 'right')) ?>
     <div class="bracket-round-2-match-spacer"></div>
-    <?php print theme('bracket_match', $node, 2, 7, 'right') ?>
+    <?php print theme('bracket_match', array('node' => $node, 'round_index' => 2, 'match_index' => 7, 'orientation' => 'right')) ?>
     <div class="bracket-round-2-match-spacer"></div>
-    <?php print theme('bracket_match', $node, 2, 8, 'right') ?>
+    <?php print theme('bracket_match', array('node' => $node, 'round_index' => 2, 'match_index' => 8, 'orientation' => 'right')) ?>
   </div>
   <div id="round-1-right" class="bracket-round">
     <div class="bracket-round-comment"><?php print filter_xss_admin($node->round[1]->comment) ?></div>
     <div id="round-1-spacer"></div>
-    <?php print theme('bracket_match', $node, 1, 9, 'right') ?>
+    <?php print theme('bracket_match', array('node' => $node, 'round_index' => 1, 'match_index' => 9, 'orientation' => 'right')) ?>
     <div class="bracket-round-1-match-spacer"></div>
-    <?php print theme('bracket_match', $node, 1, 10, 'right') ?>
+    <?php print theme('bracket_match', array('node' => $node, 'round_index' => 1, 'match_index' => 10, 'orientation' => 'right')) ?>
     <div class="bracket-round-1-match-spacer"></div>
-    <?php print theme('bracket_match', $node, 1, 11, 'right') ?>
+    <?php print theme('bracket_match', array('node' => $node, 'round_index' => 1, 'match_index' => 11, 'orientation' => 'right')) ?>
     <div class="bracket-round-1-match-spacer"></div>
-    <?php print theme('bracket_match', $node, 1, 12, 'right') ?>
+    <?php print theme('bracket_match', array('node' => $node, 'round_index' => 1, 'match_index' => 12, 'orientation' => 'right')) ?>
     <div class="bracket-round-1-match-spacer"></div>
-    <?php print theme('bracket_match', $node, 1, 13, 'right') ?>
+    <?php print theme('bracket_match', array('node' => $node, 'round_index' => 1, 'match_index' => 13, 'orientation' => 'right')) ?>
     <div class="bracket-round-1-match-spacer"></div>
-    <?php print theme('bracket_match', $node, 1, 14, 'right') ?>
+    <?php print theme('bracket_match', array('node' => $node, 'round_index' => 1, 'match_index' => 14, 'orientation' => 'right')) ?>
     <div class="bracket-round-1-match-spacer"></div>
-    <?php print theme('bracket_match', $node, 1, 15, 'right') ?>
+    <?php print theme('bracket_match', array('node' => $node, 'round_index' => 1, 'match_index' => 15, 'orientation' => 'right')) ?>
     <div class="bracket-round-1-match-spacer"></div>
-    <?php print theme('bracket_match', $node, 1, 16, 'right') ?>
+    <?php print theme('bracket_match', array('node' => $node, 'round_index' => 1, 'match_index' => 16, 'orientation' => 'right')) ?>
   </div>
-  <?php print theme('bracket_images', $node) ?>
+  <?php print theme('bracket_images', array('node' => $node)) ?>
 </div>
 
 

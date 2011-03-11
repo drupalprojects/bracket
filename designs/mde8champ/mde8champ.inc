@@ -56,15 +56,15 @@ function mde8champ_create(&$node) {
  */
 function mde8champ_image($node) {
 
-  global $bracket_image_font;
-  global $bracket_image_font_bold;
-  global $bracket_image_font_xlarge;
-  global $bracket_image_font_large;
-  global $bracket_image_font_norm;
-  global $bracket_image_font_small;
-  global $bracket_image_font_xsmall;
-  global $bracket_image_bg_color;
-  global $bracket_image_fg_color;
+  global $_bracket_image_font;
+  global $_bracket_image_font_bold;
+  global $_bracket_image_font_xlarge;
+  global $_bracket_image_font_large;
+  global $_bracket_image_font_norm;
+  global $_bracket_image_font_small;
+  global $_bracket_image_font_xsmall;
+  global $_bracket_image_bg_color;
+  global $_bracket_image_fg_color;
 
   // setup positions and spacing
   $top = 75;
@@ -88,17 +88,17 @@ function mde8champ_image($node) {
   bracket_image_setup_fonts($node);
 
   // fill in background
-  imagefill($img, 0, 0, $bracket_image_bg_color);
+  imagefill($img, 0, 0, $_bracket_image_bg_color);
 
   // font sizes
-  $bracket_image_font_xlarge = 14;
-  $bracket_image_font_large = 12;
-  $bracket_image_font_norm = 10;
-  $bracket_image_font_small = 8;
-  $bracket_image_font_xsmall = 7;
+  $_bracket_image_font_xlarge = 14;
+  $_bracket_image_font_large = 12;
+  $_bracket_image_font_norm = 10;
+  $_bracket_image_font_small = 8;
+  $_bracket_image_font_xsmall = 7;
 
   // font height
-  $bbox = imagettfbbox($bracket_image_font_norm, 0, $bracket_image_font, 'Q');
+  $bbox = imagettfbbox($_bracket_image_font_norm, 0, $_bracket_image_font, 'Q');
   $h = $bbox[1] - $bbox[7];
   $w = 10;
 
@@ -123,13 +123,13 @@ function mde8champ_image($node) {
   // winner and runner-up
   $l += $width;
   $t += ($hh / 3);
-  imageline($img, $l, $t, $l+$width, $t, $bracket_image_fg_color);
-  bracket_image_imagetextalign($img, $bracket_image_font_large, $l, $t-2, $width, $node->result[1]->cname, $bracket_image_fg_color, 'C');
-  bracket_image_imagetextalign($img, $bracket_image_font_norm, $l, $t+$h+1, $width, $node->result[1]->comment, $bracket_image_fg_color, 'C');
+  imageline($img, $l, $t, $l+$width, $t, $_bracket_image_fg_color);
+  bracket_image_imagetextalign($img, $_bracket_image_font_large, $l, $t-2, $width, $node->result[1]->cname, $_bracket_image_fg_color, 'C');
+  bracket_image_imagetextalign($img, $_bracket_image_font_norm, $l, $t+$h+1, $width, $node->result[1]->comment, $_bracket_image_fg_color, 'C');
   $t += ($hh / 3);
-  imageline($img, $l, $t, $l+$width, $t, $bracket_image_fg_color);
-  bracket_image_imagetextalign($img, $bracket_image_font_large, $l, $t-2, $width, $node->result[2]->cname, $bracket_image_fg_color, 'C');
-  bracket_image_imagetextalign($img, $bracket_image_font_norm, $l, $t+$h+1, $width, $node->result[2]->comment, $bracket_image_fg_color, 'C');
+  imageline($img, $l, $t, $l+$width, $t, $_bracket_image_fg_color);
+  bracket_image_imagetextalign($img, $_bracket_image_font_large, $l, $t-2, $width, $node->result[2]->cname, $_bracket_image_fg_color, 'C');
+  bracket_image_imagetextalign($img, $_bracket_image_font_norm, $l, $t+$h+1, $width, $node->result[2]->comment, $_bracket_image_fg_color, 'C');
 
   // loser rounds
   $lrnd = bracket_round_first_loser_round($node);
@@ -157,25 +157,25 @@ function mde8champ_image($node) {
   // 3rd and 4th place
   $l += $width;
   $t += ($hh / 4);
-  imageline($img, $l, $t, $l+$width, $t, $bracket_image_fg_color);
-  bracket_image_imagetextalign($img, $bracket_image_font_large, $l, $t-2, $width, $node->result[3]->cname, $bracket_image_fg_color, 'C');
-  bracket_image_imagetextalign($img, $bracket_image_font_norm, $l, $t+$h+1, $width, $node->result[3]->comment, $bracket_image_fg_color, 'C');
+  imageline($img, $l, $t, $l+$width, $t, $_bracket_image_fg_color);
+  bracket_image_imagetextalign($img, $_bracket_image_font_large, $l, $t-2, $width, $node->result[3]->cname, $_bracket_image_fg_color, 'C');
+  bracket_image_imagetextalign($img, $_bracket_image_font_norm, $l, $t+$h+1, $width, $node->result[3]->comment, $_bracket_image_fg_color, 'C');
   $t += ($hh / 2);
-  imageline($img, $l, $t, $l+$width, $t, $bracket_image_fg_color);
-  bracket_image_imagetextalign($img, $bracket_image_font_large, $l, $t-2, $width, $node->result[4]->cname, $bracket_image_fg_color, 'C');
-  bracket_image_imagetextalign($img, $bracket_image_font_norm, $l, $t+$h+1, $width, $node->result[4]->comment, $bracket_image_fg_color, 'C');
+  imageline($img, $l, $t, $l+$width, $t, $_bracket_image_fg_color);
+  bracket_image_imagetextalign($img, $_bracket_image_font_large, $l, $t-2, $width, $node->result[4]->cname, $_bracket_image_fg_color, 'C');
+  bracket_image_imagetextalign($img, $_bracket_image_font_norm, $l, $t+$h+1, $width, $node->result[4]->comment, $_bracket_image_fg_color, 'C');
 
   // bracket title
-  bracket_image_imagetextalign($img, $bracket_image_font_xlarge, $iwidth / 2 - (400 / 2), 15, 400, $node->title, $bracket_image_fg_color, 'C');
+  bracket_image_imagetextalign($img, $_bracket_image_font_xlarge, $iwidth / 2 - (400 / 2), 15, 400, $node->title, $_bracket_image_fg_color, 'C');
 
   // bracket subtitle
-  bracket_image_imagetextalign($img, $bracket_image_font_norm, $iwidth / 2 - (400 / 2), 30, 400, $node->subtitle, $bracket_image_fg_color, 'C');
+  bracket_image_imagetextalign($img, $_bracket_image_font_norm, $iwidth / 2 - (400 / 2), 30, 400, $node->subtitle, $_bracket_image_fg_color, 'C');
 
   // bracket comments
-  bracket_image_imagetextwordwrap($img, $bracket_image_font_small, $iwidth / 2 - (400 / 2), 60, 400, $node->comments, $bracket_image_fg_color, 'C');
+  bracket_image_imagetextwordwrap($img, $_bracket_image_font_small, $iwidth / 2 - (400 / 2), 60, 400, $node->comments, $_bracket_image_fg_color, 'C');
 
   // bracket footnote
-  bracket_image_imagetextwordwrap($img, $bracket_image_font_small, $left, $iheight-$h, $iwidth-($left*2), $node->footer, $bracket_image_fg_color, 'C');
+  bracket_image_imagetextwordwrap($img, $_bracket_image_font_small, $left, $iheight-$h, $iwidth-($left*2), $node->footer, $_bracket_image_fg_color, 'C');
 
   // bracket logo
   if ($node->logopath != '') {
@@ -194,7 +194,7 @@ function mde8champ_image($node) {
   imagedestroy($img);
 
   // return the image
-  return($png);
+  return $png;
 }
 
 /**
@@ -207,12 +207,12 @@ function mde8champ_image($node) {
  */
 function mde8champ_pdf($node) {
 
-  global $bracket_pdf_font_name;
-  global $bracket_pdf_font_xlarge;
-  global $bracket_pdf_font_large;
-  global $bracket_pdf_font_norm;
-  global $bracket_pdf_font_small;
-  global $bracket_pdf_font_xsmall;
+  global $_bracket_pdf_font_name;
+  global $_bracket_pdf_font_xlarge;
+  global $_bracket_pdf_font_large;
+  global $_bracket_pdf_font_norm;
+  global $_bracket_pdf_font_small;
+  global $_bracket_pdf_font_xsmall;
 
   // setup pdf
   $pdf = new FPDF('P', 'in', 'letter');
@@ -238,9 +238,9 @@ function mde8champ_pdf($node) {
   bracket_pdf_setup_font($node, $pdf);
 
   // set font sizes
-  $bracket_pdf_font_norm = 8;
-  $bracket_pdf_font_small = 7;
-  $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_norm);
+  $_bracket_pdf_font_norm = 8;
+  $_bracket_pdf_font_small = 7;
+  $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_norm);
 
   // start pdf
   $pdf->addPage();
@@ -265,7 +265,7 @@ function mde8champ_pdf($node) {
   // winner and runner-up
   $l += $width;
   $t += ($hh / 3);
-  $pdf->setFont($bracket_pdf_font_name, 'B', $bracket_pdf_font_large);
+  $pdf->setFont($_bracket_pdf_font_name, 'B', $_bracket_pdf_font_large);
   $pdf->line($l, $t, $l+$width, $t);
   $pdf->setXY($l, $t-0.125);
   $pdf->cell($width, 0.125, $node->result[1]->cname, 0, 0, 'C');
@@ -306,7 +306,7 @@ function mde8champ_pdf($node) {
   // 3rd and 4th place
   $l += $width;
   $t += ($hh / 4);
-  $pdf->setFont($bracket_pdf_font_name, 'B', $bracket_pdf_font_large);
+  $pdf->setFont($_bracket_pdf_font_name, 'B', $_bracket_pdf_font_large);
   $pdf->line($l, $t, $l+$width, $t);
   $pdf->setXY($l, $t-0.125);
   $pdf->cell($width, 0.125, $node->result[3]->cname, 0, 0, 'C');
@@ -320,22 +320,22 @@ function mde8champ_pdf($node) {
   $pdf->cell($width, 0.125, $node->result[4]->comment, 0, 0, 'C');
 
   // bracket title
-  $pdf->setFont($bracket_pdf_font_name, 'BI', $bracket_pdf_font_xlarge);
+  $pdf->setFont($_bracket_pdf_font_name, 'BI', $_bracket_pdf_font_xlarge);
   $pdf->setXY($left, 0.5);
   $pdf->multicell($iwidth - ($left * 2) , 0.25, $node->title, 0, 'C');
 
   // bracket subtitle
-  $pdf->setFont($bracket_pdf_font_name, 'BI', $bracket_pdf_font_large);
+  $pdf->setFont($_bracket_pdf_font_name, 'BI', $_bracket_pdf_font_large);
   $pdf->setXY($left, 0.75);
   $pdf->multicell($iwidth - ($left * 2), 0.125, $node->subtitle, 0, 'C');
 
   // bracket comments
-  $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_norm);
+  $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_norm);
   $pdf->setXY($left, 1.25);
   $pdf->multicell($iwidth - ($left * 2), 0.125, $node->comments, 0, 'C');
 
   // bracket footnote
-  $pdf->setFont($bracket_pdf_font_name, '', $bracket_pdf_font_small);
+  $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_small);
   $pdf->setXY($left, $iheight - 0.5);
   $pdf->multicell($iwidth - ($left * 2), 0.125, $node->footer, 0, 'C');
 
@@ -350,6 +350,6 @@ function mde8champ_pdf($node) {
   }
 
   // return pdf as a string
-  return($pdf->output('', 'S'));
+  return $pdf->output('', 'S');
 }
 

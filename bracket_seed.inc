@@ -15,7 +15,7 @@ function bracket_seed_edit($node) {
   return drupal_get_form('bracket_seed_edit_form', $node);
 }
 
-function bracket_seed_edit_form($form_state, $node) {
+function bracket_seed_edit_form($form, $form_state, $node) {
 
   drupal_set_title(t('Seeding') . ' - ' . check_plain($node->title));
 
@@ -29,7 +29,7 @@ function bracket_seed_edit_form($form_state, $node) {
 
   $form['help'] = array(
     '#type' => 'markup',
-    '#value' => t('Use this form to assign competitors and seeds to bracket slots.
+    '#markup' => t('Use this form to assign competitors and seeds to bracket slots.
                    This is actually just a trimmed down version of the Round 1 form.
                    Seeds are used for importing competitors - they are optional and do not appear on the bracket.')
   );

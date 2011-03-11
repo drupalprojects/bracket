@@ -15,7 +15,7 @@ function bracket_result_edit($node) {
   return drupal_get_form('bracket_result_edit_form', $node);
 }
 
-function bracket_result_edit_form($form_state, $node) {
+function bracket_result_edit_form($form, $form_state, $node) {
 
   drupal_set_title(t('Results') . ' - ' . check_plain($node->title));
   
@@ -28,7 +28,7 @@ function bracket_result_edit_form($form_state, $node) {
 
   $form['help'] = array(
     '#type' => 'markup',
-    '#value' => t('Use this form to view the bracket results and update comments that appear on the bracket for top placers.
+    '#markup' => t('Use this form to view the bracket results and update comments that appear on the bracket for top placers.
                    Seeds are used for exporting competitors into the next bracket - they are optional and do not appear on the bracket.')
   );
 
@@ -57,7 +57,7 @@ function bracket_result_edit_form($form_state, $node) {
 
     $form[$result]['hr'] = array(
       '#type' => 'markup',
-      '#value' => '<hr />',
+      '#markup' => '<hr />',
     );
 
     $form[$result]['comment'] = array(

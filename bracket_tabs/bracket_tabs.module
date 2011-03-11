@@ -1,5 +1,4 @@
 <?php
-// $Id
 
 /**
  * @file
@@ -19,8 +18,8 @@ function bracket_tabs_menu() {
 
   $items = array();
 
-  $items['admin/settings/bracket_tabs'] = array(
-    'title' => t('Bracket Tabs'),
+  $items['admin/config/bracket-tabs'] = array(
+    'title' => 'Bracket Tabs',
     'description' => t('Change bracket tabs settings'),
     'page callback' => 'bracket_tabs_settings',
     'access callback' => 'user_access',
@@ -38,22 +37,22 @@ function bracket_tabs_theme() {
   
   $theme = array(
     'bracket_tabs_view' => array(
-      'arguments' => array('node' => NULL, 'teaser' => NULL, 'page' => NULL),
+      'variables' => array('node' => NULL, 'teaser' => NULL, 'page' => NULL),
     )
   );
   return $theme;
 }
 
 /**
- * Implementation of hook_nodeapi().
+ * Implementation of hook_node_view().
  */
-function bracket_tabs_nodeapi(&$node, $op, $a3, $a4) {
+function bracket_tabs_node_view($node, $view_mode, $langcode) {
 
   // must be a bracket view not teaser
   if ($node->type == 'bracket') {
-    if ($op == 'view' && !$a3) {
+    if ($view_mode == 'full') {
       $node->content['tabs'] = array(
-        '#value' => theme('bracket_tabs_view', $node, $a3, $a4),
+        '#value' => theme('bracket_tabs_view', array('node' => $node, 'view_mode' => $view_mode)),
         '#weight' => 9
       );    
     }
@@ -63,7 +62,10 @@ function bracket_tabs_nodeapi(&$node, $op, $a3, $a4) {
 /**
  * Theming function for bracket_tabs_view
  */
-function theme_bracket_tabs_view(&$node, $teaser = 0, $page = 0) {
+function theme_bracket_tabs_view($variables) {
+
+  $node = $variables['node'];
+  $view_mode = $variables['view_mode'];
 
   $output = '';
   
@@ -81,37 +83,37 @@ function theme_bracket_tabs_view(&$node, $teaser = 0, $page = 0) {
        $node->division || $node->brgroup)) {
     foreach ($match as $m) {
       if ($m === 'season') {
-        $sql .= " AND b.season = '%s'";
-        $args[] = $node->season;
+        $sql .= " AND b.season = :season";
+        $args[':season'] = $node->season;
       }
-      else if ($m === 'sport') {
-        $sql .= " AND b.sport = '%s'";
-        $args[] = $node->sport;
+      elseif ($m === 'sport') {
+        $sql .= " AND b.sport = :sport";
+        $args[':sport'] = $node->sport;
       }
-      else if ($m === 'division') {
-        $sql .= " AND b.division = '%s'";
-        $args[] = $node->division;
+      elseif ($m === 'division') {
+        $sql .= " AND b.division = :division";
+        $args[':division'] = $node->division;
       }
-      else if ($m === 'group') {
-        $sql .= " AND b.brgroup = '%s'";
-        $args[] = $node->brgroup;
+      elseif ($m === 'group') {
+        $sql .= " AND b.brgroup = :brgroup";
+        $args[':brgroup'] = $node->brgroup;
       }
     }
     // if criteria found, get matching brackets
-    if (count(args) > 0) {
+    if (count($args) > 0) {
       $tabs = array();
       $a = array();
       $result = db_query($sql, $args);
       // substitute into title
-      while ($row = db_fetch_object($result)) {
+      foreach ($result as $record) {
         $tmp = $title;
-        $tmp = str_replace('[season]', $row->season, $tmp);
-        $tmp = str_replace('[sport]', $row->sport, $tmp);
-        $tmp = str_replace('[division]', $row->division, $tmp);
-        $tmp = str_replace('[group]', $row->brgroup, $tmp);
+        $tmp = str_replace('[season]', $record->season, $tmp);
+        $tmp = str_replace('[sport]', $record->sport, $tmp);
+        $tmp = str_replace('[division]', $record->division, $tmp);
+        $tmp = str_replace('[group]', $record->brgroup, $tmp);
         $a[] = ltrim($tmp);
-        $tabs[] .= '<li' . ($row->nid == $node->nid ? ' class="active"' : '') . '>' . 
-          l(trim($tmp), 'node/' . $row->nid) . '</li>';
+        $tabs[] .= '<li' . ($record->nid == $node->nid ? ' class="active"' : '') . '>' . 
+          l(trim($tmp), 'node/' . $record->nid) . '</li>';
       }
       
       // sort by title
@@ -138,7 +140,7 @@ function bracket_tabs_settings() {
   return drupal_get_form('bracket_tabs_settings_form');
 }
 
-function bracket_tabs_settings_form() {
+function bracket_tabs_settings_form($form, $form_state) {
 
   $form = array();
 

@@ -8,42 +8,42 @@
  */
 
 // bracket image globals
-global $bracket_image_fontpath;
-global $bracket_image_font_file;
-global $bracket_image_font_bold_file;
-global $bracket_image_font_italic_file;
-global $bracket_image_font_bolditalic_file;
-global $bracket_image_font;
-global $bracket_image_font_bold;
-global $bracket_image_font_italic;
-global $bracket_image_font_bolditalic;
-global $bracket_image_font_xlarge;
-global $bracket_image_font_large;
-global $bracket_image_font_norm;
-global $bracket_image_font_small;
-global $bracket_image_font_xsmall;
+global $_bracket_image_fontpath;
+global $_bracket_image_font_file;
+global $_bracket_image_font_bold_file;
+global $_bracket_image_font_italic_file;
+global $_bracket_image_font_bolditalic_file;
+global $_bracket_image_font;
+global $_bracket_image_font_bold;
+global $_bracket_image_font_italic;
+global $_bracket_image_font_bolditalic;
+global $_bracket_image_font_xlarge;
+global $_bracket_image_font_large;
+global $_bracket_image_font_norm;
+global $_bracket_image_font_small;
+global $_bracket_image_font_xsmall;
 
 // allocated image colors
-global $bracket_image_bg_color;
-global $bracket_image_fg_color;
-global $bracket_image_bar_bg_color;
-global $bracket_image_bar_fg_color;
+global $_bracket_image_bg_color;
+global $_bracket_image_fg_color;
+global $_bracket_image_bar_bg_color;
+global $_bracket_image_bar_fg_color;
 
 // path to font files
-$bracket_image_fontpath = realpath(drupal_get_path('module', 'bracket') . '/fonts');
+$_bracket_image_fontpath = realpath(drupal_get_path('module', 'bracket') . '/fonts');
 
 // default image font files
-$bracket_image_font_file = 'LiberationSans-Regular.ttf';
-$bracket_image_font_bold_file = 'LiberationSans-Bold.ttf';
-$bracket_image_font_italic_file = 'LiberationSans-Italic.ttf';
-$bracket_image_font_bolditalic_file = 'LiberationSans-BoldItalic.ttf';
+$_bracket_image_font_file = 'LiberationSans-Regular.ttf';
+$_bracket_image_font_bold_file = 'LiberationSans-Bold.ttf';
+$_bracket_image_font_italic_file = 'LiberationSans-Italic.ttf';
+$_bracket_image_font_bolditalic_file = 'LiberationSans-BoldItalic.ttf';
 
 // default font sizes
-$bracket_image_font_xlarge = 12;
-$bracket_image_font_large = 9;
-$bracket_image_font_norm = 7;
-$bracket_image_font_small = 6.5;
-$bracket_image_font_xsmall = 6;
+$_bracket_image_font_xlarge = 12;
+$_bracket_image_font_large = 9;
+$_bracket_image_font_norm = 7;
+$_bracket_image_font_small = 6.5;
+$_bracket_image_font_xsmall = 6;
 
 // setup default font file paths
 bracket_image_setup_font_paths();
@@ -57,25 +57,25 @@ bracket_image_allocate_default_colors();
  */
 function bracket_image_allocate_default_colors() {
 
-  global $bracket_image_bg_color;
-  global $bracket_image_fg_color;
-  global $bracket_bg_color_default;
-  global $bracket_fg_color_default;
-  global $bracket_image_bar_bg_color;
-  global $bracket_image_bar_fg_color;
-  global $bracket_bar_bg_color_default;
-  global $bracket_bar_fg_color_default;
+  global $_bracket_image_bg_color;
+  global $_bracket_image_fg_color;
+  global $_bracket_bg_color_default;
+  global $_bracket_fg_color_default;
+  global $_bracket_image_bar_bg_color;
+  global $_bracket_image_bar_fg_color;
+  global $_bracket_bar_bg_color_default;
+  global $_bracket_bar_fg_color_default;
 
   $img = imagecreatetruecolor(10, 10);
 
-  $rgb = bracket_html2rgb($bracket_bg_color_default);
-  $bracket_image_bg_color = imagecolorallocate($img, $rgb[0], $rgb[1], $rgb[2]);
-  $rgb = bracket_html2rgb($bracket_fg_color_default);
-  $bracket_image_bar_fg_color = imagecolorallocate($img, $rgb[0], $rgb[1], $rgb[2]);
-  $rgb = bracket_html2rgb($bracket_bar_bg_color_default);
-  $bracket_image_bar_bg_color = imagecolorallocate($img, $rgb[0], $rgb[1], $rgb[2]);
-  $rgb = bracket_html2rgb($bracket_bar_fg_color_default);
-  $bracket_image_fg_color = imagecolorallocate($img, $rgb[0], $rgb[1], $rgb[2]);
+  $rgb = bracket_html2rgb($_bracket_bg_color_default);
+  $_bracket_image_bg_color = imagecolorallocate($img, $rgb[0], $rgb[1], $rgb[2]);
+  $rgb = bracket_html2rgb($_bracket_fg_color_default);
+  $_bracket_image_bar_fg_color = imagecolorallocate($img, $rgb[0], $rgb[1], $rgb[2]);
+  $rgb = bracket_html2rgb($_bracket_bar_bg_color_default);
+  $_bracket_image_bar_bg_color = imagecolorallocate($img, $rgb[0], $rgb[1], $rgb[2]);
+  $rgb = bracket_html2rgb($_bracket_bar_fg_color_default);
+  $_bracket_image_fg_color = imagecolorallocate($img, $rgb[0], $rgb[1], $rgb[2]);
 
   imagedestroy($img);
 }
@@ -90,21 +90,21 @@ function bracket_image_allocate_default_colors() {
  */
 function bracket_image_setup_colors($node, $img) {
 
-  global $bracket_image_bg_color;
-  global $bracket_image_fg_color;
-  global $bracket_bg_color_default;
-  global $bracket_fg_color_default;
+  global $_bracket_image_bg_color;
+  global $_bracket_image_fg_color;
+  global $_bracket_bg_color_default;
+  global $_bracket_fg_color_default;
 
   $color = $node->options['image_options']['bg_color'];
   if (bracket_validate_color($color)) {
     $rgb = bracket_html2rgb($color);
-    $bracket_image_bg_color = imagecolorallocate($img, $rgb[0], $rgb[1], $rgb[2]);
+    $_bracket_image_bg_color = imagecolorallocate($img, $rgb[0], $rgb[1], $rgb[2]);
   }
 
   $color = $node->options['image_options']['fg_color'];
   if (bracket_validate_color($color)) {
     $rgb = bracket_html2rgb($color);
-    $bracket_image_fg_color = imagecolorallocate($img, $rgb[0], $rgb[1], $rgb[2]);
+    $_bracket_image_fg_color = imagecolorallocate($img, $rgb[0], $rgb[1], $rgb[2]);
   }
 }
 
@@ -118,20 +118,20 @@ function bracket_image_setup_colors($node, $img) {
  */
 function bracket_image_setup_bar_colors($node, $img) {
 
-  global $bracket_image_bar_bg_color;
-  global $bracket_image_bar_fg_color;
-  global $bracket_bar_bg_color_default;
-  global $bracket_bar_fg_color_default;
+  global $_bracket_image_bar_bg_color;
+  global $_bracket_image_bar_fg_color;
+  global $_bracket_bar_bg_color_default;
+  global $_bracket_bar_fg_color_default;
 
   $color = $node->options['image_options']['bar_bg_color'];
   if (bracket_validate_color($color)) {
     $rgb = bracket_html2rgb($color);
-    $bracket_image_bar_bg_color = imagecolorallocate($img, $rgb[0], $rgb[1], $rgb[2]);
+    $_bracket_image_bar_bg_color = imagecolorallocate($img, $rgb[0], $rgb[1], $rgb[2]);
   }
   $color = $node->options['image_options']['bar_fg_color'];
   if (bracket_validate_color($color)) {
     $rgb = bracket_html2rgb($color);
-    $bracket_image_bar_fg_color = imagecolorallocate($img, $rgb[0], $rgb[1], $rgb[2]);
+    $_bracket_image_bar_fg_color = imagecolorallocate($img, $rgb[0], $rgb[1], $rgb[2]);
   }
 }
 
@@ -143,29 +143,29 @@ function bracket_image_setup_bar_colors($node, $img) {
  */
 function bracket_image_setup_fonts($node) {
 
-  global $bracket_image_font_file;
-  global $bracket_image_font_bold_file;
-  global $bracket_image_font_italic_file;
-  global $bracket_image_font_bolditalic_file;
+  global $_bracket_image_font_file;
+  global $_bracket_image_font_bold_file;
+  global $_bracket_image_font_italic_file;
+  global $_bracket_image_font_bolditalic_file;
 
   $font = $node->options['image_options']['image_fonts']['image_font'];
   if (trim($font) != '') {
-    $bracket_image_font_file = $font;
+    $_bracket_image_font_file = $font;
   }
 
   $font = $node->options['image_options']['image_fonts']['image_font_bold'];
   if (trim($font) != '') {
-    $bracket_image_font_bold_file = $font;
+    $_bracket_image_font_bold_file = $font;
   }
 
   $font = $node->options['image_options']['image_fonts']['image_font_italic'];
   if (trim($font) != '') {
-    $bracket_image_font_italic_file = $font;
+    $_bracket_image_font_italic_file = $font;
   }
 
   $font = $node->options['image_options']['image_fonts']['image_font_bolditalic'];
   if (trim($font) != '') {
-    $bracket_image_font_bolditalic_file = $font;
+    $_bracket_image_font_bolditalic_file = $font;
   }
 
   bracket_image_setup_font_paths();
@@ -177,20 +177,20 @@ function bracket_image_setup_fonts($node) {
  */
 function bracket_image_setup_font_paths() {
 
-  global $bracket_image_fontpath;
-  global $bracket_image_font_file;
-  global $bracket_image_font_bold_file;
-  global $bracket_image_font_italic_file;
-  global $bracket_image_font_bolditalic_file;
-  global $bracket_image_font;
-  global $bracket_image_font_bold;
-  global $bracket_image_font_italic;
-  global $bracket_image_font_bolditalic;
+  global $_bracket_image_fontpath;
+  global $_bracket_image_font_file;
+  global $_bracket_image_font_bold_file;
+  global $_bracket_image_font_italic_file;
+  global $_bracket_image_font_bolditalic_file;
+  global $_bracket_image_font;
+  global $_bracket_image_font_bold;
+  global $_bracket_image_font_italic;
+  global $_bracket_image_font_bolditalic;
 
-  $bracket_image_font = realpath($bracket_image_fontpath . '/' . $bracket_image_font_file);
-  $bracket_image_font_bold = realpath($bracket_image_fontpath . '/' . $bracket_image_font_bold_file);
-  $bracket_image_font_italic = realpath($bracket_image_fontpath . '/' . $bracket_image_font_italic_file);
-  $bracket_image_font_bolditalic = realpath($bracket_image_fontpath . '/' . $bracket_image_font_bolditalic_file);
+  $_bracket_image_font = realpath($_bracket_image_fontpath . '/' . $_bracket_image_font_file);
+  $_bracket_image_font_bold = realpath($_bracket_image_fontpath . '/' . $_bracket_image_font_bold_file);
+  $_bracket_image_font_italic = realpath($_bracket_image_fontpath . '/' . $_bracket_image_font_italic_file);
+  $_bracket_image_font_bolditalic = realpath($_bracket_image_fontpath . '/' . $_bracket_image_font_bolditalic_file);
 }
 
 /**
@@ -263,19 +263,19 @@ function bracket_image_drawbracketset($img, $node, $lr, $top, $width, $height, $
  */
 function bracket_image_drawcell($img, $lr, $top, $width, $height, $match, $orient='L', $comments=TRUE, $matchid=FALSE, $dashed=FALSE) {
 
-  global $bracket_image_fg_color;
-  global $bracket_image_font;
-  global $bracket_image_font_norm;
-  global $bracket_image_font_small;
-  global $bracket_image_font_xsmall;
+  global $_bracket_image_fg_color;
+  global $_bracket_image_font;
+  global $_bracket_image_font_norm;
+  global $_bracket_image_font_small;
+  global $_bracket_image_font_xsmall;
 
   // font cell width and height
-  $bbox = imagettfbbox($bracket_image_font_norm, 0, $bracket_image_font, 'Q');
+  $bbox = imagettfbbox($_bracket_image_font_norm, 0, $_bracket_image_font, 'Q');
   $h = $bbox[1] - $bbox[7];
   $w = $bbox[2] - $bbox[0];
 
   // font cell width and height
-  $bbox = imagettfbbox($bracket_image_font_small, 0, $bracket_image_font, 'Q');
+  $bbox = imagettfbbox($_bracket_image_font_small, 0, $_bracket_image_font, 'Q');
   $hs = $bbox[1] - $bbox[7];
   $ws = $bbox[2] - $bbox[0];
 
@@ -285,25 +285,25 @@ function bracket_image_drawcell($img, $lr, $top, $width, $height, $match, $orien
 
   // draw bracket cell lines
   if ($orient == 'L') {
-    imageline($img, $lr, $top, $lr+$width, $top, $bracket_image_fg_color);
+    imageline($img, $lr, $top, $lr+$width, $top, $_bracket_image_fg_color);
     if ($dashed) {
-      bracket_image_imagedashedline($img, $lr+$width, $top, $lr+$width, $top+$height, $bracket_image_fg_color);
-      bracket_image_imagedashedline($img, $lr, $top+$height, $lr+$width, $top+$height, $bracket_image_fg_color);
+      bracket_image_imagedashedline($img, $lr+$width, $top, $lr+$width, $top+$height, $_bracket_image_fg_color);
+      bracket_image_imagedashedline($img, $lr, $top+$height, $lr+$width, $top+$height, $_bracket_image_fg_color);
     }
     else {
-      imageline($img, $lr+$width, $top, $lr+$width, $top+$height, $bracket_image_fg_color);
-      imageline($img, $lr, $top+$height, $lr+$width, $top+$height, $bracket_image_fg_color);
+      imageline($img, $lr+$width, $top, $lr+$width, $top+$height, $_bracket_image_fg_color);
+      imageline($img, $lr, $top+$height, $lr+$width, $top+$height, $_bracket_image_fg_color);
     }
   }
   else {
-    imageline($img, $lr, $top, $lr-$width, $top, $bracket_image_fg_color);
+    imageline($img, $lr, $top, $lr-$width, $top, $_bracket_image_fg_color);
     if ($dashed) {
-      bracket_image_imagedashedline($img, $lr-$width, $top, $lr-$width, $top+$height, $bracket_image_fg_color);
-      bracket_image_imagedashedline($img, $lr, $top+$height, $lr-$width, $top+$height, $bracket_image_fg_color);
+      bracket_image_imagedashedline($img, $lr-$width, $top, $lr-$width, $top+$height, $_bracket_image_fg_color);
+      bracket_image_imagedashedline($img, $lr, $top+$height, $lr-$width, $top+$height, $_bracket_image_fg_color);
     }
     else {
-      imageline($img, $lr-$width, $top, $lr-$width, $top+$height, $bracket_image_fg_color);
-      imageline($img, $lr, $top+$height, $lr-$width, $top+$height, $bracket_image_fg_color);
+      imageline($img, $lr-$width, $top, $lr-$width, $top+$height, $_bracket_image_fg_color);
+      imageline($img, $lr, $top+$height, $lr-$width, $top+$height, $_bracket_image_fg_color);
     }
   }
 
@@ -318,20 +318,20 @@ function bracket_image_drawcell($img, $lr, $top, $width, $height, $match, $orien
   }
 
   // draw top competitor
-  bracket_image_imagetextalign($img, $bracket_image_font_norm, $lrx, $over, $width, $match->cname[1], $bracket_image_fg_color, $orient);
-  bracket_image_imagetextalign($img, $bracket_image_font_small, $lrx, $under, $width, $match->comp_comment[1], $bracket_image_fg_color, $orient);
+  bracket_image_imagetextalign($img, $_bracket_image_font_norm, $lrx, $over, $width, $match->cname[1], $_bracket_image_fg_color, $orient);
+  bracket_image_imagetextalign($img, $_bracket_image_font_small, $lrx, $under, $width, $match->comp_comment[1], $_bracket_image_fg_color, $orient);
 
   // draw top competitor score
   if ($orient == 'L') {
-    bracket_image_imagetextalign($img, $bracket_image_font_small, $lr + $width - ($w * 2) - 1, $over, $w*2, $match->score[1], $bracket_image_fg_color, 'R');
+    bracket_image_imagetextalign($img, $_bracket_image_font_small, $lr + $width - ($w * 2) - 1, $over, $w*2, $match->score[1], $_bracket_image_fg_color, 'R');
     if ($match->home[1]) {
-      bracket_image_imagetextalign($img, $bracket_image_font_small, $lr + $width - $w - 1, $under, $w, 'H', $bracket_image_fg_color, 'R');
+      bracket_image_imagetextalign($img, $_bracket_image_font_small, $lr + $width - $w - 1, $under, $w, 'H', $_bracket_image_fg_color, 'R');
     }
   }
   else {
-    bracket_image_imagetextalign($img, $bracket_image_font_small, $lrx + 2, $over, $w * 2, $match->score[1], $bracket_image_fg_color, 'L');
+    bracket_image_imagetextalign($img, $_bracket_image_font_small, $lrx + 2, $over, $w * 2, $match->score[1], $_bracket_image_fg_color, 'L');
     if ($match->home[1]) {
-      bracket_image_imagetextalign($img, $bracket_image_font_small, $lrx + 2, $under, $w, 'H', $bracket_image_fg_color, 'L');
+      bracket_image_imagetextalign($img, $_bracket_image_font_small, $lrx + 2, $under, $w, 'H', $_bracket_image_fg_color, 'L');
     }
   }
 
@@ -355,12 +355,12 @@ function bracket_image_drawcell($img, $lr, $top, $width, $height, $match, $orien
 
     // draw comments
     if ($match->comment[1] != '') {
-      bracket_image_imagetextalign($img, $bracket_image_font_small, $clrx, $ct, $width-5, $match->comment[1], $bracket_image_fg_color, $orient);
+      bracket_image_imagetextalign($img, $_bracket_image_font_small, $clrx, $ct, $width-5, $match->comment[1], $_bracket_image_fg_color, $orient);
       $ct += $hs;
     }
 
     if ($match->comment[2] != '') {
-      bracket_image_imagetextalign($img, $bracket_image_font_small, $clrx, $ct, $width-5, $match->comment[2], $bracket_image_fg_color, $orient);
+      bracket_image_imagetextalign($img, $_bracket_image_font_small, $clrx, $ct, $width-5, $match->comment[2], $_bracket_image_fg_color, $orient);
     }
   }
 
@@ -375,7 +375,7 @@ function bracket_image_drawcell($img, $lr, $top, $width, $height, $match, $orien
     }
     // match number top position
     $ct = $top + ($height / 2);
-    bracket_image_imageTextAlign($img, $bracket_image_font_xsmall, $clrx, $ct, $w, '#' . $match->id, $bracket_image_fg_color, $co);
+    bracket_image_imageTextAlign($img, $_bracket_image_font_xsmall, $clrx, $ct, $w, '#' . $match->id, $_bracket_image_fg_color, $co);
   }
 
   // text coordinates
@@ -383,20 +383,20 @@ function bracket_image_drawcell($img, $lr, $top, $width, $height, $match, $orien
   $under = $top + $height + $hs - 1;
 
   // draw bottom competitor
-  bracket_image_imagetextalign($img, $bracket_image_font_norm, $lrx, $over, $width, $match->cname[2], $bracket_image_fg_color, $orient);
-  bracket_image_imagetextalign($img, $bracket_image_font_small, $lrx, $under, $width, $match->comp_comment[2], $bracket_image_fg_color, $orient);
+  bracket_image_imagetextalign($img, $_bracket_image_font_norm, $lrx, $over, $width, $match->cname[2], $_bracket_image_fg_color, $orient);
+  bracket_image_imagetextalign($img, $_bracket_image_font_small, $lrx, $under, $width, $match->comp_comment[2], $_bracket_image_fg_color, $orient);
 
   // draw bottom competitor score
   if ($orient == 'L') {
-    bracket_image_imagetextalign($img, $bracket_image_font_small, $lr + $width - ($w * 2) - 1, $over, $w*2, $match->score[2], $bracket_image_fg_color, 'R');
+    bracket_image_imagetextalign($img, $_bracket_image_font_small, $lr + $width - ($w * 2) - 1, $over, $w*2, $match->score[2], $_bracket_image_fg_color, 'R');
     if ($match->home[2]) {
-        bracket_image_imagetextalign($img, $bracket_image_font_small, $lr + $width - $w - 1, $under, $w, 'H', $bracket_image_fg_color, 'R');
+        bracket_image_imagetextalign($img, $_bracket_image_font_small, $lr + $width - $w - 1, $under, $w, 'H', $_bracket_image_fg_color, 'R');
     }
   }
   else {
-    bracket_image_imagetextalign($img, $bracket_image_font_small, $lrx + 2, $over, ($w * 2), $match->score[2], $bracket_image_fg_color, 'L');
+    bracket_image_imagetextalign($img, $_bracket_image_font_small, $lrx + 2, $over, ($w * 2), $match->score[2], $_bracket_image_fg_color, 'L');
     if ($match->home[2]) {
-      bracket_image_imagetextalign($img, $bracket_image_font_small, $lrx + 2, $under, $w, 'H', $bracket_image_fg_color, 'L');
+      bracket_image_imagetextalign($img, $_bracket_image_font_small, $lrx + 2, $under, $w, 'H', $_bracket_image_fg_color, 'L');
     }
   }
 }
@@ -423,7 +423,7 @@ function bracket_image_drawcell($img, $lr, $top, $width, $height, $match, $orien
  */
 function bracket_image_imagetextalign($img, $fontsize, $x, $y, $w, $text, $color, $align='L') {
 
-  global $bracket_image_font;
+  global $_bracket_image_font;
 
   if ($text != '') {
 
@@ -432,18 +432,18 @@ function bracket_image_imagetextalign($img, $fontsize, $x, $y, $w, $text, $color
     $w = round($w, 0);
 
     // calculate width of string
-    $bbox = imagettfbbox($fontsize, 0, $bracket_image_font, $text);
+    $bbox = imagettfbbox($fontsize, 0, $_bracket_image_font, $text);
     $textwidth = $bbox[2] - $bbox[0];
 
     // plot text based on alignment
     if ($align == 'L') {
-      imagettftext($img, $fontsize, 0, $x, $y, $color, $bracket_image_font, $text);
+      imagettftext($img, $fontsize, 0, $x, $y, $color, $_bracket_image_font, $text);
     }
     elseif ($align == 'R') {
-      imagettftext($img, $fontsize, 0, ($x + $w - $textwidth - 2), $y, $color, $bracket_image_font, $text);
+      imagettftext($img, $fontsize, 0, ($x + $w - $textwidth - 2), $y, $color, $_bracket_image_font, $text);
     }
     else {
-      imagettftext($img, $fontsize, 0, ($x + ($w / 2) - ($textwidth / 2)), $y, $color, $bracket_image_font, $text);
+      imagettftext($img, $fontsize, 0, ($x + ($w / 2) - ($textwidth / 2)), $y, $color, $_bracket_image_font, $text);
     }
   }
 }
@@ -468,7 +468,7 @@ function bracket_image_imagetextalign($img, $fontsize, $x, $y, $w, $text, $color
 function bracket_image_imagewordwrapbbox($text, $width, $fontsize = 10, $font = '') {
 
   $words = explode(' ', $text);
-  $lines = array ();
+  $lines = array();
   $line = '';
 
   foreach ($words as $word ) {
@@ -487,7 +487,7 @@ function bracket_image_imagewordwrapbbox($text, $width, $fontsize = 10, $font = 
     $box = imagettfbbox($fontsize, 0, $font, $line . $word);
     $size = $box[4] - $box[0];
     if ($size > $width ) {
-      $lines[] = trim ($line);
+      $lines[] = trim($line);
       $line = '';
     }
     $line .= $word . ' ';
@@ -526,9 +526,9 @@ function bracket_image_imagewordwrapbbox($text, $width, $fontsize = 10, $font = 
  */
 function bracket_image_imagetextwordwrap($img, $fontsize, $x, $y, $w, $text, $color, $align='L') {
 
-  global $bracket_image_font;
+  global $_bracket_image_font;
 
-  $data = bracket_image_imagewordwrapbbox($text, $w, $fontsize, $bracket_image_font);
+  $data = bracket_image_imagewordwrapbbox($text, $w, $fontsize, $_bracket_image_font);
 
   foreach ($data[1] as $key => $line ) {
     $locx = $x;
@@ -636,6 +636,42 @@ function bracket_image_output_png($img) {
   unlink($tmp);
   // return output
   return $png;
+}
+
+/**
+ * Draw a result cell on the given image
+ *
+ * A result cell is a single match result result
+ *
+ * @param $img
+ *   the img handle
+ * @param $lr
+ *   the left or right edge (x-coord) of the result cell (depending on orientation)
+ * @param $top
+ *   the top edge (y-coord) of the result set
+ * @param $width
+ *   the width of the result set
+ * @param $result
+ *   the result to draw
+ * @param $orient
+ *   the orientation of the bracket set - 'L'=left or 'R'=right
+ */
+function bracket_image_draw_result($img, $lr, $top, $width, $result, $orient='L') {
+
+  global $_bracket_image_fg_color;
+  global $_bracket_image_font_norm;
+
+  if ($orient == 'L') {
+    $lrx = $lr + 2;
+  }
+  else {
+    $lrx = $lr - $width;
+  }
+
+  imageline($img, $lrx, $top, $lrx+$width, $top, $bracket_image_fg_color);
+  bracket_image_imagetextalign($img, $_bracket_image_font_norm, $lrx, $top-5, $width, $result->cname, $_bracket_image_fg_color, $orient);
+  bracket_image_imagetextalign($img, $_bracket_image_font_norm, $lrx, $top+10, $width, $result->comment, $_bracket_image_fg_color, $orient);
+
 }
 
 

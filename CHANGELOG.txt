@@ -1,9 +1,9 @@
 
-Bracket 6.x Version Changelog
+Bracket 7.x Version Changelog
 ------------------------------
 
-6.x-1.0
+7.x-1.0
 --------
-- Initial version for 6.x API
+- Initial version for 7.x API
 
 

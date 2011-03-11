@@ -23,7 +23,7 @@ function bracket_design_list() {
 
     $list = file_scan_directory($dir, '/\.inc$/');
 
-    foreach($list as $file) {
+    foreach ($list as $file) {
         $desc = bracket_design_description($file->name);
         if ($desc != '')
             $dlist[$file->name] = $desc;

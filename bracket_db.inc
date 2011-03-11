@@ -17,34 +17,74 @@
  */
 function bracket_db_load($node) {
 
+  $bracket = new Bracket();
+  
   // try to load from the db
   $result = db_query(
     "SELECT * FROM {bracket} WHERE nid = :nid", 
-    array(':nid' => $node->nid), 
-    array('fetch' => 'Bracket')
+    array(':nid' => $node->nid)
   );
-  if ($bracket = $result->fetchObject()) {
+  if ($record = $result->fetchObject()) {
+
+    // copy info
+    $bracket->subtitle = $record->subtitle;
+    $bracket->comments = $record->comments;
+    $bracket->sport = $record->sport;
+    $bracket->division = $record->division;
+    $bracket->season = $record->season;
+    $bracket->brgroup = $record->brgroup;
+    $bracket->footer = $record->footer;
+    $bracket->logopath = $record->logopath;
+    $bracket->sponsorlogopath = $record->sponsorlogopath;
+    $bracket->design = $record->design;
+    $bracket->options = unserialize($record->options);
+
+    // convert options to new format if needed    
+    if (!isset($bracket->options['image_options'])) {
+      $bracket->options['image_options']['image_fonts'] = $bracket->options['image_fonts'];
+      $bracket->options['image_options']['bg_color'] = $bracket->options['bg_color'];
+      $bracket->options['image_options']['fg_color'] = $bracket->options['fg_color'];
+      $bracket->options['image_options']['bar_bg_color'] = $bracket->options['bar_bg_color'];
+      $bracket->options['image_options']['bar_fg_color'] = $bracket->options['bar_fg_color'];
+      $bracket->options['image_options']['show_bracket_bar'] = $bracket->options['show_bracket_bar'];
+      $bracket->options['image_options']['pdf_font'] = $bracket->options['pdf_font'];
+      unset($bracket->options['image_fonts']);
+      unset($bracket->options['bg_color']);
+      unset($bracket->options['fg_color']);
+      unset($bracket->options['bar_bg_color']);
+      unset($bracket->options['bar_fg_color']);
+      unset($bracket->options['show_bracket_bar']);
+      unset($bracket->options['pdf_font']);
+    }
 
     // load competitors
     $result = db_query(
       "SELECT * FROM {bracket_comp} WHERE nid = :nid ORDER BY id", 
-      array(':nid' => $node->nid),
-      array('fetch' =>'Bracket_Competitor')
+      array(':nid' => $node->nid)
     );
-    while($c = $result->fetchObject()) {
-      $bracket->comp[$c->id] = $c;
+    while($record = $result->fetchObject()) {
+      $c = new Bracket_Competitor();
+      $c->name = $record->name;
+      $c->seedin = $record->seedin;
+      $bracket->comp[$record->id] = $c;
     }
 
     // load rounds
     $result = db_query(
       "SELECT * FROM {bracket_round} WHERE nid = :nid ORDER BY id", 
-      array(':nid' => $node->nid),
-      array('fetch' => 'Bracket_Round')
+      array(':nid' => $node->nid)
     );
-    while($r = $result->fetchObject()) {
+    while($record = $result->fetchObject()) {
 
-      $bracket->round[$row->id] = $r;
-
+      // add round
+      $r = new Bracket_Round();
+      $r->id = $record->id;
+      $r->name = $record->round;
+      $r->loser = $record->loser;
+      $r->first = $record->first;
+      $r->comment = $record->comment;
+      $bracket->round[$record->id] = $r;
+      
       // load matches for this round
       $result2 = db_query(
         "SELECT m.*, r.loser
@@ -52,7 +92,7 @@ function bracket_db_load($node) {
          JOIN {bracket_round} r on r.id = m.roundid
          WHERE m.nid = :nid AND m.roundid = :roundid
          ORDER BY m.seq", 
-        array(':nid' => $node->nid, ':roundid' => $row->id)
+        array(':nid' => $node->nid, ':roundid' => $record->id)
       );
       while($record2 = $result2->fetchObject()) {
 
@@ -92,18 +132,18 @@ function bracket_db_load($node) {
     // load results
     $result = db_query(
       "SELECT * FROM {bracket_result} WHERE nid = :nid ORDER BY id", 
-      array(':nid' => $node->nid),
-      array('fetch' => 'Bracket_Result'));
-    while($s = $result->fetchObject()) {
+      array(':nid' => $node->nid)
+    );
+    while($record = $result->fetchObject()) {
+      $s = new Bracket_Result();
+      $s->compid = $record->compid;
       if ($s->compid > 0) {
         $s->cname = $bracket->comp[$s->compid]->name;
       }
-      $bracket->result[$row->id] = $s;
+      $s->comment = $record->comment;
+      $s->seedout = $record->seedout;
+      $bracket->result[$record->id] = $s;
     }
-  }
-  else {
-    // make an empty bracket if none found
-    $bracket = new Bracket();
   }
 
   // load the design if set
@@ -166,7 +206,7 @@ function bracket_db_update($node) {
       'sponsorlogopath' => $node->sponsorlogopath,
       'options' => serialize($node->options),
     ))
-    ->condition('id', $node->nid)
+    ->condition('nid', $node->nid)
     ->execute();
 }
 
@@ -182,7 +222,7 @@ function bracket_db_update_tree($node) {
   bracket_db_delete_tree($node);
 
   // insert competitors
-  for($i=1; $i<=count($node->comp); $i++) {
+  for ($i=1; $i<=count($node->comp); $i++) {
     $c = $node->comp[$i];
 
     db_insert('bracket_comp')
@@ -196,7 +236,7 @@ function bracket_db_update_tree($node) {
   }
 
   // insert rounds
-  for($i=1; $i<=count($node->round); $i++) {
+  for ($i=1; $i<=count($node->round); $i++) {
     $r = $node->round[$i];
 
     db_insert('bracket_round')
@@ -204,14 +244,14 @@ function bracket_db_update_tree($node) {
         'nid' => $node->nid,
         'id' => $i,
         'round' => $r->name,
-        'loser' => $r->loser,
-        'first' => $r->first,
+        'loser' => $r->loser ? 1 : 0,
+        'first' => $r->first ? 1 : 0,
         'comment' => $r->comment,
     ))
     ->execute();
 
     // insert matches for this round
-    for($j=1; $j<=count($r->match); $j++) {
+    for ($j=1; $j<=count($r->match); $j++) {
       $m = $r->match[$j];
 
     db_insert('bracket_match')
@@ -222,13 +262,13 @@ function bracket_db_update_tree($node) {
         'seq' => $j,
         'compid1' => $m->compid[1],
         'score1' => $m->score[1],
-        'home1' => $m->home[1],
-        'win1' => $m->win[1],
+        'home1' => $m->home[1] ? 1 : 0,
+        'win1' => $m->win[1] ? 1 : 0,
         'comp1_comment' => $m->comp_comment[1],
         'compid2' => $m->compid[2],
         'score2' => $m->score[2],
-        'home2' => $m->home[2],
-        'win2' => $m->win[2],
+        'home2' => $m->home[2] ? 1 : 0,
+        'win2' => $m->win[2] ? 1 : 0,
         'comp2_comment' => $m->comp_comment[2],
         'match_comment1' => $m->comment[1],
         'match_comment2' => $m->comment[2],
@@ -244,7 +284,7 @@ function bracket_db_update_tree($node) {
     }
   }
   // insert results
-  for($i=1; $i<=count($node->result); $i++) {
+  for ($i=1; $i<=count($node->result); $i++) {
     $s = $node->result[$i];
 
     db_insert('bracket_result')

@@ -1,6 +1,14 @@
 <?php
 
 /**
+ * @file
+ * This module contains the functions required to install the
+ * Tournament Bracket module.
+ *
+ * @author Jim Bullington <jimb@jrbcs.com>
+ */
+
+/**
  * Implementation of hook_install().
  */
 function bracket_install() {

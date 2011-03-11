@@ -1,5 +1,5 @@
-
 name = Bracket
 description = The Bracket module creates and displays tournament brackets
 core = 7.x
 files[] = bracket_class.inc
+configure = admin/config/content/bracket

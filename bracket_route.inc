@@ -15,7 +15,7 @@ function bracket_route_edit($node) {
   return drupal_get_form('bracket_route_edit_form', $node);
 }
 
-function bracket_route_edit_form($form_state, $node) {
+function bracket_route_edit_form($form, $form_state, $node) {
 
   drupal_set_title(t('Routing') . ' - ' . check_plain($node->title));
 
@@ -23,13 +23,13 @@ function bracket_route_edit_form($form_state, $node) {
 
   // save the nodeid
   $form['head']['nid'] = array(
-    '#type' => 'hidden',
+    '#type' => 'value',
     '#value' => $node->nid
   );
 
   $form['head']['help'] = array(
     '#type' => 'markup',
-    '#value' => t('Use this form to change match ids and competitor routing through the bracket.
+    '#markup' => t('Use this form to change match ids and competitor routing through the bracket.
                    <strong>Use With Caution</strong> - in most cases this will not be necessary, especially for single-elimination brackets.
                    The form has been provided since some customization may be required for double-elimination brackets.')
   );
@@ -66,7 +66,7 @@ function bracket_route_edit_form($form_state, $node) {
     // insert the loser matches
     $lfinalrnd = bracket_round_last_loser_round($node);
     for ($i=$lrnd; $i<=$lfinalrnd; $i++) {
-      bracket_route_edit_form_matches($node->round[$i], $form, $options, $comp_opt, false);
+      bracket_route_edit_form_matches($node->round[$i], $form, $options, $comp_opt, FALSE);
     }
   }
 
@@ -111,13 +111,11 @@ function bracket_route_edit_form_matches($r, &$form, $options, $comp_opt, $loser
         '#type' => 'select',
         '#options' => $options,
         '#default_value' => $m->winner_match,
-        '#theme' => 'bracket_route_select',
       );
       $form[$rtype][$round][$match]['winner_comp'] = array(
         '#type' => 'select',
         '#options' => $comp_opt,
         '#default_value' => $m->winner_comp,
-        '#theme' => 'bracket_route_select',
       );
 
       if ($loserto) {
@@ -125,13 +123,11 @@ function bracket_route_edit_form_matches($r, &$form, $options, $comp_opt, $loser
           '#type' => 'select',
           '#options' => $options,
           '#default_value' => $m->loser_match,
-          '#theme' => 'bracket_route_select',
         );
         $form[$rtype][$round][$match]['loser_comp'] = array(
           '#type' => 'select',
           '#options' => $comp_opt,
           '#default_value' => $m->loser_comp,
-          '#theme' => 'bracket_route_select',
         );
       }   // end - if ($loserto)...
     }   // end - if ($isfinal)...
@@ -140,37 +136,44 @@ function bracket_route_edit_form_matches($r, &$form, $options, $comp_opt, $loser
     if ($m->winner_result > 0) {
       $form[$rtype][$round][$match]['winner_result'] = array(
         '#type' => 'markup',
-        '#value' => t('Winner Result: ') . $m->winner_result
+        '#markup' => t('Winner Result: ') . $m->winner_result
       );
     }
 
     if ($m->loser_result > 0) {
       $form[$rtype][$round][$match]['loser_result'] = array(
         '#type' => 'markup',
-        '#value' => t('Loser Result: ') . $m->loser_result
+        '#markup' => t('Loser Result: ') . $m->loser_result
       );
     }
 
     if ($m->win_use_result > 0) {
       $form[$rtype][$round][$match]['win_use_result'] = array(
         '#type' => 'markup',
-        '#value' => t('Win Use Result: ') . $m->win_use_result
+        '#markup' => t('Win Use Result: ') . $m->win_use_result
       );
       $form[$rtype][$round][$match]['win_use_result_comment'] = array(
         '#type' => 'markup',
-        '#value' => t(' (If this competitor wins, result is used, not match routing - no next match)')
+        '#markup' => t(' (If this competitor wins, result is used, not match routing - no next match)')
       );
     }
 
   }   // end - for($i=1; $i<=count($r->match); $i++)...
 }
 
-function theme_bracket_route_edit_form($form) {
+function theme_bracket_route_edit_form($variables) {
+
+  $form = $variables['form'];
 
   $output = drupal_render($form['head']);
 
   $wr = element_children($form['winner']);
-  $lr = element_children($form['loser']);
+  if (isset($form['loser'])) {
+    $lr = element_children($form['loser']);
+  }
+  else {
+    $lr = array();
+  }
 
   // if loser matches, generate header for winner matches
   if (count($lr) > 0) {
@@ -275,7 +278,7 @@ function theme_bracket_route_edit_form($form) {
 
     // Create the table inside the fieldset
     $form[$rtype][$round]['table'] = array(
-      '#value' => $table
+      '#markup' => $table
     );
 
     $output .= "\n<!--round_begin-->\n<td>";
@@ -291,7 +294,7 @@ function theme_bracket_route_edit_form($form) {
     $rtype = 'loser';
 
     // header for loser matches
-    $output .= '<hr /><p><h2>' .t('Loser Matches') . '</h2></p>';
+    $output .= '<hr /><p><h2>' . t('Loser Matches') . '</h2></p>';
 
     $output .= "\n<!--loser_table_begin-->\n<table><tr>";
 
@@ -379,41 +382,7 @@ function theme_bracket_route_edit_form($form) {
 
   }   // end - if (count($lr) > 0)...
 
-  $output .= drupal_render($form);
-
-  return $output;
-}
-
-// custom select theme callback
-function theme_bracket_route_select($element) {
-
-  $select = '';
-  $size = $element['#size'] ? ' size="' . $element['#size'] . '"' : '';
-  _form_set_class($element, array('form-select'));
-  return theme_bracket_route_form_element($element['#title'], '<select name="'. $element['#name'] .''. ($element['#multiple'] ? '[]' : '') .'"'. ($element['#multiple'] ? ' multiple="multiple" ' : '') . drupal_attributes($element['#attributes']) .' id="' . $element['#id'] .'" '. $size .'>'. form_select_options($element) .'</select>', $element['#description'], $element['#id'], $element['#required'], form_get_error($element));
-}
-
-// custom form_element theme function
-function theme_bracket_route_form_element($title, $value, $description = NULL, $id = NULL, $required = FALSE, $error = FALSE) {
-
-  $output = '';
-  
-  $required = $required ? '<span class="form-required" title="'. t('This field is required.') .'">*</span>' : '';
-
-  if ($title) {
-    if ($id) {
-      $output .= ' <label for="'. form_clean_id($id) .'">'. t('%title: %required', array('%title' => filter_xss_admin($title), '%required' => $required)) . '</label>' . "\n";
-    }
-    else {
-      $output .= ' <label>'. t('%title: %required', array('%title' => filter_xss_admin($title), '%required' => $required)) . '</label>' . "\n";
-    }
-  }
-
-  $output .= ' ' . $value . "\n";
-
-  if ($description) {
-    $output .= ' <div class="description">'. $description . '</div>' . "\n";
-  }
+  $output .= drupal_render_children($form);
 
   return $output;
 }
@@ -431,7 +400,7 @@ function bracket_route_edit_form_validate($form_id, &$form_state) {
     $round = 'round' . $i;
     $r = $node->round[$i];
 
-    for($j=1; $j<=count($r->match); $j++) {
+    for ($j=1; $j<=count($r->match); $j++) {
 
       $match = 'match' . $j;
       $m = $r->match[$j];
@@ -455,15 +424,15 @@ function bracket_route_edit_form_validate($form_id, &$form_state) {
     $round = 'round' . $i;
     $r = $node->round[$i];
 
-    for($j=1; $j<=count($r->match); $j++) {
+    for ($j=1; $j<=count($r->match); $j++) {
 
       $match = 'match' . $j;
       $m = $r->match[$j];
 
-      $wm = $form_state['values'][$round][$match]['winner_match'];
-      $wc = $form_state['values'][$round][$match]['winner_comp'];
-      $lm = $form_state['values'][$round][$match]['loser_match'];
-      $lc = $form_state['values'][$round][$match]['loser_comp'];
+      $wm = isset($form_state['values'][$round][$match]['winner_match']) ? $form_state['values'][$round][$match]['winner_match'] : 0;
+      $wc = isset($form_state['values'][$round][$match]['winner_comp']) ? $form_state['values'][$round][$match]['winner_comp'] : 0;
+      $lm = isset($form_state['values'][$round][$match]['loser_match']) ? $form_state['values'][$round][$match]['loser_match'] : 0;
+      $lc = isset($form_state['values'][$round][$match]['loser_comp']) ? $form_state['values'][$round][$match]['loser_comp'] : 0;
 
       if ($wm > 0 && $wc == 0) {
         form_set_error($round .']['. $match . '][winner_comp',
@@ -501,7 +470,7 @@ function bracket_route_edit_form_submit($form_id, &$form_state) {
     $round = 'round' . $i;
     $r = $node->round[$i];
 
-    for($j=1; $j<=count($r->match); $j++) {
+    for ($j=1; $j<=count($r->match); $j++) {
 
       $match = 'match' . $j;
       $m = $r->match[$j];
@@ -510,10 +479,10 @@ function bracket_route_edit_form_submit($form_id, &$form_state) {
       $m->id = $form_state['values'][$round][$match]['matchid'];
 
       // update the routing
-      $m->winner_match = $form_state['values'][$round][$match]['winner_match'];
-      $m->winner_comp = $form_state['values'][$round][$match]['winner_comp'];
-      $m->loser_match = $form_state['values'][$round][$match]['loser_match'];
-      $m->loser_comp = $form_state['values'][$round][$match]['loser_comp'];
+      $m->winner_match = isset($form_state['values'][$round][$match]['winner_match']) ? $form_state['values'][$round][$match]['winner_match'] : 0;
+      $m->winner_comp = isset($form_state['values'][$round][$match]['winner_comp']) ? $form_state['values'][$round][$match]['winner_comp'] : 0;
+      $m->loser_match = isset($form_state['values'][$round][$match]['loser_match']) ? $form_state['values'][$round][$match]['loser_match'] : 0;
+      $m->loser_comp = isset($form_state['values'][$round][$match]['loser_comp']) ? $form_state['values'][$round][$match]['loser_comp'] : 0;
      }
   }
 

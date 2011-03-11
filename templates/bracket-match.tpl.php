@@ -1,5 +1,4 @@
 <?php
-// $Id:
 
 /**
  * @file
@@ -14,7 +13,7 @@
 ?>
 <div id="round-<?php print $round_index ?>-match-<?php print $match_index ?>" class="bracket-match">
   <div id="round-<?php print $round_index ?>-match-<?php print $match_index ?>-competitor-1-block" class="bracket-match-competitor-block">
-    <div id="round-<?php print $round_index ?>-match-<?php print $match_index ?>-competitor-1" class="bracket-match-competitor bracket-match-competitor-<?php print $orientation ?>"><?php print $node->round[$round_index]->match[$match_index]->cname[1] ? filter_xss_admin($node->round[$round_index]->match[$match_index]->cname[1]) : '&nbsp;' ?></div>
+    <div id="round-<?php print $round_index ?>-match-<?php print $match_index ?>-competitor-1" class="bracket-match-competitor bracket-match-competitor-<?php print $orientation ?><?php if ($node->round[$round_index]->match[$match_index]->win[1]) print ' bracket-match-winner' ?>"><?php print $node->round[$round_index]->match[$match_index]->cname[1] ? filter_xss_admin($node->round[$round_index]->match[$match_index]->cname[1]) : '&nbsp;' ?></div>
     <div id="round-<?php print $round_index ?>-match-<?php print $match_index ?>-competitor-1-score" class="bracket-match-score bracket-match-score-<?php print $orientation ?>"><?php print filter_xss_admin($node->round[$round_index]->match[$match_index]->score[1]) ?></div>
   </div>
   <div id="round-<?php print $round_index ?>-match-<?php print $match_index ?>-block" class="bracket-match-block bracket-match-block-<?php print $orientation ?> round-<?php print $round_index ?>-match">
@@ -30,7 +29,7 @@
     <div id="round-<?php print $round_index ?>-match-<?php print $match_index ?>-id" class="bracket-match-id bracket-match-id-<?php print $orientation ?>">#<?php print $node->round[$round_index]->match[$match_index]->id ?></div>
     <?php } ?>
     <div id="round-<?php print $round_index ?>-match-<?php print $match_index ?>-competitor-2-block" class="bracket-match-competitor-block bracket-match-bottom-competitor-block">
-      <div id="round-<?php print $round_index ?>-match-<?php print $match_index ?>-competitor-2" class="bracket-match-competitor bracket-match-competitor-<?php print $orientation ?>"><?php print $node->round[$round_index]->match[$match_index]->cname[2] ? filter_xss_admin($node->round[$round_index]->match[$match_index]->cname[2]) : '&nbsp;' ?></div>
+      <div id="round-<?php print $round_index ?>-match-<?php print $match_index ?>-competitor-2" class="bracket-match-competitor bracket-match-competitor-<?php print $orientation ?><?php if ($node->round[$round_index]->match[$match_index]->win[2]) print " bracket-match-winner" ?>"><?php print $node->round[$round_index]->match[$match_index]->cname[2] ? filter_xss_admin($node->round[$round_index]->match[$match_index]->cname[2]) : '&nbsp;' ?></div>
       <div id="round-<?php print $round_index ?>-match-<?php print $match_index ?>-competitor-2-score" class="bracket-match-score bracket-match-score-<?php print $orientation ?>"><?php print filter_xss_admin($node->round[$round_index]->match[$match_index]->score[2]) ?></div>
     </div>
   </div>
