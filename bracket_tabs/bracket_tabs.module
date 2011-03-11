@@ -52,7 +52,7 @@ function bracket_tabs_node_view($node, $view_mode, $langcode) {
   if ($node->type == 'bracket') {
     if ($view_mode == 'full') {
       $node->content['tabs'] = array(
-        '#value' => theme('bracket_tabs_view', array('node' => $node, 'view_mode' => $view_mode)),
+        '#markup' => theme('bracket_tabs_view', array('node' => $node, 'view_mode' => $view_mode)),
         '#weight' => 9
       );    
     }
