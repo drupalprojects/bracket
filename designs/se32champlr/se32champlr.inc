@@ -243,7 +243,7 @@ function se32champlr_pdf($node) {
   global $_bracket_pdf_font_xsmall;
 
   // setup pdf
-  $pdf = new FPDF('L', 'in', 'letter');
+  $pdf = new PDF('L', 'in', 'letter');
   $pdf->setAutoPageBreak(FALSE);
   $iwidth = 11.0;
   $iheight = 8.5;
@@ -404,12 +404,12 @@ function se32champlr_pdf($node) {
 
   // bracket logo
   if ($node->logopath != '') {
-    bracket_pdf_insert_image($pdf, $node->logopath, 5.5, 1.00, 1.75);
+    bracket_pdf_insert_image($pdf, $node->logopath, 5.5, 1.5, 1.75, 'C');
   }
 
   // sponsor logo
   if ($node->sponsorlogopath != '') {
-    bracket_pdf_insert_image($pdf, $node->sponsorlogopath, 5.5, 5.5, 0.5);
+    bracket_pdf_insert_image($pdf, $node->sponsorlogopath, 5.5, 6.5, 0.5, 'C');
   }
 
   // bracket bar

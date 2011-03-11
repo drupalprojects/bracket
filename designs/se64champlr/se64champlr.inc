@@ -255,7 +255,7 @@ function se64champlr_pdf($node) {
   global $_bracket_pdf_font_xsmall;
 
   // setup pdf
-  $pdf = new FPDF('L', 'in', 'letter');
+  $pdf = new PDF('L', 'in', 'letter');
   $pdf->setAutoPageBreak(FALSE);
   $iwidth = 11.0;
   $iheight = 8.5;
