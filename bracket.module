@@ -486,12 +486,8 @@ function update_all_bracket_displays() {
  */
 function bracket_view($node, $view_mode) {
 
+  // no teasers for now
   if ($view_mode == 'teaser') {
-    if (!property_exists($node, 'content') || !isset($node->content['teaser'])) {
-      $node->content['teaser'] = array(
-        '#markup' => check_markup($node->teaser, $node->format, FALSE)
-      );
-    }
     return $node;
   }
   
