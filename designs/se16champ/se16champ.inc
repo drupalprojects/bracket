@@ -117,8 +117,30 @@ function se16champ_image($node) {
   $t += ($hh / 2);
   $hh = $sp + $height;
   $sp = $sp * 2;
-  bracket_image_drawbracketset($img, $node, $l, $t, $width, $hh, $sp, 4, 1, 1, 'L');
+  bracket_image_drawbracketset($img, $node, $l, $t, $width, $hh, $sp, 4, 1, 1, 'L', FALSE);
 
+  // get match
+  $match = $node->round[4]->match[1];
+  // finals comments
+  if ($match->comment[1] != '' || $match->comment[2] != '') {
+    // comment left position
+    $cl = $l + 5;
+    // comment top position
+    $ct = $t + ($hh / 2) - 50;
+    // adjust for two comments
+    if ($match->comment[1] != '' && $match->comment[2] != '') {
+      $ct -= 10;
+    }
+    // draw comments
+    if ($match->comment[1] != '') {
+      bracket_image_imagetextalign($img, $_bracket_image_font_small, $cl, $ct, $width-5, $match->comment[1], $_bracket_image_fg_color, 'L');
+      $ct += 10;
+    }
+    if ($match->comment[2] != '') {
+      bracket_image_imagetextalign($img, $_bracket_image_font_small, $cl, $ct, $width-5, $match->comment[2], $_bracket_image_fg_color, 'L');
+    }
+  }
+  
   // winner and runner-up
   $t += ($hh / 3);
   $l += $width;
@@ -248,6 +270,28 @@ function se16champ_pdf($node) {
   $hh = $sp + $height;
   $sp = $sp * 2;
   bracket_pdf_drawbracketset($pdf, $node, $l, $t, $width, $hh, $sp, 4, 1, 1, 'L');
+
+  // get match
+  $match = $node->round[4]->match[1];
+  // draw comments
+  if ($match->comment[1] != '' || $match->comment[2] != '') {
+    // draw bracket cell comments
+    $t2 = $t + ($hh / 2) - 0.5;
+    $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_small);
+    if ($match->comment[1] != '' && $match->comment[2] != '') {
+      $t2 -= 0.125;
+    }
+    $pdf->setXY($l, $t2);
+    if ($match->comment[1] != '') {
+      $pdf->setXY($l, $t2);
+      $pdf->cell($width, 0.125, $match->comment[1], 0, 0, 'L');
+      $t2 += 0.125;
+    }
+    if ($match->comment[2] != '') {
+      $pdf->setXY($l, $t2);
+      $pdf->cell($width, 0.125, $match->comment[2], 0, 0, 'L');
+    }
+  }
 
   // winner and runner-up
   $t += ($hh / 3);
