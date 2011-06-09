@@ -198,6 +198,10 @@ function bracket_pdf_drawcell($pdf, $lr, $top, $width, $height, $match, $orient,
 
   // cell height
   $h = 0.125;
+  if ($_bracket_pdf_font_norm <= 6.0) {
+    $h = 0.0625;
+  }
+  
   // comment orientation - opposite of cell orientation
   $co = 'L';
   if ($orient == 'L') {
@@ -290,7 +294,7 @@ function bracket_pdf_drawcell($pdf, $lr, $top, $width, $height, $match, $orient,
   if ($matchid) {
     // match number position
     if ($orient == 'L') {
-      $pdf->setXY($lrx + $width - 0.09, $top + ($height / 2) - ($h / 2));
+      $pdf->setXY($lrx + $width - $h, $top + ($height / 2) - ($h / 2));
     }
     else {
       $pdf->setXY($lrx, $top + ($height / 2) - ($h / 2));
