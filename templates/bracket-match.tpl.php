@@ -11,7 +11,7 @@
  *  $orientation: the orientation of the match in the bracket - 'left' or 'right'
  */
 ?>
-<div id="round-<?php print $round_index ?>-match-<?php print $match_index ?>" class="bracket-match">
+<div id="round-<?php print $round_index ?>-match-<?php print $match_index ?>" class="bracket-match round-<?php print $round_index ?>-match-block">
   <div id="round-<?php print $round_index ?>-match-<?php print $match_index ?>-competitor-1-block" class="bracket-match-competitor-block">
     <div id="round-<?php print $round_index ?>-match-<?php print $match_index ?>-competitor-1" class="bracket-match-competitor bracket-match-competitor-<?php print $orientation ?><?php if ($node->round[$round_index]->match[$match_index]->win[1]) print ' bracket-match-winner' ?>"><?php print $node->round[$round_index]->match[$match_index]->cname[1] ? filter_xss_admin($node->round[$round_index]->match[$match_index]->cname[1]) : '&nbsp;' ?></div>
     <div id="round-<?php print $round_index ?>-match-<?php print $match_index ?>-competitor-1-score" class="bracket-match-score bracket-match-score-<?php print $orientation ?>"><?php print filter_xss_admin($node->round[$round_index]->match[$match_index]->score[1]) ?></div>
