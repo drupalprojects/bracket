@@ -373,7 +373,7 @@ function de32champ_pdf($node) {
 
   // bracket footnote
   $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_small);
-  $pdf->setXY($left, 10.5);
+  $pdf->setXY($left, 10.67);
   $pdf->multicell($iwidth - ($left * 2), 0.125, $node->footer, 0, 'C');
 
   // bracket logo
@@ -383,7 +383,7 @@ function de32champ_pdf($node) {
 
   // sponsor logo
   if ($node->sponsorlogopath != '') {
-    bracket_pdf_insert_image($pdf, $node->sponsorlogopath, 4.25, 10.0, 0.75, TRUE);
+    bracket_pdf_insert_image($pdf, $node->sponsorlogopath, 4.25, 10.25, 0.75, TRUE);
   }
 
   // return pdf as a string

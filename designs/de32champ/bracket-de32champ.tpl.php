@@ -90,19 +90,19 @@ drupal_add_css(drupal_get_path('module', 'bracket') . '/designs/de32champ/bracke
     <?php print theme('bracket_match', $node, 2, 8, 'left') ?>
     <div id="round-2-loser-round-spacer"></div>
     <?php print theme('bracket_match', $node, 9, 1, 'left') ?>
-    <div class="bracket-round-8-match-spacer"></div>
+    <div class="bracket-round-9-match-spacer"></div>
     <?php print theme('bracket_match', $node, 9, 2, 'left') ?>
-    <div class="bracket-round-8-match-spacer"></div>
+    <div class="bracket-round-9-match-spacer"></div>
     <?php print theme('bracket_match', $node, 9, 3, 'left') ?>
-    <div class="bracket-round-8-match-spacer"></div>
+    <div class="bracket-round-9-match-spacer"></div>
     <?php print theme('bracket_match', $node, 9, 4, 'left') ?>
-    <div class="bracket-round-8-match-spacer"></div>
+    <div class="bracket-round-9-match-spacer"></div>
     <?php print theme('bracket_match', $node, 9, 5, 'left') ?>
-    <div class="bracket-round-8-match-spacer"></div>
+    <div class="bracket-round-9-match-spacer"></div>
     <?php print theme('bracket_match', $node, 9, 6, 'left') ?>
-    <div class="bracket-round-8-match-spacer"></div>
+    <div class="bracket-round-9-match-spacer"></div>
     <?php print theme('bracket_match', $node, 9, 7, 'left') ?>
-    <div class="bracket-round-8-match-spacer"></div>
+    <div class="bracket-round-9-match-spacer"></div>
     <?php print theme('bracket_match', $node, 9, 8, 'left') ?>
   </div>
   <div id="round-3" class="bracket-round">
