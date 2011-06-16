@@ -1481,7 +1481,7 @@ function bracket_create(&$node) {
   if (function_exists($function)) {
 
     $args = array(&$node);
-    $img = call_user_func_array($function, $args);
+    call_user_func_array($function, $args);
   }
 }
 
