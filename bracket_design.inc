@@ -309,9 +309,15 @@ function bracket_design_create_loser_rounds(&$node, $modified = FALSE) {
 
   // competitors must already be added
   $cc = count($node->comp);
+  if ($cc <= 2) {
+    return;
+  }
 
   // winner round count
   $wrc = count($node->round);
+  if ($wrc <= 1) {
+    return;
+  }
 
   // next round id
   $rid = $wrc + 1;
@@ -498,6 +504,9 @@ function bracket_design_create_loser_rounds(&$node, $modified = FALSE) {
     // save previous loser round
     $plr = $lr;
 
+    // bump loser round counter
+    $lri++;
+    
     // start alternating rounds after first two rounds
     if ($wri >= 2) {
       $ralt = !$ralt;
@@ -509,12 +518,13 @@ function bracket_design_create_loser_rounds(&$node, $modified = FALSE) {
 
     // see if we are done
     if ($modified) {
-      if ($wri == $wrc) {
+      // must be a minimum of 2 loser rounds
+      if ($wri >= $wrc && $lri > 2) {
         $rdone = TRUE;
       }
     }
     else {
-      if ($wri == $wrc && !$ralt) {
+      if ($wri >= $wrc && !$ralt) {
         $rdone = TRUE;
       }
     }
