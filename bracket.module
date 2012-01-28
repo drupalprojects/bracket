@@ -663,7 +663,9 @@ function bracket_form(&$node) {
 
   $form['bracket']['logo'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Logo Image')
+    '#title' => t('Logo Image'),
+    '#prefix' => '<div class="logo-image">',
+    '#suffix' => '</div>',    
   );
 
   if (variable_get('bracket_image_upload', FALSE)) {
@@ -707,8 +709,9 @@ function bracket_form(&$node) {
 
   $form['bracket']['sponsorlogo'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Sponsor Logo Image')
-  );
+    '#title' => t('Sponsor Logo Image'),
+    '#prefix' => '<div class="sponsor-logo-image">',
+    '#suffix' => '</div>',  );
 
   if (variable_get('bracket_image_upload', FALSE)) {
 
@@ -756,7 +759,8 @@ function bracket_form(&$node) {
   $form['bracket']['options'] = array(
     '#type' => 'fieldset',
     '#title' => t('Bracket Display Options'),
-    '#collapsed' => TRUE,
+    '#prefix' => '<div class="bracket-display-options">',
+    '#suffix' => '</div>',    '#collapsed' => TRUE,
     '#collapsible' => TRUE,
     '#tree' => TRUE
   );
@@ -866,7 +870,8 @@ function bracket_form(&$node) {
   $form['bracket']['options']['image_options']['image_fonts'] = array(
     '#type' => 'fieldset',
     '#title' => t('Image Font Files'),
-    '#collapsed' => FALSE,
+    '#prefix' => '<div class="image-font-files">',
+    '#suffix' => '</div>',
     '#collapsible' => FALSE,
     '#tree' => TRUE,
     '#description' => t('Image font files must be present in the fonts folder of the bracket module.'),
