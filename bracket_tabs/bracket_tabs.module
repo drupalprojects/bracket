@@ -18,7 +18,7 @@ function bracket_tabs_menu() {
 
   $items = array();
 
-  $items['admin/config/bracket-tabs'] = array(
+  $items['admin/config/content/bracket/bracket-tabs'] = array(
     'title' => 'Bracket Tabs',
     'description' => t('Change bracket tabs settings'),
     'page callback' => 'bracket_tabs_settings',
