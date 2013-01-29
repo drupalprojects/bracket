@@ -117,7 +117,16 @@ function se16champ_image($node) {
   $t += ($hh / 2);
   $hh = $sp + $height;
   $sp = $sp * 2;
-  bracket_image_drawbracketset($img, $node, $l, $t, $width, $hh, $sp, 4, 1, 1, 'L');
+  bracket_image_drawbracketset($img, $node, $l, $t, $width, $hh, $sp, 4, 1, 1, 'L', FALSE);
+  // draw comments for finals over bar
+  $ct = $t + ($hh / 2) - 60;
+  if ($node->round[4]->match[1]->comment[1] != '') {
+    bracket_image_imagetextalign($img, $_bracket_image_font_small, $l + 5, $ct, $width-5, $node->round[4]->match[1]->comment[1], $_bracket_image_fg_color, 'L');
+    $ct += 20;
+  }
+  if ($node->round[4]->match[1]->comment[2] != '') {
+    bracket_image_imagetextalign($img, $_bracket_image_font_small, $l + 5, $ct, $width-5, $node->round[4]->match[1]->comment[2], $_bracket_image_fg_color, 'L');
+  }
 
   // winner and runner-up
   $t += ($hh / 3);
@@ -247,7 +256,18 @@ function se16champ_pdf($node) {
   $t += ($hh / 2);
   $hh = $sp + $height;
   $sp = $sp * 2;
-  bracket_pdf_drawbracketset($pdf, $node, $l, $t, $width, $hh, $sp, 4, 1, 1, 'L');
+  bracket_pdf_drawbracketset($pdf, $node, $l, $t, $width, $hh, $sp, 4, 1, 1, 'L', FALSE);
+  // draw comments for finals over bar
+  $ct = $t + ($hh / 2) - 0.5;
+  if ($node->round[4]->match[1]->comment[1] != '') {
+    $pdf->setXY($l, $ct);
+    $pdf->cell($width, 0.125, $node->round[4]->match[1]->comment[1], 0, 0, 'L');
+    $ct += 0.125;
+  }
+  if ($node->round[4]->match[1]->comment[2] != '') {
+    $pdf->setXY($l, $ct);
+    $pdf->cell($width, 0.125, $node->round[4]->match[1]->comment[2], 0, 0, 'L');
+  }
 
   // winner and runner-up
   $t += ($hh / 3);
