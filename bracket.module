@@ -147,7 +147,7 @@ function bracket_menu() {
     'type' => MENU_NORMAL_ITEM,
   );
 
-  $items['node/%bracket_menu/image'] = array(
+  $items['node/%bracket_menu/bracket-image'] = array(
     'page callback' => 'bracket_image',
     'page arguments' => array(1),
     'access callback' => 'node_access',
@@ -155,7 +155,7 @@ function bracket_menu() {
     'type' => MENU_CALLBACK,
   );
 
-  $items['node/%bracket_menu/pdf'] = array(
+  $items['node/%bracket_menu/bracket-pdf'] = array(
     'page callback' => 'bracket_pdf',
     'page arguments' => array(1),
     'access callback' => 'node_access',
@@ -163,7 +163,7 @@ function bracket_menu() {
     'type' => MENU_CALLBACK,
   );
 
-  $items['node/%bracket_menu/clone'] = array(
+  $items['node/%bracket_menu/bracket-clone'] = array(
     'title' => 'Clone',
     'page callback' => 'bracket_clone',
     'page arguments' => array(1),
@@ -173,7 +173,7 @@ function bracket_menu() {
     'type' => MENU_LOCAL_TASK
   );
 
-  $items['node/%bracket_menu/clear'] = array(
+  $items['node/%bracket_menu/bracket-clear'] = array(
     'title' => 'Clear',
     'page callback' => 'bracket_clear',
     'page arguments' => array(1),
@@ -183,7 +183,7 @@ function bracket_menu() {
     'type' => MENU_LOCAL_TASK
   );
 
-  $items['node/%bracket_menu/export'] = array(
+  $items['node/%bracket_menu/bracket-export'] = array(
     'title' => 'Export',
     'page callback' => 'bracket_export',
     'page arguments' => array(1),
@@ -193,7 +193,7 @@ function bracket_menu() {
     'type' => MENU_LOCAL_TASK
   );
 
-  $items['node/%bracket_menu/import'] = array(
+  $items['node/%bracket_menu/bracket-import'] = array(
     'title' => 'Import',
     'page callback' => 'bracket_import',
     'page arguments' => array(1),
@@ -442,7 +442,7 @@ function bracket_settings_form_validate($form_id, &$form_state) {
 function bracket_settings_form_submit($form_id, &$form_state) {
 
   if ($form_state['values']['op'] == $form_state['values']['purge_cache_now']) {
-    cache_clear_all('bracket', 'cache', TRUE);
+    bracket_clear_cache_all();
     $msg = 'Bracket cache was purged.';
     watchdog('bracket', $msg);
     drupal_set_message($msg, 'info');
@@ -456,9 +456,17 @@ function bracket_settings_form_submit($form_id, &$form_state) {
     drupal_set_message($msg, 'info');
     return;
   }
+
+  // clear bracket cache and drupal cache if setting changes
+  $current = variable_get(BRACKET_CACHE, FALSE);
+  $new = $form_state['values'][BRACKET_CACHE];
+  if ($current != $new) {
+    bracket_clear_cache_all();
+    cache_clear_all();
+  }
   
   variable_set('bracket_default_display', $form_state['values']['display']);
-  variable_set(BRACKET_CACHE, $form_state['values'][BRACKET_CACHE]);
+  variable_set(BRACKET_CACHE, $new);
   variable_set('bracket_image_upload', $form_state['values']['upload']);
   variable_set('bracket_image_upload_path', $form_state['values']['upload_path']);
 
@@ -516,15 +524,14 @@ function theme_bracket_view($variables) {
   drupal_add_css(drupal_get_path('module', 'bracket') . '/bracket.css');
   
   $output = '<div class="bracket">' . "\n";
-
-  if (isset($node->options['hide_pdf']) && !$node->options['hide_pdf']) {
-    $output .= '<div class="bracket-print-link">' . l(t('Click here for a printable version'), 'node/' . $node->nid . '/pdf') . "</div>\n";
+  if (!isset($node->options['hide_pdf']) || (isset($node->options['hide_pdf']) && !$node->options['hide_pdf'])) {
+    $output .= '<div class="bracket-print-link">' . l(t('Click here for a printable version'), 'node/' . $node->nid . '/bracket-pdf') . "</div>\n";
   }
   if (isset($node->options['display']) && $node->options['display'] == 'HTML') {
     $output .= theme('bracket_' . $node->design, array('node' => $node));
   }
   else {
-    $output .= '<div class="bracket-img"><img src="' . url('node/' . $node->nid . '/image') . '"></div>' . "\n";
+    $output .= '<div class="bracket-img"><img src="' . url('node/' . $node->nid . '/bracket-image') . '"></div>' . "\n";
   }
   
   $output .= '</div><div class="clear-block"></div>' . "\n";
@@ -1494,13 +1501,13 @@ function bracket_create(&$node) {
 function bracket_image($node) {
 
   global $user;
-  
+
   // form cache key
   $key = 'bracket/' . $node->nid . '/image';
 
   // don't retrieve from cache for update users
-  $img = NULL;
-  if (!bracket_node_access('update', $node, $user)) {
+  $img = FALSE;
+  if (bracket_node_access('update', $node, $user) == NODE_ACCESS_DENY) {
     // try to fetch from cache
     $img = bracket_fetch_from_cache($key);
   }
@@ -1517,7 +1524,7 @@ function bracket_image($node) {
       $img = call_user_func_array($function, $args);
       
       // save in cache
-      cache_set($key, $img, 'cache', CACHE_PERMANENT);
+      bracket_save_in_cache($key, $img);
     }
   }
  
@@ -1535,13 +1542,13 @@ function bracket_image($node) {
 function bracket_pdf($node) {
 
   global $user;
-  
+
   // form cache key
   $key = 'bracket/' . $node->nid . '/pdf';
 
   // don't retrieve from cache for update users
-  $img = NULL;
-  if (!bracket_node_access('update', $node, $user)) {
+  $img = FALSE;
+  if (bracket_node_access('update', $node, $user) == NODE_ACCESS_DENY) {
     // try to fetch from cache
     $img = bracket_fetch_from_cache($key);
   }
@@ -1558,7 +1565,7 @@ function bracket_pdf($node) {
       $img = call_user_func_array($function, $args);
 
       // save in cache
-      cache_set($key, $img, 'cache', CACHE_PERMANENT);
+      bracket_save_in_cache($key, $img);
     }
   }
   
@@ -1593,10 +1600,10 @@ function bracket_fetch_from_cache($key) {
   
   // get cache setting
   $cancache = variable_get(BRACKET_CACHE, FALSE);
-  
+
   // retrieve from cache if so configured
   if ($cancache) {
-    $cache = cache_get($key);
+    $cache = cache_get($key, 'cache');
     if (is_object($cache) && ($cache->data)) {
       $img = $cache->data;
     }
@@ -1606,7 +1613,31 @@ function bracket_fetch_from_cache($key) {
 }
 
 /**
- * Clear bracket node imagesfrom cache
+ * Save bracket image in cache
+ *
+ * @param $key
+ *   the cache key
+ * @param $img
+ *   the image to cache
+ */
+function bracket_save_in_cache($key, $img) {
+
+  // get cache setting
+  $cancache = variable_get(BRACKET_CACHE, FALSE);
+
+  // save in cache if enabled
+  if ($cancache) {
+    
+    // tell Drupal not to cache this url
+    bracket_disable_page_cache();
+
+    // save in cache
+    cache_set($key, $img, 'cache', CACHE_PERMANENT);
+  }
+}
+
+/**
+ * Clear bracket node images from cache
  *
  * @param $node
  *   the node containing the bracket
@@ -1618,6 +1649,15 @@ function bracket_clear_cache($node) {
     
   // clear bracket node from the cache
   cache_clear_all($key, 'cache', TRUE);
+}
+
+/**
+ * Clear all bracket node images from cache
+ */
+function bracket_clear_cache_all() {
+
+  // clear all bracket images from the cache
+  cache_clear_all('bracket', 'cache', TRUE);
 }
 
 /**
@@ -1678,7 +1718,12 @@ function bracket_logo_url($logopath) {
   }
   // return url
   else {
-    return file_create_url($logopath);
+    // detect root-relative urls - remove root slash so file_create_url will expand it to local server
+    $tmp = $logopath;
+    if (substr($tmp, 0, 1) == '/') {
+      $tmp = substr($tmp, 1);
+    }
+    return file_create_url($tmp);
   }
 }
 
@@ -1691,4 +1736,20 @@ function bracket_logo_url($logopath) {
 function bracket_path_is_url($path) {
 
   return preg_match("/^https?:\/\//", $path);
+}
+
+/**
+ * disable the Drupal page cache (taken from webform module)
+ *
+ */
+function bracket_disable_page_cache() {
+
+  // Drupal 7 method.
+  if (function_exists('drupal_page_is_cacheable')) {
+    drupal_page_is_cacheable(FALSE);
+  }
+  // Drupal 6 hack to disable page cache.
+  else {
+    $GLOBALS['conf']['cache'] = FALSE;
+  }
 }
