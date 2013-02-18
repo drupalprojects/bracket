@@ -8,7 +8,7 @@
  * Available variables:
  * - $node: The node object for the bracket to be rendered.
  */
-drupal_add_css(drupal_get_path('module', 'bracket') . '/designs/mde32champ/bracket-mde32champ.css', 'theme', 'all', FALSE);
+drupal_add_css(drupal_get_path('module', 'bracket') . '/designs/mde32champ/bracket-mde32champ.css', array('preprocess' => FALSE));
 ?>
 
 <div class="bracket-block">

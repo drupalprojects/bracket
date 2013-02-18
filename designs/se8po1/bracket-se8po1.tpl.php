@@ -8,7 +8,7 @@
  * Available variables:
  * - $node: The node object for the bracket to be rendered.
  */
-drupal_add_css(drupal_get_path('module', 'bracket') . '/designs/se8po1/bracket-se8po1.css', 'theme', 'all', FALSE);
+drupal_add_css(drupal_get_path('module', 'bracket') . '/designs/se8po1/bracket-se8po1.css', array('preprocess' => FALSE));
 ?>
 
 <div class="bracket-block">
