@@ -141,7 +141,6 @@ function se8po1_image($node) {
     $t += 4;
     for ($i=1; $i<=sizeof($node->round); $i++) {
       bracket_image_imageTextAlign($img, $_bracket_image_font_norm, $left + (($i-1) * $width), $t, $width, $node->round[$i]->comment, $_bracket_image_bar_fg_color, 'C');
-      bracket_image_imageTextAlign($img, $_bracket_image_font_norm, $right - ($i * $width), $t, $width, $node->round[$i]->comment, $_bracket_image_bar_fg_color, 'C');
     }
   }
 
