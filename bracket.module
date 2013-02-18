@@ -81,44 +81,43 @@ function bracket_node_info() {
 /**
  * Implementation of hook_node_access
  */
-function bracket_node_access($op, $node, $account) {
+function bracket_node_access($node, $op, $account) {
 
-  switch ($op) {
-    case 'view':
-      // if node is published, return view access
-      if ($node->status) {
-        if (user_access('view brackets')) {
-          return NODE_ACCESS_ALLOW;
+  $result = NODE_ACCESS_IGNORE;
+  $type = is_string($node) ? $node : $node->type;
+
+  if ($type == 'bracket') {
+    $result = NODE_ACCESS_DENY;
+    switch ($op) {
+      case 'view':
+        // if node is published, return view access
+        if (is_object($node) && $node->status) {
+          if (user_access('view brackets', $account)) {
+            $result = NODE_ACCESS_ALLOW;
+          }
         }
-        else {
-          return NODE_ACCESS_DENY;
+        // if unpublished, return update access - users who can update the node should be able to view it
+        else  {
+          if (node_access('update', $node, $account)) {
+            $result = NODE_ACCESS_ALLOW;
+          }
         }
-      }
-      // if unpublished, return update access - users who can update the node should be able to view it
-      else  {
-        if (node_access('update', $node, $account)) {
-          return NODE_ACCESS_ALLOW;
+        break;
+      case 'create':
+        if (user_access('create brackets', $account)) {
+          $result = NODE_ACCESS_ALLOW;
         }
-        else {
-          return NODE_ACCESS_DENY;
+        break;
+      case 'update':
+      case 'delete':
+        if (user_access('edit brackets', $account) || (user_access('edit own brackets', $account) && (is_object($node) && $account->uid == $node->uid))) {
+          $result = NODE_ACCESS_ALLOW;
         }
-      }
-    case 'create':
-      if (user_access('create brackets')) {
-        return NODE_ACCESS_ALLOW;
-      }
-      else {
-        return NODE_ACCESS_DENY;
-      }
-    case 'update':
-    case 'delete':
-      if (user_access('edit brackets') || (user_access('edit own brackets') && ($account->uid == $node->uid))) {
-        return NODE_ACCESS_ALLOW;
-      }
-      else {
-        return NODE_ACCESS_DENY;
-      }
+        break;
+    }
   }
+
+  return $result;
 }
 
 /**
@@ -1089,7 +1088,12 @@ function bracket_update($node) {
   bracket_db_update($node);
 
   // delete bracket images from cache
-  bracket_clear_cache($node);
+  if (variable_get(BRACKET_CACHE, FALSE)) {
+    bracket_clear_cache($node);
+  }
+  else {
+    cache_clear_all();
+  }
 }
 
 /**
@@ -1100,7 +1104,12 @@ function bracket_delete($node, $log = TRUE) {
   bracket_db_delete($node);
 
   // delete bracket images from cache
-  bracket_clear_cache($node);
+  if (variable_get(BRACKET_CACHE, FALSE)) {
+    bracket_clear_cache($node);
+  }
+  else {
+    cache_clear_all();
+  }
 }
 
 //=========================================================================
@@ -1212,8 +1221,8 @@ function bracket_clear_form($form, $form_state, $node) {
   );
 
   $form['options']['opt'] = array(
-      '#type' => 'radios',
-      '#options' => array('comp' => t('Competitors and Match Results'), 'match' => t('Match Results Only')),
+      '#type' => 'checkboxes',
+      '#options' => array('comp' => t('Competitors'), 'comp_comments' => t('Competitor Comments'), 'match' => t('Match Results'), 'comments' => t('Match Comments')),
       '#required' => TRUE,
       '#weight' => 1,
     );
@@ -1236,14 +1245,14 @@ function bracket_clear_form_submit($form_id, &$form_state) {
   // load the node
   $node = node_load($form_state['values']['nid']);
 
-  if ($form_state['values']['opt'] == 'comp') {
+  if ($form_state['values']['opt']['comp']) {
     // clear competitors
     for ($i=1; $i<=count($node->comp); $i++) {
       $node->comp[$i]->name = '';
     }
   }
 
-  if ($form_state['values']['opt'] == 'comp' || $form_state['values']['opt'] == 'match') {
+  if ($form_state['values']['opt']['match']) {
     // clear match results
     for ($i=1; $i<=count($node->round); $i++) {
       $r = $node->round[$i];
@@ -1261,6 +1270,28 @@ function bracket_clear_form_submit($form_id, &$form_state) {
     // clear final results
     for ($i=1; $i<=count($node->result); $i++) {
       $node->result[$i]->compid = 0;
+    }
+  }
+
+  if ($form_state['values']['opt']['comments']) {
+    // clear match results
+    for ($i=1; $i<=count($node->round); $i++) {
+      $r = $node->round[$i];
+      for ($j=1; $j<=count($r->match); $j++) {
+        $r->match[$j]->comment[1] = '';
+        $r->match[$j]->comment[2] = '';
+      }
+    }
+  }
+
+  if ($form_state['values']['opt']['comp_comments']) {
+    // clear match results
+    for ($i=1; $i<=count($node->round); $i++) {
+      $r = $node->round[$i];
+      for ($j=1; $j<=count($r->match); $j++) {
+        $r->match[$j]->comp_comment[1] = '';
+        $r->match[$j]->comp_comment[2] = '';
+      }
     }
   }
 
@@ -1502,6 +1533,12 @@ function bracket_image($node) {
 
   global $user;
 
+  // if internal caching is on
+  if (variable_get(BRACKET_CACHE, FALSE)) {
+    // tell Drupal not to cache this url
+    bracket_disable_page_cache();
+  }
+
   // form cache key
   $key = 'bracket/' . $node->nid . '/image';
 
@@ -1542,6 +1579,12 @@ function bracket_image($node) {
 function bracket_pdf($node) {
 
   global $user;
+
+  // if internal caching is on
+  if (variable_get(BRACKET_CACHE, FALSE)) {
+    // tell Drupal not to cache this url
+    bracket_disable_page_cache();
+  }
 
   // form cache key
   $key = 'bracket/' . $node->nid . '/pdf';
@@ -1598,11 +1641,8 @@ function bracket_fetch_from_cache($key) {
 
   $img = FALSE;
   
-  // get cache setting
-  $cancache = variable_get(BRACKET_CACHE, FALSE);
-
   // retrieve from cache if so configured
-  if ($cancache) {
+  if (variable_get(BRACKET_CACHE, FALSE)) {
     $cache = cache_get($key, 'cache');
     if (is_object($cache) && ($cache->data)) {
       $img = $cache->data;
@@ -1622,15 +1662,8 @@ function bracket_fetch_from_cache($key) {
  */
 function bracket_save_in_cache($key, $img) {
 
-  // get cache setting
-  $cancache = variable_get(BRACKET_CACHE, FALSE);
-
   // save in cache if enabled
-  if ($cancache) {
-    
-    // tell Drupal not to cache this url
-    bracket_disable_page_cache();
-
+  if (variable_get(BRACKET_CACHE, FALSE)) {
     // save in cache
     cache_set($key, $img, 'cache', CACHE_PERMANENT);
   }
