@@ -263,9 +263,9 @@ function se32po2lr_pdf($node) {
   $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_norm);
   $pdf->line($l, $t, $l+$width, $t);
   $pdf->setXY($l, $t-0.125);
-  $pdf->cell($w, 0.125, $node->result[1]->cname, 0, 0, 'L');
+  $pdf->cell($width, 0.125, $node->result[1]->cname, 0, 0, 'L');
   $pdf->setXY($l, $t);
-  $pdf->cell($w, 0.125, $node->result[1]->comment, 0, 0, 'L');
+  $pdf->cell($width, 0.125, $node->result[1]->comment, 0, 0, 'L');
   $pdf->line($r, $t, $r-$width, $t);
   $pdf->setXY($r-$width, $t-0.125);
   $pdf->cell($width, 0.125, $node->result[5]->cname, 0, 0, 'R');
@@ -273,9 +273,9 @@ function se32po2lr_pdf($node) {
   $pdf->cell($width, 0.125, $node->result[5]->comment, 0, 0, 'R');
   $pdf->line($l, $t+$tb, $l+$width, $t+$tb);
   $pdf->setXY($l, $t+$tb-0.125);
-  $pdf->cell($w, 0.125, $node->result[3]->cname, 0, 0, 'L');
+  $pdf->cell($width, 0.125, $node->result[3]->cname, 0, 0, 'L');
   $pdf->setXY($l, $t+$tb);
-  $pdf->cell($w, 0.125, $node->result[3]->comment, 0, 0, 'L');
+  $pdf->cell($width, 0.125, $node->result[3]->comment, 0, 0, 'L');
   $pdf->line($r, $t+$tb, $r-$width, $t+$tb);
   $pdf->setXY($r-$width, $t+$tb-0.125);
   $pdf->cell($width, 0.125, $node->result[7]->cname, 0, 0, 'R');
@@ -284,9 +284,9 @@ function se32po2lr_pdf($node) {
   $t += $hh;
   $pdf->line($l, $t, $l+$width, $t);
   $pdf->setXY($l, $t-0.125);
-  $pdf->cell($w, 0.125, $node->result[2]->cname, 0, 0, 'L');
+  $pdf->cell($width, 0.125, $node->result[2]->cname, 0, 0, 'L');
   $pdf->setXY($l, $t);
-  $pdf->cell($w, 0.125, $node->result[2]->comment, 0, 0, 'L');
+  $pdf->cell($width, 0.125, $node->result[2]->comment, 0, 0, 'L');
   $pdf->line($r, $t, $r-$width, $t);
   $pdf->setXY($r-$width, $t-0.125);
   $pdf->cell($width, 0.125, $node->result[6]->cname, 0, 0, 'R');
@@ -294,9 +294,9 @@ function se32po2lr_pdf($node) {
   $pdf->cell($width, 0.125, $node->result[6]->comment, 0, 0, 'R');
   $pdf->line($l, $t+$tb, $l+$width, $t+$tb);
   $pdf->setXY($l, $t+$tb-0.125);
-  $pdf->cell($w, 0.125, $node->result[4]->cname, 0, 0, 'L');
+  $pdf->cell($width, 0.125, $node->result[4]->cname, 0, 0, 'L');
   $pdf->setXY($l, $t+$tb);
-  $pdf->cell($w, 0.125, $node->result[4]->comment, 0, 0, 'L');
+  $pdf->cell($width, 0.125, $node->result[4]->comment, 0, 0, 'L');
   $pdf->line($r, $t+$tb, $r-$width, $t+$tb);
   $pdf->setXY($r-$width, $t+$tb-0.125);
   $pdf->cell($width, 0.125, $node->result[8]->cname, 0, 0, 'R');

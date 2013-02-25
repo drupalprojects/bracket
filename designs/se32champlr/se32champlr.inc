@@ -338,7 +338,7 @@ function se32champlr_pdf($node) {
   $pdf->cell(0.25, 0.125, $match->score[1], 0, 0, 'R');
   if ($match->home[1]) {
     $pdf->setXY($l+$width-0.125, $t+0.0625);
-    $pdf->cell(0.125, $h, 'H');
+    $pdf->cell(0.125, 0.125, 'H');
   }
   $t += $hh / 3;
   $r -= $width;
