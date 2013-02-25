@@ -213,25 +213,25 @@ function se8po1_pdf($node) {
   $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_norm);
   $pdf->line($l, $t, $l+$width, $t);
   $pdf->setXY($l, $t-0.125);
-  $pdf->cell($w, 0.125, $node->result[1]->cname, 0, 0, 'L');
+  $pdf->cell($width, 0.125, $node->result[1]->cname, 0, 0, 'L');
   $pdf->setXY($l, $t);
-  $pdf->cell($w, 0.125, $node->result[1]->comment, 0, 0, 'L');
+  $pdf->cell($width, 0.125, $node->result[1]->comment, 0, 0, 'L');
   $pdf->line($l, $t+$tb, $l+$width, $t+$tb);
   $pdf->setXY($l, $t+$tb-0.125);
-  $pdf->cell($w, 0.125, $node->result[3]->cname, 0, 0, 'L');
+  $pdf->cell($width, 0.125, $node->result[3]->cname, 0, 0, 'L');
   $pdf->setXY($l, $t+$tb);
-  $pdf->cell($w, 0.125, $node->result[3]->comment, 0, 0, 'L');
+  $pdf->cell($width, 0.125, $node->result[3]->comment, 0, 0, 'L');
   $t += $spacing;
   $pdf->line($l, $t, $l+$width, $t);
   $pdf->setXY($l, $t-0.125);
-  $pdf->cell($w, 0.125, $node->result[2]->cname, 0, 0, 'L');
+  $pdf->cell($width, 0.125, $node->result[2]->cname, 0, 0, 'L');
   $pdf->setXY($l, $t);
-  $pdf->cell($w, 0.125, $node->result[2]->comment, 0, 0, 'L');
+  $pdf->cell($width, 0.125, $node->result[2]->comment, 0, 0, 'L');
   $pdf->line($l, $t+$tb, $l+$width, $t+$tb);
   $pdf->setXY($l, $t+$tb-0.125);
-  $pdf->cell($w, 0.125, $node->result[4]->cname, 0, 0, 'L');
+  $pdf->cell($width, 0.125, $node->result[4]->cname, 0, 0, 'L');
   $pdf->setXY($l, $t+$tb);
-  $pdf->cell($w, 0.125, $node->result[4]->comment, 0, 0, 'L');
+  $pdf->cell($width, 0.125, $node->result[4]->comment, 0, 0, 'L');
 
   // bracket title
   $pdf->setFont($_bracket_pdf_font_name, 'BI', $_bracket_pdf_font_xlarge);
