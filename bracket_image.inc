@@ -668,7 +668,7 @@ function bracket_image_draw_result($img, $lr, $top, $width, $result, $orient='L'
     $lrx = $lr - $width;
   }
 
-  imageline($img, $lrx, $top, $lrx+$width, $top, $bracket_image_fg_color);
+  imageline($img, $lrx, $top, $lrx+$width, $top, $_bracket_image_fg_color);
   bracket_image_imagetextalign($img, $_bracket_image_font_norm, $lrx, $top-5, $width, $result->cname, $_bracket_image_fg_color, $orient);
   bracket_image_imagetextalign($img, $_bracket_image_font_norm, $lrx, $top+10, $width, $result->comment, $_bracket_image_fg_color, $orient);
 
