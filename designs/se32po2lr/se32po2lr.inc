@@ -325,7 +325,7 @@ function se32po2lr_pdf($node) {
 
   // bracket logo
   if ($node->logopath != '') {
-    bracket_pdf_insert_image($pdf, $node->logopath, 5.5, 1.00, 1.75, TRUE);
+    bracket_pdf_insert_image($pdf, $node->logopath, 5.5, 1.5, 1.75, TRUE);
   }
 
   // sponsor logo
