@@ -286,14 +286,14 @@ function se16champlr_pdf($node) {
   $hh = $sp + $height;
   bracket_pdf_drawbracketset($pdf, $node, $l, $t, $width, $hh, $sp, 3, 1, 1, 'L', FALSE);
   $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_small);
-  $match = $node->round[4]->match[1];
+  $match = $node->round[3]->match[1];
   $pdf->setXY($l-0.125, $t + ($hh / 3) - 0.125);
   $pdf->cell($width, 0.125, $match->comment[1], 0, 0, 'R');
   $pdf->setXY($l-0.125, $t + ($hh / 3));
   $pdf->cell($width, 0.125, $match->comment[2], 0, 0, 'R');
   bracket_pdf_drawbracketset($pdf, $node, $r, $t, $width, $hh, $sp, 3, 2, 2, 'R', FALSE);
   $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_small);
-  $match = $node->round[4]->match[2];
+  $match = $node->round[3]->match[2];
   $pdf->setXY($r-$width+0.125, $t + ($hh - ($hh / 3)) - 0.125);
   $pdf->cell($width, 0.125, $match->comment[1], 0, 0, 'L');
   $pdf->setXY($r-$width+0.125, $t + ($hh - ($hh / 3)));
@@ -315,7 +315,7 @@ function se16champlr_pdf($node) {
   $pdf->cell(0.25, 0.125, $match->score[1], 0, 0, 'R');
   if ($match->home[1]) {
     $pdf->setXY($l+$width-0.125, $t+0.0625);
-    $pdf->cell(0.125, $h, 'H');
+    $pdf->cell(0.125, 0.125, 'H');
   }
   $t += $hh / 3;
   $r -= $width;
