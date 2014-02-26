@@ -1312,11 +1312,20 @@ function bracket_export_form($form, $form_state, $node) {
   );
 
   $form['options']['opt'] = array(
-      '#type' => 'radios',
-      '#options' => array('bracket' => t('Complete Bracket'), 'results' => t('Bracket Results Only')),
-      '#required' => TRUE,
-      '#weight' => 1,
-    );
+    '#title' => t('Output'),
+    '#type' => 'radios',
+    '#options' => array('bracket' => t('Complete Bracket'), 'results' => t('Bracket Results Only')),
+    '#required' => TRUE,
+    '#weight' => 1,
+  );
+
+  $form['options']['format'] = array(
+    '#title' => t('Format'),
+    '#type' => 'radios',
+    '#options' => array('xml' => t('XML'), 'txt' => t('Text (Results Only)')),
+    '#required' => TRUE,
+    '#weight' => 2,
+  );
 
   $form['clear'] = array(
     '#type' => 'submit',
@@ -1334,21 +1343,67 @@ function bracket_export_form_submit($form_id, &$form_state) {
   // load the node
   $node = node_load($form_state['values']['nid']);
 
-  // generate the xml
-  $output = bracket_xml_export($node, $form_state['values']['opt']);
-
   // make a file name from title
   $fname = preg_replace('/[^0-9a-z\.\_\-]/i', '_', $node->title);
-
+  
+  if ($form_state['values']['format'] == 'xml') {
+    // generate the xml
+    $fname .= '.xml';
+    $output = bracket_xml_export($node, $form_state['values']['opt']);
+  }
+  else {
+    $fname .= '.txt';
+    $output = bracket_text_export($node, $form_state['values']['opt']);
+  }
+  
   // prepare to download
   drupal_add_http_header('Content-Type',  'text/plain');
   drupal_add_http_header('Content-Length', strlen($output));
-  drupal_add_http_header('Content-Disposition', 'attachment; filename="' . $fname . '.xml"');
+  drupal_add_http_header('Content-Disposition', 'attachment; filename="' . $fname . '"');
 
   // send the output
   echo $output;
 
   exit();
+}
+
+function bracket_text_export($node, $opt) {
+
+  $output = check_plain($node->title) . "\n\n";
+
+  if ($opt == 'bracket') {
+    for ($i=1; $i<=count($node->round); $i++) {
+      $r = $node->round[$i];
+      $output .= check_plain($r->name) . "\n";
+
+      for ($j=1; $j<=count($r->match); $j++) {
+        $m = $r->match[$j];
+        if ($m->win[1] || $m->win[2]) {
+          $winner = 1;
+          $loser = 2;
+          if ($m->win[2]) {
+            $winner = 2;
+            $loser = 1;
+          }
+          $output .= check_plain($m->cname[$winner]) . ' ';
+          $output .= check_plain($m->score[$winner]) . ', ';
+          $output .= check_plain($m->cname[$loser]) . ' ';
+          $output .= check_plain($m->score[$loser]);
+          $output .= "\n";
+        }
+      }
+      $output .= "\n";
+    }
+  }
+  
+  $output .= "Results\n";
+  for ($i=1; $i<=count($node->result); $i++) {
+    $s = $node->result[$i];
+    $output .= $i . ". ";
+    $output .= $s->cname . "\n";
+  }
+
+  return $output;
 }
 
 //=========================================================================
