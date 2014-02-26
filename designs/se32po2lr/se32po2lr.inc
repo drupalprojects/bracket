@@ -191,12 +191,20 @@ function se32po2lr_image($node) {
 /**
  * Produce a pdf document for the requested bracket object
  *
- * @param $b
- *   the bracket object
+ * @param $node
+ *   the bracket node object
  * @return
  *   the pdf document
  */
 function se32po2lr_pdf($node) {
+
+  // produce and return pdf as a string
+  $pdf = new PDF('P', 'in', 'letter');
+  se32po2lr_pdf_page($node, $pdf);
+  return $pdf->output('', 'S');
+}
+
+function se32po2lr_pdf_page($node, &$pdf) {
 
   global $_bracket_pdf_font_name;
   global $_bracket_pdf_font_xlarge;
@@ -206,8 +214,8 @@ function se32po2lr_pdf($node) {
   global $_bracket_pdf_font_xsmall;
 
   // setup pdf
-  $pdf = new PDF('L', 'in', 'letter');
   $pdf->setAutoPageBreak(FALSE);
+  $pdf->addPage('L');
   $iwidth = 11.0;
   $iheight = 8.5;
 
@@ -232,9 +240,6 @@ function se32po2lr_pdf($node) {
   $_bracket_pdf_font_norm = 8;
   $_bracket_pdf_font_small = 7;
   $pdf->setFont($_bracket_pdf_font_name, '', $_bracket_pdf_font_norm);
-
-  // start pdf
-  $pdf->addPage();
 
   // round 1
   $right = 11.0 - $left;
@@ -347,7 +352,4 @@ function se32po2lr_pdf($node) {
       $pdf->cell($width, 0.125, $node->round[$i]->comment, 0, 0, 'C');
     }
   }
-
-  // return pdf as a string
-  return $pdf->output('', 'S');
 }

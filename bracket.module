@@ -1534,16 +1534,22 @@ function bracket_image($node) {
  */
 function bracket_pdf($node) {
 
-  $img = FALSE;
+  $stream = FALSE;
   // design pdf function
   $function = $node->design . '_pdf';
   if (function_exists($function)) {
-
     // go generate pdf
     $args = array($node);
-    $img = call_user_func_array($function, $args);
+    $stream = call_user_func_array($function, $args);
   }
   
+  if ($stream) {
+    bracket_pdf_download($stream, $node->title . '.pdf');
+  }
+}
+
+function bracket_pdf_download($stream, $fname) {
+
   // force PDF download
   drupal_add_http_header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0');
 
@@ -1554,13 +1560,10 @@ function bracket_pdf($node) {
     drupal_add_http_header('Content-Type', 'application/octet-stream');
   }
     
-  // make a file name from title
-  $fname = preg_replace('/[^0-9a-z\.\_\-]/i', '_', $node->title);
-
   // send PDF
-  drupal_add_http_header('Content-Disposition', 'attachment; filename="' . $fname .'.pdf"');
-  drupal_add_http_header('Content-Length',  strlen($img));
-  echo $img;
+  drupal_add_http_header('Content-Disposition', 'attachment; filename="' . preg_replace('/[^0-9a-z\.\_\-]/i', '_', $fname) . '"');
+  drupal_add_http_header('Content-Length',  strlen($stream));
+  echo $stream;
 }
 
 /**
