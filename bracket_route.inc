@@ -159,6 +159,7 @@ function bracket_route_edit_form_matches($r, &$form, $options, $comp_opt, $loser
     }
 
   }   // end - for($i=1; $i<=count($r->match); $i++)...
+  
 }
 
 function theme_bracket_route_edit_form($variables) {
@@ -245,7 +246,7 @@ function theme_bracket_route_edit_form($variables) {
 
       if (isset($form[$rtype][$round][$match]['winner_result']) ||
           isset($form[$rtype][$round][$match]['loser_result']) ||
-          isset($form[$rtype][$round][$match]['winner_result'])) {
+          isset($form[$rtype][$round][$match]['win_use_result'])) {
 
         if (isset($form[$rtype][$round][$match]['winner_result'])) {
           $table .= '</tr><tr><td colspan="4" nowrap>';
@@ -338,7 +339,7 @@ function theme_bracket_route_edit_form($variables) {
 
         if (isset($form[$rtype][$round][$match]['winner_result']) ||
             isset($form[$rtype][$round][$match]['loser_result']) ||
-            isset($form[$rtype][$round][$match]['winner_result'])) {
+            isset($form[$rtype][$round][$match]['win_use_result'])) {
 
           if (isset($form[$rtype][$round][$match]['winner_result'])) {
             $table .= '</tr><tr><td colspan="4" nowrap>';
@@ -370,7 +371,8 @@ function theme_bracket_route_edit_form($variables) {
       $table .= '</table>';
 
       $form[$rtype][$round]['table'] = array(
-        '#value' => $table
+        '#type' => 'markup',
+        '#markup' => $table
       );
 
       $output .= "\n<!--round_begin-->\n<td>";
