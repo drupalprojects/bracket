@@ -134,16 +134,6 @@ function bracket_menu() {
     'type' => MENU_NORMAL_ITEM,
   );
 
-  // bracket listing.
-  $items['admin/content/bracket'] = array(
-    'title' => 'Brackets',
-    'page callback' => 'bracket_admin_content',
-    'access callback' => 'user_access',
-    'access arguments' => array('administer content'),
-    'description' => 'View and edit all the brackets on your site.',
-    'type' => MENU_NORMAL_ITEM,
-  );
-
   $items['node/%bracket_menu/bracket-image'] = array(
     'page callback' => 'bracket_image',
     'page arguments' => array(1),
@@ -303,9 +293,6 @@ function bracket_theme() {
   $theme = array(
     'bracket_view' => array(
       'variables' => array('node' => NULL, 'view_mode' => NULL),
-    ),
-    'bracket_admin_content' => array(
-      'variables' => array('nodes' => NULL),
     ),
     'bracket_route_edit_form' => array(
       'render element' => 'form',
@@ -1490,48 +1477,6 @@ function bracket_import_form_submit($form_id, &$form_state) {
 
     drupal_set_message(t('Nothing was uploaded.'), 'error');
   }
-}
-
-/**
- * Display bracket list for admin/content/bracket
- */
-function bracket_admin_content() {
-  
-  $nodes = db_select('node', 'n')
-    ->fields('n')
-    ->condition('n.type', 'bracket', '=')
-    ->execute()
-    ->fetchAllAssoc('nid');
-
-  return theme('bracket_admin_content', array('nodes' => $nodes));
-}
-
-
-/**
- * Theme the list of brackets
- */
-function theme_bracket_admin_content($variables) {
-
-  $nodes = $variables['nodes'];
-
-  $header = array(
-    t('Title'),
-    array('data' => t('Operations'), 'colspan' => '5')
-  );
-
-  $rows = array();
-  foreach ($nodes as $node) {
-    $rows[] = array(
-      l($node->title, 'node/'. $node->nid),
-      node_access('update', $node) ? l(t('Edit'), 'node/'. $node->nid .'/edit') : '',
-      node_access('update', $node) ? l(t('Clone'), 'node/'. $node->nid .'/clone') : '',
-      node_access('update', $node) ? l(t('Clear'), 'node/'. $node->nid .'/clear') : '',
-      node_access('update', $node) ? l(t('Export'), 'node/'. $node->nid .'/export') : '',
-      node_access('update', $node) ? l(t('Import'), 'node/'. $node->nid .'/import') : '',
-    );
-  }
-
-  return theme('table', array('header' => $header, 'rows' => $rows));
 }
 
 //=========================================================================
